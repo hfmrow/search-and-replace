@@ -1,0 +1,380 @@
+{
+	"ProgInfos": {
+		"Name": "SearchAndReplace",
+		"Version": "v1.5",
+		"Creat": "H.F.M",
+		"MainObjStructName": "mainObjects",
+		"GladeXmlFilename": "/media/syndicate/storage/Documents/dev/go/src/github.com/hfmrow/sAndReplace/assets/glade/main.glade",
+		"TranslateFilename": "/media/syndicate/storage/Documents/dev/go/src/github.com/hfmrow/sAndReplace/translate.go"
+	},
+	"Language": {
+		"LangNameLong": "English",
+		"LangNameShrt": "eng",
+		"Author": "H.F.M",
+		"Date": "Mon, 11 Mar 2019 04:04:21",
+		"Updated": "Sun, 14 Jul 2019 16:46:08",
+		"Contributors": [
+			""
+		]
+	},
+	"Options": {
+		"SkipLowerCase": false,
+		"SkipEmptyLabel": false,
+		"DoBackup": true
+	},
+	"ObjectsCount": 31,
+	"Objects": [
+		{
+			"Class": "GtkButton",
+			"Id": "btnFind",
+			"Label": "Find in files",
+			"Tooltip": "Find in selected files.",
+			"Text": "",
+			"Uri": "",
+			"Wrap": false,
+			"Markup": false,
+			"Comment": ""
+		},
+		{
+			"Class": "GtkButton",
+			"Id": "btnReplaceInClipboard",
+			"Label": "Replace in clipboard",
+			"Tooltip": "Replace clipboard content with\ndefined text.",
+			"Text": "",
+			"Uri": "",
+			"Wrap": false,
+			"Markup": false,
+			"Comment": ""
+		},
+		{
+			"Class": "GtkButton",
+			"Id": "btnShowClipboard",
+			"Label": "View it",
+			"Tooltip": "Display clipboard content.",
+			"Text": "",
+			"Uri": "",
+			"Wrap": false,
+			"Markup": false,
+			"Comment": ""
+		},
+		{
+			"Class": "GtkCheckButton",
+			"Id": "chkCaseSensitive",
+			"Label": "Case sensitive",
+			"Tooltip": "Respect character case when searching.",
+			"Text": "",
+			"Uri": "",
+			"Wrap": false,
+			"Markup": false,
+			"Comment": ""
+		},
+		{
+			"Class": "GtkCheckButton",
+			"Id": "chkCharacterClass",
+			"Label": "Posix character class  ",
+			"Tooltip": "Use character classes to search.\ni.e: \"Ok!\"\nwill be transformed as:\n[[:upper:]][[:lower:]][[:punct:]]",
+			"Text": "",
+			"Uri": "",
+			"Wrap": false,
+			"Markup": false,
+			"Comment": ""
+		},
+		{
+			"Class": "GtkCheckButton",
+			"Id": "chkCharacterClassStrictMode",
+			"Label": "Strict mode",
+			"Tooltip": "Use all character classes equivalents.",
+			"Text": "",
+			"Uri": "",
+			"Wrap": false,
+			"Markup": false,
+			"Comment": ""
+		},
+		{
+			"Class": "GtkCheckButton",
+			"Id": "chkFollowSymlinkDir",
+			"Label": "Follow symlink directory",
+			"Tooltip": "Always follow the directory\neven if it is a symbolic link.",
+			"Text": "",
+			"Uri": "",
+			"Wrap": false,
+			"Markup": false,
+			"Comment": ""
+		},
+		{
+			"Class": "GtkCheckButton",
+			"Id": "chkRegex",
+			"Label": "Use regex",
+			"Tooltip": "Consider the search entry as\na regular expression.",
+			"Text": "",
+			"Uri": "",
+			"Wrap": false,
+			"Markup": false,
+			"Comment": ""
+		},
+		{
+			"Class": "GtkCheckButton",
+			"Id": "chkSubDir",
+			"Label": "Scan sub directories",
+			"Tooltip": "Allow subdirectory scanning and\nviewing of contained files.",
+			"Text": "",
+			"Uri": "",
+			"Wrap": false,
+			"Markup": false,
+			"Comment": ""
+		},
+		{
+			"Class": "GtkCheckButton",
+			"Id": "chkUseEscapeChar",
+			"Label": "Use escape character",
+			"Tooltip": "When searching for expression,\nyou allow the use of escape characters\nlike \" \\ n \".",
+			"Text": "",
+			"Uri": "",
+			"Wrap": false,
+			"Markup": false,
+			"Comment": ""
+		},
+		{
+			"Class": "GtkCheckButton",
+			"Id": "chkWildcard",
+			"Label": "Use wildcard",
+			"Tooltip": "Allow use of wildcard like \"*\" or \"?\"\nin search statement.",
+			"Text": "",
+			"Uri": "",
+			"Wrap": false,
+			"Markup": false,
+			"Comment": ""
+		},
+		{
+			"Class": "GtkCheckButton",
+			"Id": "chkWoleWord",
+			"Label": "Whole word",
+			"Tooltip": "Search only for the whole word\n(does not be a part of another word).",
+			"Text": "",
+			"Uri": "",
+			"Wrap": false,
+			"Markup": false,
+			"Comment": ""
+		},
+		{
+			"Class": "GtkEntry",
+			"Id": "entryExtMask",
+			"Label": "",
+			"Tooltip": "You can set a mask to restrict the display to these files extensions.\nChange focus to another control to take effect.\n\nEach of them must be separated by \";\".\nie: '*.go; *.opt; *.debug'",
+			"Text": "*.*",
+			"Uri": "",
+			"Wrap": false,
+			"Markup": false,
+			"Comment": ""
+		},
+		{
+			"Class": "GtkEntry",
+			"Id": "entryReplace1",
+			"Label": "",
+			"Tooltip": "The text entered in this control\nwill replace the found text.",
+			"Text": "",
+			"Uri": "",
+			"Wrap": false,
+			"Markup": false,
+			"Comment": ""
+		},
+		{
+			"Class": "GtkEntry",
+			"Id": "entrySearch1",
+			"Label": "",
+			"Tooltip": "The text entered in this control\nwill be replaced once found.",
+			"Text": "",
+			"Uri": "",
+			"Wrap": false,
+			"Markup": false,
+			"Comment": ""
+		},
+		{
+			"Class": "GtkFileChooserButton",
+			"Id": "fileChooserBtn",
+			"Label": "",
+			"Tooltip": "Select directory to be scanned.",
+			"Text": "",
+			"Uri": "",
+			"Wrap": false,
+			"Markup": false,
+			"Comment": ""
+		},
+		{
+			"Class": "GtkButton",
+			"Id": "findWinCancelBtn",
+			"Label": "Cancel",
+			"Tooltip": "Close window.",
+			"Text": "",
+			"Uri": "",
+			"Wrap": false,
+			"Markup": false,
+			"Comment": ""
+		},
+		{
+			"Class": "GtkCheckButton",
+			"Id": "findWinChkBackUp",
+			"Label": "Make backup",
+			"Tooltip": "Do backup when changes applied.",
+			"Text": "",
+			"Uri": "",
+			"Wrap": false,
+			"Markup": false,
+			"Comment": ""
+		},
+		{
+			"Class": "GtkLabel",
+			"Id": "findWinLabel",
+			"Label": "",
+			"Tooltip": "",
+			"Text": "",
+			"Uri": "",
+			"Wrap": false,
+			"Markup": false,
+			"Comment": "This is a blank label.\nNot designed to be labeled."
+		},
+		{
+			"Class": "GtkLabel",
+			"Id": "findWinLabel1",
+			"Label": "",
+			"Tooltip": "",
+			"Text": "",
+			"Uri": "",
+			"Wrap": false,
+			"Markup": false,
+			"Comment": "This is a blank label.\nNot designed to be labeled."
+		},
+		{
+			"Class": "GtkLabel",
+			"Id": "findWinLabel2",
+			"Label": "",
+			"Tooltip": "",
+			"Text": "",
+			"Uri": "",
+			"Wrap": false,
+			"Markup": false,
+			"Comment": "This is a blank label.\nNot designed to be labeled."
+		},
+		{
+			"Class": "GtkButton",
+			"Id": "findWinReplaceBtn",
+			"Label": "Replace",
+			"Tooltip": "Replace in selected files with\ndefined text.",
+			"Text": "",
+			"Uri": "",
+			"Wrap": false,
+			"Markup": false,
+			"Comment": ""
+		},
+		{
+			"Class": "GtkTreeView",
+			"Id": "findWinTreeView",
+			"Label": "",
+			"Tooltip": "You can drop in files to be treated.",
+			"Text": "",
+			"Uri": "",
+			"Wrap": false,
+			"Markup": false,
+			"Comment": ""
+		},
+		{
+			"Class": "GtkImage",
+			"Id": "imgTop",
+			"Label": "",
+			"Tooltip": "Click to show Aboubox.",
+			"Text": "",
+			"Uri": "",
+			"Wrap": false,
+			"Markup": false,
+			"Comment": ""
+		},
+		{
+			"Class": "GtkLabel",
+			"Id": "lblExtMask",
+			"Label": " Mask : ",
+			"Tooltip": "",
+			"Text": "",
+			"Uri": "",
+			"Wrap": false,
+			"Markup": false,
+			"Comment": "No tooltip needed."
+		},
+		{
+			"Class": "GtkLabel",
+			"Id": "lblReplace",
+			"Label": "Replace with",
+			"Tooltip": "",
+			"Text": "",
+			"Uri": "",
+			"Wrap": false,
+			"Markup": false,
+			"Comment": ""
+		},
+		{
+			"Class": "GtkLabel",
+			"Id": "lblSearch",
+			"Label": "Search for",
+			"Tooltip": "",
+			"Text": "",
+			"Uri": "",
+			"Wrap": false,
+			"Markup": false,
+			"Comment": ""
+		},
+		{
+			"Class": "GtkButton",
+			"Id": "textWinBtnDone",
+			"Label": "Done",
+			"Tooltip": "Close window.",
+			"Text": "",
+			"Uri": "",
+			"Wrap": false,
+			"Markup": false,
+			"Comment": ""
+		},
+		{
+			"Class": "GtkCheckButton",
+			"Id": "textWinChkShowModifications",
+			"Label": "Show modifications",
+			"Tooltip": "Display modifications without applying.",
+			"Text": "",
+			"Uri": "",
+			"Wrap": false,
+			"Markup": false,
+			"Comment": ""
+		},
+		{
+			"Class": "GtkCheckButton",
+			"Id": "textWinChkWrap",
+			"Label": "Wrap text  ",
+			"Tooltip": "Wrap displayed text.",
+			"Text": "",
+			"Uri": "",
+			"Wrap": false,
+			"Markup": false,
+			"Comment": ""
+		},
+		{
+			"Class": "GtkTreeView",
+			"Id": "treeviewFiles",
+			"Label": "",
+			"Tooltip": "you can drop in files to be treated.",
+			"Text": "",
+			"Uri": "",
+			"Wrap": false,
+			"Markup": false,
+			"Comment": ""
+		}
+	],
+	"Sentences": {
+		"allow": "Allow",
+		"cancel": "Cancel",
+		"deny": "Deny",
+		"no": "No",
+		"ok": "Ok",
+		"openf": "Open file",
+		"retry": "Retry",
+		"savef": "Save file",
+		"yes": "Yes"
+	}
+}
