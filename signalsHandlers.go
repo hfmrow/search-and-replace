@@ -5,9 +5,12 @@ package main
 import (
 	"fmt"
 	"net/url"
+	"os"
+	"path/filepath"
 	"strings"
 
 	"github.com/gotk3/gotk3/gdk"
+	"github.com/gotk3/gotk3/glib"
 	"github.com/gotk3/gotk3/gtk"
 	g "github.com/hfmrow/sAndReplace/genLib"
 	gi "github.com/hfmrow/sAndReplace/gtk3Import"
@@ -44,10 +47,19 @@ func entryReplaceFocusOut(e *gtk.Entry) {
 }
 
 // Signal handler changed ... FocusOut - to trim entry
-func entryExtMaskFocusOut() {
+func entryExtMaskFocusOut() bool {
+
+	var dispError = func() {
+		// idle run to permit gtk3 working right during goroutine
+		_, err := glib.IdleAdd(func() {
+			gi.DlgMessage(mainObjects.mainWin, "error", sts["file-rem"], err.Error(), "", "Ok")
+		})
+		Check(err)
+	}
+
 	var extSep = ";"
 	mainOptions.ExtMask = []string{}
-	// if strings.Contains(getEntryText(mainObjects.entryExtMask))
+
 	tmpSliceStrings := strings.Split(getEntryText(mainObjects.entryExtMask), extSep)
 	for _, str := range tmpSliceStrings {
 		str = strings.TrimSpace(str)
@@ -56,10 +68,21 @@ func entryExtMaskFocusOut() {
 		}
 	}
 	mainObjects.entryExtMask.SetText(strings.Join(mainOptions.ExtMask, extSep+" "))
-	err = getFilesSelection(mainOptions.currentInFilesList)
-	if err != nil {
-		gi.DlgMessage(mainObjects.mainWin, "error", mainOptions.TxtAlert, err.Error(), "", "Ok")
+
+	// Check if directory exist ...
+	if _, err = os.Stat(mainOptions.Directory); os.IsNotExist(err) {
+		gi.DlgMessage(mainObjects.mainWin, "error", mainOptions.TxtAlert, "\n"+sts["dir-rem"]+"\n\n"+err.Error(), "", "Ok")
+		mainOptions.Directory = filepath.Dir(os.Args[0])
+		scanFilesAndDisp()
+	} else {
+		err = getFilesSelection(mainOptions.currentInFilesList)
+		if err != nil {
+			// Tips, calling goroutine allow to finish this function and
+			// returning the "GDK_EVENT_PROPAGATE" signal to avoid GDK error
+			go dispError()
+		}
 	}
+	return false // GDK_EVENT_PROPAGATE signal
 }
 
 // Signal handler changed ...

@@ -95,11 +95,8 @@ func mainApplication() {
 
 	/* Retreive command line arguments */
 	switch {
-	// case len(os.Args) == 1:
-	// 	if mainOptions.Directory == "" {
-	// 		mainOptions.Directory = filepath.Dir(os.Args[0])
-	// 	}
-	// 	scanFilesAndDisp()
+	case len(os.Args) == 1:
+		scanFilesAndDisp()
 	default:
 		if len(os.Args) >= 2 {
 			if fileInfo, err = os.Stat(os.Args[1]); err == nil {

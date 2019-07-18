@@ -6,7 +6,7 @@
 * 	This program comes with absolutely no warranty.
 *	See the The MIT License (MIT) for details:
 *	https://opensource.org/licenses/mit-license.php
-*/
+ */
 
 package main
 
@@ -55,6 +55,7 @@ func (trans *MainTranslate) initGtkObjectsText() {
 	trans.setTextToGtkObjects(&mainObjects.textWinChkWrap.Widget, "textWinChkWrap")
 	trans.setTextToGtkObjects(&mainObjects.treeviewFiles.Widget, "treeviewFiles")
 }
+
 // Translations structure declaration. To be used in main application.
 var translate = new(MainTranslate)
 
@@ -63,17 +64,18 @@ var translate = new(MainTranslate)
 // They'll be added to language file each time application started
 // when "devMode" is set at true.
 var sts = map[string]string{
-	`deny`: `Deny`,
-	`ok`: `Ok`,
-	`no`: `No`,
-	`savef`: `Save file`,
-	`openf`: `Open file`,
-	`retry`: `Retry`,
-	`allow`: `Allow`,
-	`cancel`: `Cancel`,
-	`yes`: `Yes`,
+	`deny`:     `Deny`,
+	`ok`:       `Ok`,
+	`no`:       `No`,
+	`savef`:    `Save file`,
+	`openf`:    `Open file`,
+	`retry`:    `Retry`,
+	`allow`:    `Allow`,
+	`cancel`:   `Cancel`,
+	`yes`:      `Yes`,
+	`dir-rem`:  `Directory does not exist. The current application directory will be used.`,
+	`file-rem`: `File(s) does not exist.`,
 }
-
 
 // Translations structure with methods
 type MainTranslate struct {
@@ -134,18 +136,18 @@ func (trans *MainTranslate) write(filename string) (err error) {
 }
 
 type parsingFlags struct {
-	SkipLowerCase       bool
-	SkipEmptyLabel      bool
-	DoBackup            bool
+	SkipLowerCase  bool
+	SkipEmptyLabel bool
+	DoBackup       bool
 }
 
 type progInfo struct {
-	Name                 string
-	Version              string
-	Creat                string
-	MainObjStructName    string
-	GladeXmlFilename     string
-	TranslateFilename    string
+	Name              string
+	Version           string
+	Creat             string
+	MainObjStructName string
+	GladeXmlFilename  string
+	TranslateFilename string
 }
 
 type language struct {

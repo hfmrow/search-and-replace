@@ -33,7 +33,6 @@ var mainOptions *MainOpt
 var err error
 var tempDir string
 
-// Translations
 var devMode bool
 var applyChanges, acceptBinary bool
 var treeviewSelectedRows []string
@@ -118,7 +117,7 @@ func (opt *MainOpt) Init() {
 // Variables -> Objects.
 func (opt *MainOpt) UpdateObjects() {
 	mainObjects.mainWin.Resize(opt.MainWinWidth, opt.MainWinHeight)
-	//	mainObjects.fileChooserBtn.FileChooser.SetCurrentFolder(opt.Directory)
+	mainObjects.fileChooserBtn.FileChooser.SetCurrentFolder(opt.Directory)
 	mainObjects.chkCaseSensitive.ToggleButton.SetActive(opt.CaseSensitive)
 	mainObjects.chkFollowSymlinkDir.ToggleButton.SetActive(opt.FollowSymlinkDir)
 	mainObjects.chkSubDir.ToggleButton.SetActive(opt.ScanSubDir)
@@ -134,8 +133,7 @@ func (opt *MainOpt) UpdateObjects() {
 // Objects -> Variables.
 func (opt *MainOpt) UpdateOptions() {
 	opt.MainWinWidth, opt.MainWinHeight = mainObjects.mainWin.GetSize()
-	opt.Directory = ""
-	//	opt.Directory = mainObjects.fileChooserBtn.FileChooser.GetFilename()
+	opt.Directory = mainObjects.fileChooserBtn.FileChooser.GetFilename()
 	opt.CaseSensitive = mainObjects.chkCaseSensitive.ToggleButton.GetActive()
 	opt.FollowSymlinkDir = mainObjects.chkFollowSymlinkDir.ToggleButton.GetActive()
 	opt.ScanSubDir = mainObjects.chkSubDir.ToggleButton.GetActive()

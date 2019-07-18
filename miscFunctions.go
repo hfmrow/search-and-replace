@@ -60,23 +60,23 @@ func FindDir(dir string, masks []string, returnedStrSlice *[][]string, scanSub, 
 	var fName, time, size string
 	files, err := ioutil.ReadDir(dir)
 	if err != nil {
-		return err
+		return errors.New(fmt.Sprintf("%s\nDir-Name: %s\n", err.Error(), dir))
 	}
 	for _, file := range files {
 		fName = filepath.Join(dir, file.Name())
 		if followSymlinkDir { // Check for symlink ..
 			file, err = os.Lstat(fName)
 			if err != nil {
-				return err
+				return errors.New(fmt.Sprintf("%s\nFilename: %s\n", err.Error(), fName))
 			}
 			if file.Mode()&os.ModeSymlink != 0 { // Is a symlink ?
 				fName, err := os.Readlink(fName) // Then read it...
 				if err != nil {
-					return err
+					return errors.New(fmt.Sprintf("%s\nFilename: %s\n", err.Error(), fName))
 				}
 				file, err = os.Stat(fName) // Get symlink infos.
 				if err != nil {
-					return err
+					return errors.New(fmt.Sprintf("%s\nFilename: %s\n", err.Error(), fName))
 				}
 				fName = filepath.Join(dir, file.Name())
 			}
@@ -85,10 +85,10 @@ func FindDir(dir string, masks []string, returnedStrSlice *[][]string, scanSub, 
 		if file.IsDir() && scanSub {
 			tmpFileList := new([][]string)
 			err = FindDir(fName, masks, tmpFileList, scanSub, true, followSymlinkDir)
-			*returnedStrSlice = append(*returnedStrSlice, *tmpFileList...)
 			if err != nil {
-				return err
+				return errors.New(fmt.Sprintf("%s\nFilename: %s\n", err.Error(), fName))
 			}
+			*returnedStrSlice = append(*returnedStrSlice, *tmpFileList...)
 		}
 		// get information to be displayed.
 		size = fmt.Sprintf("%s", humanize.Bytes(uint64(file.Size())))
@@ -120,9 +120,16 @@ func FindDir(dir string, masks []string, returnedStrSlice *[][]string, scanSub, 
 // scanFilesAndDisp:
 func scanFilesAndDisp() {
 	var err error
+	// Check if directory exist ...
+	if _, err = os.Stat(mainOptions.Directory); os.IsNotExist(err) {
+		gi.DlgMessage(mainObjects.mainWin, "error", mainOptions.TxtAlert, "\n"+sts["dir-rem"]+"\n\n"+err.Error(), "", "Ok")
+		mainOptions.Directory = filepath.Dir(os.Args[0])
+	}
+
 	// Set control value to be sure is always displayed (case of cmdline input.)
 	mainObjects.fileChooserBtn.SetCurrentFolder(mainOptions.Directory)
 	filesList := new([][]string)
+
 	err = FindDir(mainOptions.Directory, mainOptions.ExtMask, filesList,
 		mainObjects.chkSubDir.ToggleButton.GetActive(),
 		false,
@@ -147,7 +154,8 @@ func getFilesSelection(inStrings []string) (err error) {
 	var tmpErr string
 	var file os.FileInfo
 	var filesList [][]string
-	var ok bool
+	var errorStop, ok bool
+	var errorCount int
 
 	if mainObjects.listStore != nil {
 		for _, fullName := range inStrings {
@@ -175,7 +183,13 @@ func getFilesSelection(inStrings []string) (err error) {
 						fmt.Sprintf("%s.", humanize.Time(file.ModTime())),
 						fullName})
 				} else {
-					tmpErr += err.Error() + "\n"
+					if errorCount < 5 {
+						tmpErr += err.Error() + "\n"
+						errorCount++
+					} else if !errorStop {
+						tmpErr += "\nAnd more ..."
+						errorStop = true
+					}
 				}
 			}
 			ok = false
@@ -183,13 +197,15 @@ func getFilesSelection(inStrings []string) (err error) {
 		filesCount = len(filesList)
 		// Clean before fill
 		mainObjects.listStore.Clear()
-		for idx := 0; idx < filesCount; idx++ {
-			gi.ListStoreAddRow(mainObjects.listStore, (filesList[idx]))
+		if filesCount > 0 {
+			for idx := 0; idx < filesCount; idx++ {
+				gi.ListStoreAddRow(mainObjects.listStore, (filesList[idx]))
+			}
 		}
 		updateStatusBar()
 	}
 	if len(tmpErr) != 0 {
-		err = errors.New(tmpErr)
+		err = errors.New("\n" + tmpErr)
 	}
 	return err
 }

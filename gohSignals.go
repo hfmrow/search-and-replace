@@ -19,14 +19,13 @@ func signalsPropHandler() {
 	mainObjects.btnShowClipboard.Connect("clicked", btnShowClipboardClicked)           /*MANUAL*/
 	mainObjects.chkCaseSensitive.Connect("toggled", chkCaseSensitiveToggled)           /*MANUAL*/
 	mainObjects.chkCharacterClass.Connect("toggled", chkCharacterClassToggled)
-	mainObjects.chkFollowSymlinkDir.Connect("toggled", fileChooserBtnClicked) /*MANUAL*/
-	mainObjects.chkRegex.Connect("toggled", chkRegexToggled)                  /*MANUAL*/
-	mainObjects.chkSubDir.Connect("toggled", fileChooserBtnClicked)           /*MANUAL*/
-	mainObjects.chkUseEscapeChar.Connect("toggled", chkUseEscapeCharToggled)  /*MANUAL*/
-	mainObjects.chkWildcard.Connect("toggled", chkWildcardToggled)            /*MANUAL*/
-	mainObjects.chkWoleWord.Connect("toggled", chkWoleWordToggled)            /*MANUAL*/
-	mainObjects.entryExtMask.Connect("focus-out-event", entryExtMaskFocusOut) /*MANUAL*/
-	// mainObjects.entryExtMask.Connect("focus-out-event", fileChooserBtnClicked) /*MANUAL*/
+	mainObjects.chkFollowSymlinkDir.Connect("toggled", fileChooserBtnClicked)      /*MANUAL*/
+	mainObjects.chkRegex.Connect("toggled", chkRegexToggled)                       /*MANUAL*/
+	mainObjects.chkSubDir.Connect("toggled", fileChooserBtnClicked)                /*MANUAL*/
+	mainObjects.chkUseEscapeChar.Connect("toggled", chkUseEscapeCharToggled)       /*MANUAL*/
+	mainObjects.chkWildcard.Connect("toggled", chkWildcardToggled)                 /*MANUAL*/
+	mainObjects.chkWoleWord.Connect("toggled", chkWoleWordToggled)                 /*MANUAL*/
+	mainObjects.entryExtMask.Connect("focus-out-event", entryExtMaskFocusOut)      /*MANUAL*/
 	mainObjects.fileChooserBtn.Connect("selection-changed", fileChooserBtnClicked) /*MANUAL*/
 	mainObjects.findWinCancelBtn.Connect("clicked", findWinCancelBtnClicked)       /*MANUAL*/
 	mainObjects.findWinChkBackUp.Connect("toggled", findWinChkBackUpToggled)       /*MANUAL*/
