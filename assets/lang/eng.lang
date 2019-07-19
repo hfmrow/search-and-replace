@@ -12,7 +12,7 @@
 		"LangNameShrt": "eng",
 		"Author": "H.F.M",
 		"Date": "Mon, 11 Mar 2019 04:04:21",
-		"Updated": "Sun, 14 Jul 2019 16:46:08",
+		"Updated": "Fri, 19 Jul 2019 03:23:46",
 		"Contributors": [
 			""
 		]
@@ -22,7 +22,7 @@
 		"SkipEmptyLabel": false,
 		"DoBackup": true
 	},
-	"ObjectsCount": 31,
+	"ObjectsCount": 32,
 	"Objects": [
 		{
 			"Class": "GtkButton",
@@ -270,7 +270,7 @@
 			"Class": "GtkTreeView",
 			"Id": "findWinTreeView",
 			"Label": "",
-			"Tooltip": "You can drop in files to be treated.",
+			"Tooltip": "",
 			"Text": "",
 			"Uri": "",
 			"Wrap": false,
@@ -315,6 +315,17 @@
 			"Id": "lblSearch",
 			"Label": "Search for",
 			"Tooltip": "",
+			"Text": "",
+			"Uri": "",
+			"Wrap": false,
+			"Markup": false,
+			"Comment": ""
+		},
+		{
+			"Class": "GtkSwitch",
+			"Id": "SwitchFileChooserButton",
+			"Label": "",
+			"Tooltip": "Enable/Disable the directory selection button.\n\nWhen files are passed by argument, the \ndirectory selection button is disabled.",
 			"Text": "",
 			"Uri": "",
 			"Wrap": false,
@@ -370,6 +381,8 @@
 		"allow": "Allow",
 		"cancel": "Cancel",
 		"deny": "Deny",
+		"dir-rem": "Directory does not exist. The current application directory will be used.",
+		"file-rem": "File(s) does not exist.",
 		"no": "No",
 		"ok": "Ok",
 		"openf": "Open file",
