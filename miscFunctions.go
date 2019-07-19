@@ -120,32 +120,35 @@ func FindDir(dir string, masks []string, returnedStrSlice *[][]string, scanSub, 
 // scanFilesAndDisp:
 func scanFilesAndDisp() {
 	var err error
-	// Check if directory exist ...
-	if _, err = os.Stat(mainOptions.Directory); os.IsNotExist(err) {
-		gi.DlgMessage(mainObjects.mainWin, "error", mainOptions.TxtAlert, "\n"+sts["dir-rem"]+"\n\n"+err.Error(), "", "Ok")
-		mainOptions.Directory = filepath.Dir(os.Args[0])
-	}
 
-	// Set control value to be sure is always displayed (case of cmdline input.)
-	mainObjects.fileChooserBtn.SetCurrentFolder(mainOptions.Directory)
-	filesList := new([][]string)
-
-	err = FindDir(mainOptions.Directory, mainOptions.ExtMask, filesList,
-		mainObjects.chkSubDir.ToggleButton.GetActive(),
-		false,
-		mainObjects.chkFollowSymlinkDir.ToggleButton.GetActive())
-	g.Check(err, "fileChooserBtnClicked", "FindDir")
-
-	if mainObjects.listStore != nil {
-		filesCount = len(*filesList)
-		// Clean before fill
-		mainObjects.listStore.Clear()
-		mainOptions.currentInFilesList = mainOptions.currentInFilesList[:0]
-		for idx := 0; idx < filesCount; idx++ {
-			mainOptions.currentInFilesList = append(mainOptions.currentInFilesList, (*filesList)[idx][3])
-			gi.ListStoreAddRow(mainObjects.listStore, (*filesList)[idx]) // dereferencing pointer to index slice ...
+	if !cmdLineArg {
+		// Check if directory exist ...
+		if _, err = os.Stat(mainOptions.Directory); os.IsNotExist(err) {
+			gi.DlgMessage(mainObjects.mainWin, "error", mainOptions.TxtAlert, "\n"+sts["dir-rem"]+"\n\n"+err.Error(), "", "Ok")
+			mainOptions.Directory = filepath.Dir(os.Args[0])
 		}
-		updateStatusBar()
+
+		// Set control value to be sure is always displayed (case of cmdline input.)
+		mainObjects.fileChooserBtn.SetCurrentFolder(mainOptions.Directory)
+		filesList := new([][]string)
+
+		err = FindDir(mainOptions.Directory, mainOptions.ExtMask, filesList,
+			mainObjects.chkSubDir.ToggleButton.GetActive(),
+			false,
+			mainObjects.chkFollowSymlinkDir.ToggleButton.GetActive())
+		g.Check(err, "fileChooserBtnClicked", "FindDir")
+
+		if mainObjects.listStore != nil {
+			filesCount = len(*filesList)
+			// Clean before fill
+			mainObjects.listStore.Clear()
+			mainOptions.currentInFilesList = mainOptions.currentInFilesList[:0]
+			for idx := 0; idx < filesCount; idx++ {
+				mainOptions.currentInFilesList = append(mainOptions.currentInFilesList, (*filesList)[idx][3])
+				gi.ListStoreAddRow(mainObjects.listStore, (*filesList)[idx]) // dereferencing pointer to index slice ...
+			}
+			updateStatusBar()
+		}
 	}
 }
 

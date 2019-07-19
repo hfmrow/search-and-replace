@@ -1,6 +1,6 @@
 // gohOptions.go
 
-// Source file auto-generated on Sun, 14 Jul 2019 16:40:30 using Gotk3ObjHandler v1.3 ©2019 H.F.M
+// Source file auto-generated on Fri, 19 Jul 2019 03:46:10 using Gotk3ObjHandler v1.3 ©2019 H.F.M
 
 /*
 	This program comes with absolutely no warranty. See the The MIT License (MIT) for details:
@@ -19,7 +19,7 @@ import (
 
 // App infos
 var Name = "SearchAndReplace"
-var Vers = "v1.7.2"
+var Vers = "v1.7.3"
 var Descr = "Search and replace text sequences in one or more files.\nThe clipboard is also included inside replacing functionality."
 var Creat = "H.F.M"
 var YearCreat = "2018"
@@ -34,7 +34,7 @@ var err error
 var tempDir string
 
 var devMode bool
-var applyChanges, acceptBinary bool
+var applyChanges, acceptBinary, cmdLineArg bool
 var treeviewSelectedRows []string
 var filesCount int
 var filesSelected int

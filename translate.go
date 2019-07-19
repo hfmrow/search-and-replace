@@ -1,12 +1,12 @@
 // translate.go
 
-// File generated on Wed, 17 Apr 2019 13:16:14 using Gotk3ObjectsTranslate v1.0 2019 H.F.M
+// File generated on Fri, 19 Jul 2019 03:17:23 using Gotk3ObjectsTranslate v1.0 2019 H.F.M
 
 /*
 * 	This program comes with absolutely no warranty.
 *	See the The MIT License (MIT) for details:
 *	https://opensource.org/licenses/mit-license.php
- */
+*/
 
 package main
 
@@ -50,12 +50,12 @@ func (trans *MainTranslate) initGtkObjectsText() {
 	trans.setTextToGtkObjects(&mainObjects.lblExtMask.Widget, "lblExtMask")
 	trans.setTextToGtkObjects(&mainObjects.lblReplace.Widget, "lblReplace")
 	trans.setTextToGtkObjects(&mainObjects.lblSearch.Widget, "lblSearch")
+	trans.setTextToGtkObjects(&mainObjects.SwitchFileChooserButton.Widget, "SwitchFileChooserButton")
 	trans.setTextToGtkObjects(&mainObjects.textWinBtnDone.Widget, "textWinBtnDone")
 	trans.setTextToGtkObjects(&mainObjects.textWinChkShowModifications.Widget, "textWinChkShowModifications")
 	trans.setTextToGtkObjects(&mainObjects.textWinChkWrap.Widget, "textWinChkWrap")
 	trans.setTextToGtkObjects(&mainObjects.treeviewFiles.Widget, "treeviewFiles")
 }
-
 // Translations structure declaration. To be used in main application.
 var translate = new(MainTranslate)
 
@@ -64,18 +64,19 @@ var translate = new(MainTranslate)
 // They'll be added to language file each time application started
 // when "devMode" is set at true.
 var sts = map[string]string{
-	`deny`:     `Deny`,
-	`ok`:       `Ok`,
-	`no`:       `No`,
-	`savef`:    `Save file`,
-	`openf`:    `Open file`,
-	`retry`:    `Retry`,
-	`allow`:    `Allow`,
-	`cancel`:   `Cancel`,
-	`yes`:      `Yes`,
-	`dir-rem`:  `Directory does not exist. The current application directory will be used.`,
+	`savef`: `Save file`,
 	`file-rem`: `File(s) does not exist.`,
+	`retry`: `Retry`,
+	`yes`: `Yes`,
+	`ok`: `Ok`,
+	`deny`: `Deny`,
+	`no`: `No`,
+	`openf`: `Open file`,
+	`allow`: `Allow`,
+	`cancel`: `Cancel`,
+	`dir-rem`: `Directory does not exist. The current application directory will be used.`,
 }
+
 
 // Translations structure with methods
 type MainTranslate struct {
@@ -136,18 +137,18 @@ func (trans *MainTranslate) write(filename string) (err error) {
 }
 
 type parsingFlags struct {
-	SkipLowerCase  bool
-	SkipEmptyLabel bool
-	DoBackup       bool
+	SkipLowerCase       bool
+	SkipEmptyLabel      bool
+	DoBackup            bool
 }
 
 type progInfo struct {
-	Name              string
-	Version           string
-	Creat             string
-	MainObjStructName string
-	GladeXmlFilename  string
-	TranslateFilename string
+	Name                 string
+	Version              string
+	Creat                string
+	MainObjStructName    string
+	GladeXmlFilename     string
+	TranslateFilename    string
 }
 
 type language struct {

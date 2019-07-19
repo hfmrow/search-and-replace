@@ -6,7 +6,6 @@ import (
 	"fmt"
 	"net/url"
 	"os"
-	"path/filepath"
 	"strings"
 
 	"github.com/gotk3/gotk3/gdk"
@@ -15,6 +14,11 @@ import (
 	g "github.com/hfmrow/sAndReplace/genLib"
 	gi "github.com/hfmrow/sAndReplace/gtk3Import"
 )
+
+// SwitchFileChooserButtonStateSet:
+func SwitchFileChooserButtonStateSet() {
+	mainObjects.fileChooserBtn.SetSensitive(mainObjects.SwitchFileChooserButton.GetActive())
+}
 
 // treeviewFilesReceived:
 func treeviewFilesReceived(tw *gtk.TreeView, context *gdk.DragContext, x, y int, data_ptr uintptr, info, time uint) {
@@ -70,9 +74,9 @@ func entryExtMaskFocusOut() bool {
 	mainObjects.entryExtMask.SetText(strings.Join(mainOptions.ExtMask, extSep+" "))
 
 	// Check if directory exist ...
-	if _, err = os.Stat(mainOptions.Directory); os.IsNotExist(err) {
+	if _, err = os.Stat(mainOptions.Directory); os.IsNotExist(err) && !cmdLineArg {
 		gi.DlgMessage(mainObjects.mainWin, "error", mainOptions.TxtAlert, "\n"+sts["dir-rem"]+"\n\n"+err.Error(), "", "Ok")
-		mainOptions.Directory = filepath.Dir(os.Args[0])
+		// mainOptions.Directory = filepath.Dir(os.Args[0])
 		scanFilesAndDisp()
 	} else {
 		err = getFilesSelection(mainOptions.currentInFilesList)
@@ -325,6 +329,7 @@ func btnReplaceInClipboardClicked() {
 // Signal handler clicked ...
 func fileChooserBtnClicked() {
 	mainOptions.Directory = mainObjects.fileChooserBtn.GetFilename()
+	cmdLineArg = false
 	scanFilesAndDisp()
 }
 

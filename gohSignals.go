@@ -1,6 +1,6 @@
 // gohSignals.go
 
-// Source file auto-generated on Sun, 14 Jul 2019 16:40:30 using Gotk3ObjHandler v1.3 ©2019 H.F.M
+// Source file auto-generated on Fri, 19 Jul 2019 03:46:10 using Gotk3ObjHandler v1.3 ©2019 H.F.M
 
 /*
 	This program comes with absolutely no warranty. See the The MIT License (MIT) for details:
@@ -33,6 +33,7 @@ func signalsPropHandler() {
 	mainObjects.findWinTreeView.Connect("row-activated", findTreeViewDblClick)     /*MANUAL*/
 	mainObjects.ImgTopEventbox.Connect("button-release-event", imgTopReleaseEvent) /*MANUAL*/
 	mainObjects.mainWin.Connect("delete-event", mainWinOnExit)
+	mainObjects.SwitchFileChooserButton.Connect("state-set", SwitchFileChooserButtonStateSet)
 	mainObjects.textWinBtnDone.Connect("clicked", textWinBtnDoneClicked)                           /*MANUAL*/
 	mainObjects.textWinChkShowModifications.Connect("toggled", textWinChkShowModificationsToggled) /*MANUAL*/
 	mainObjects.textWinChkWrap.Connect("toggled", textWinChkWrapToggled)                           /*MANUAL*/

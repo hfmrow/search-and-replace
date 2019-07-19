@@ -1,6 +1,6 @@
 // gohObjects.go
 
-// Source file auto-generated on Sun, 14 Jul 2019 16:40:30 using Gotk3ObjHandler v1.3 ©2019 H.F.M
+// Source file auto-generated on Fri, 19 Jul 2019 03:46:10 using Gotk3ObjHandler v1.3 ©2019 H.F.M
 
 /*
 	This program comes with absolutely no warranty. See the The MIT License (MIT) for details:
@@ -67,6 +67,7 @@ type MainControlsObj struct {
 	replaceGrid                 *gtk.Grid
 	scrolledWindowTreeView      *gtk.ScrolledWindow
 	statusbar                   *gtk.Statusbar
+	SwitchFileChooserButton     *gtk.Switch
 	textWin                     *gtk.Window
 	textWinBox                  *gtk.Box
 	textWinBtnDone              *gtk.Button
@@ -135,6 +136,7 @@ func gladeObjParser() {
 	mainObjects.replaceGrid = loadObject("replaceGrid").(*gtk.Grid)
 	mainObjects.scrolledWindowTreeView = loadObject("scrolledWindowTreeView").(*gtk.ScrolledWindow)
 	mainObjects.statusbar = loadObject("statusbar").(*gtk.Statusbar)
+	mainObjects.SwitchFileChooserButton = loadObject("SwitchFileChooserButton").(*gtk.Switch)
 	mainObjects.textWin = loadObject("textWin").(*gtk.Window)
 	mainObjects.textWin.SetTitle(mainOptions.TxtTextWin)                /*MANUAL*/
 	mainObjects.textWin.SetModal(false)                                 /*MANUAL*/

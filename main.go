@@ -1,9 +1,9 @@
 // main.go
 
-// Source file auto-generated on Sun, 14 Jul 2019 16:40:30 using Gotk3ObjHandler v1.3 ©2019 H.F.M
+// Source file auto-generated on Fri, 19 Jul 2019 03:46:10 using Gotk3ObjHandler v1.3 ©2019 H.F.M
 
 /*
-	SearchAndReplace v1.7.2 ©2018 H.F.M
+	SearchAndReplace v1.7.3 ©2018 H.F.M
 
 	This program comes with absolutely no warranty. See the The MIT License (MIT) for details:
 
@@ -97,26 +97,27 @@ func mainApplication() {
 	switch {
 	case len(os.Args) == 1:
 		scanFilesAndDisp()
-	default:
-		if len(os.Args) >= 2 {
-			if fileInfo, err = os.Stat(os.Args[1]); err == nil {
-				if fileInfo.IsDir() {
-					mainOptions.Directory = os.Args[1]
-					scanFilesAndDisp()
-				} else {
-					mainOptions.currentInFilesList = mainOptions.currentInFilesList[:0]
-					for _, file := range os.Args {
-						if _, err := os.Stat(os.Args[1]); err == nil {
-							mainOptions.currentInFilesList = append(mainOptions.currentInFilesList, file)
-						} else {
-							tmpErr += err.Error() + "\n"
-						}
-					}
-					err = getFilesSelection(mainOptions.currentInFilesList[1:])
-					if err != nil {
+	case len(os.Args) > 1:
+		if fileInfo, err = os.Stat(os.Args[1]); err == nil {
+			if fileInfo.IsDir() {
+				mainOptions.Directory = os.Args[1]
+				scanFilesAndDisp()
+			} else {
+				mainOptions.currentInFilesList = mainOptions.currentInFilesList[:0]
+				for _, file := range os.Args {
+					if _, err := os.Stat(os.Args[1]); err == nil {
+						mainOptions.currentInFilesList = append(mainOptions.currentInFilesList, file)
+					} else {
 						tmpErr += err.Error() + "\n"
 					}
 				}
+				mainOptions.currentInFilesList = mainOptions.currentInFilesList[1:]
+				err = getFilesSelection(mainOptions.currentInFilesList)
+				if err != nil {
+					tmpErr += err.Error() + "\n"
+				}
+				cmdLineArg = true
+				mainObjects.SwitchFileChooserButton.SetActive(!cmdLineArg)
 			}
 		}
 	}
