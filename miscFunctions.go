@@ -84,7 +84,7 @@ func FindDir(dir string, masks []string, returnedStrSlice *[][]string, scanSub, 
 		// Recursive play if it's a directory
 		if file.IsDir() && scanSub {
 			tmpFileList := new([][]string)
-			err = FindDir(fName, masks, tmpFileList, scanSub, true, followSymlinkDir)
+			err = FindDir(fName, masks, tmpFileList, scanSub, showDir, followSymlinkDir)
 			if err != nil {
 				return errors.New(fmt.Sprintf("%s\nFilename: %s\n", err.Error(), fName))
 			}
@@ -117,10 +117,25 @@ func FindDir(dir string, masks []string, returnedStrSlice *[][]string, scanSub, 
 	return nil
 }
 
+// BuildExtSlice
+func BuildExtSlice() {
+	var extSep = ";"
+	mainOptions.ExtMask = []string{}
+
+	tmpSliceStrings := strings.Split(getEntryText(mainObjects.entryExtMask), extSep)
+	for _, str := range tmpSliceStrings {
+		str = strings.TrimSpace(str)
+		if len(str) != 0 {
+			mainOptions.ExtMask = append(mainOptions.ExtMask, str)
+		}
+	}
+	mainObjects.entryExtMask.SetText(strings.Join(mainOptions.ExtMask, extSep+" "))
+}
+
 // scanFilesAndDisp:
 func scanFilesAndDisp() {
 	var err error
-
+	mainOptions.UpdateOptions()
 	if !cmdLineArg {
 		// Check if directory exist ...
 		if _, err = os.Stat(mainOptions.Directory); os.IsNotExist(err) {

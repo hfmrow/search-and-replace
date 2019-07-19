@@ -61,17 +61,7 @@ func entryExtMaskFocusOut() bool {
 		Check(err)
 	}
 
-	var extSep = ";"
-	mainOptions.ExtMask = []string{}
-
-	tmpSliceStrings := strings.Split(getEntryText(mainObjects.entryExtMask), extSep)
-	for _, str := range tmpSliceStrings {
-		str = strings.TrimSpace(str)
-		if len(str) != 0 {
-			mainOptions.ExtMask = append(mainOptions.ExtMask, str)
-		}
-	}
-	mainObjects.entryExtMask.SetText(strings.Join(mainOptions.ExtMask, extSep+" "))
+	BuildExtSlice()
 
 	// Check if directory exist ...
 	if _, err = os.Stat(mainOptions.Directory); os.IsNotExist(err) && !cmdLineArg {

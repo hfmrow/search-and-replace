@@ -89,6 +89,7 @@ func (opt *MainOpt) Init() {
 	opt.Directory = ""
 	opt.FollowSymlinkDir = false
 	opt.Mask = "*"
+	opt.ExtMask = []string{"*"}
 	opt.ScanSubDir = false
 	opt.TreeViewColumns = [][]string{{"Name", "text"}, {"Size", "text"}, {"Date", "text"}, {"Path", "text"}}
 	opt.TreeStoreColumns = [][]string{{"File", "markup"}}
