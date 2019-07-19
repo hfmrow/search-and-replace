@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<!-- Generated with glade 3.19.0 
+<!-- Generated with glade 3.22.1 
 
 The MIT License (MIT)
 
@@ -40,6 +40,9 @@ Author: H.F.M 2018
     <property name="modal">True</property>
     <property name="window_position">center</property>
     <property name="skip_taskbar_hint">True</property>
+    <child>
+      <placeholder/>
+    </child>
     <child>
       <object class="GtkGrid" id="findWinGrid">
         <property name="visible">True</property>
@@ -174,6 +177,9 @@ Author: H.F.M 2018
   <object class="GtkWindow" id="mainWin">
     <property name="can_focus">False</property>
     <signal name="delete-event" handler="mainWinOnExit" swapped="no"/>
+    <child>
+      <placeholder/>
+    </child>
     <child>
       <object class="GtkBox" id="mainBox">
         <property name="visible">True</property>
@@ -317,22 +323,6 @@ Author: H.F.M 2018
                   </packing>
                 </child>
                 <child>
-                  <object class="GtkCheckButton" id="chkSubDir">
-                    <property name="label" translatable="yes">Scan sub directories</property>
-                    <property name="visible">True</property>
-                    <property name="can_focus">True</property>
-                    <property name="receives_default">False</property>
-                    <property name="margin_top">2</property>
-                    <property name="margin_bottom">2</property>
-                    <property name="xalign">0</property>
-                    <property name="draw_indicator">True</property>
-                  </object>
-                  <packing>
-                    <property name="left_attach">2</property>
-                    <property name="top_attach">3</property>
-                  </packing>
-                </child>
-                <child>
                   <object class="GtkCheckButton" id="chkFollowSymlinkDir">
                     <property name="label" translatable="yes">Follow symlink directory</property>
                     <property name="visible">True</property>
@@ -458,6 +448,48 @@ Author: H.F.M 2018
                   <packing>
                     <property name="left_attach">2</property>
                     <property name="top_attach">1</property>
+                  </packing>
+                </child>
+                <child>
+                  <object class="GtkGrid">
+                    <property name="visible">True</property>
+                    <property name="can_focus">False</property>
+                    <property name="row_homogeneous">True</property>
+                    <child>
+                      <object class="GtkCheckButton" id="chkSubDir">
+                        <property name="label" translatable="yes">Scan sub directories</property>
+                        <property name="visible">True</property>
+                        <property name="can_focus">True</property>
+                        <property name="receives_default">False</property>
+                        <property name="margin_top">2</property>
+                        <property name="margin_bottom">2</property>
+                        <property name="hexpand">True</property>
+                        <property name="xalign">0</property>
+                        <property name="draw_indicator">True</property>
+                      </object>
+                      <packing>
+                        <property name="left_attach">0</property>
+                        <property name="top_attach">0</property>
+                      </packing>
+                    </child>
+                    <child>
+                      <object class="GtkSwitch" id="SwitchFileChooserButton">
+                        <property name="visible">True</property>
+                        <property name="can_focus">True</property>
+                        <property name="margin_top">2</property>
+                        <property name="margin_bottom">2</property>
+                        <property name="hexpand">True</property>
+                        <property name="active">True</property>
+                      </object>
+                      <packing>
+                        <property name="left_attach">1</property>
+                        <property name="top_attach">0</property>
+                      </packing>
+                    </child>
+                  </object>
+                  <packing>
+                    <property name="left_attach">2</property>
+                    <property name="top_attach">3</property>
                   </packing>
                 </child>
               </object>
@@ -622,6 +654,9 @@ Author: H.F.M 2018
     <property name="modal">True</property>
     <property name="window_position">center</property>
     <property name="skip_taskbar_hint">True</property>
+    <child>
+      <placeholder/>
+    </child>
     <child>
       <object class="GtkBox" id="textWinBox">
         <property name="visible">True</property>
