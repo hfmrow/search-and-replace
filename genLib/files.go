@@ -302,7 +302,7 @@ func ReadFile(filename string) (data []byte, err error) {
 	return ioutil.ReadFile(filename)
 }
 
-// writeFile:
+// writeFile: with file backup capability
 func WriteFile(filename string, datas []byte, doBackup ...bool) (err error) {
 	if len(doBackup) != 0 {
 		if doBackup[0] {

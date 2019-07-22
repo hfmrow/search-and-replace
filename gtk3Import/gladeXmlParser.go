@@ -43,11 +43,13 @@ type GtkInterface struct {
 	Objects       []GtkObject
 	Comments      []string
 	// private
-	objectsLoaded bool
-	idxLine       int
-	prevIdxLine   int
-	xmlSource     []string
-	getValuesReg  *regexp.Regexp
+	objectsLoaded   bool
+	skipNoId        bool
+	skipLoweAtFirst bool
+	idxLine         int
+	prevIdxLine     int
+	xmlSource       []string
+	getValuesReg    *regexp.Regexp
 }
 
 type GtkObject struct {
@@ -71,12 +73,14 @@ type requires struct {
 
 // parseGladeXmlFile: Create new parsed glade structure containing
 // all objects with property, signals, packing informations.
-func GladeXmlParserNew(filename string) (out *GtkInterface, err error) {
+func GladeXmlParserNew(filename string, skipNoId, skipLoweAtFirst bool) (out *GtkInterface, err error) {
 	iFace := new(GtkInterface)
 	iFace.GladeFilename = filename
 	iFace.GXPVersion = fmt.Sprintf("%s %s", Name, Vers)
-	//	iFace.Objects = make([]GtkObject, 0)
 	iFace.getValuesReg = regexp.MustCompile(`"(.*?)"|>(.*?)<`)
+	iFace.skipNoId = skipNoId
+	iFace.skipLoweAtFirst = skipLoweAtFirst
+
 	err = iFace.readGladeXmlFile()
 	if err == nil {
 		iFace.parseGladeXmlFile()
@@ -111,35 +115,39 @@ func (iFace *GtkInterface) readGladeXmlFile() (err error) {
 
 // parseGladeXmlFile:
 func (iFace *GtkInterface) parseGladeXmlFile() {
-	var tmpId, line string
+	var line, tmpID string
 	var values []string
-	// var tmpGtkObj GtkObject
 	for iFace.idxLine = 0; iFace.idxLine < len(iFace.xmlSource); iFace.idxLine++ {
-		tmpId = ""
 		values, line = iFace.getValues()
-		if len(values) > 1 {
-			tmpId = values[1]
+		if len(values) > 1 { // Check for ID
+			tmpID = values[1]
+		} else {
+			tmpID = ""
 		}
-		switch {
-		case strings.Contains(line, `<requires lib="`): // requires
-			iFace.Requires.Lib = values[0]
-			iFace.Requires.Version = tmpId
+		if !(iFace.skipNoId && len(tmpID) == 0) { // Exclude no name objects if requires
+			if !(iFace.skipLoweAtFirst && LowercaseAtFirst(tmpID)) { // Exclude lower at first char objects if requires
+				switch {
+				case strings.Contains(line, `<requires lib="`): // requires
+					iFace.Requires.Lib = values[0]
+					iFace.Requires.Version = tmpID
+				case strings.Contains(line, `<object class="`): // object
+					iFace.idxLine++
+					var tmpGtkObj GtkObject
+					tmpGtkObj = iFace.readObject(GtkObject{
+						Class:    values[0],
+						Id:       tmpID,
+						Property: []GtkProps{},
+						Signal:   []GtkProps{},
+						Packing:  []GtkProps{}})
+					iFace.Objects = append(iFace.Objects, tmpGtkObj)
+				}
+			}
 
-		case strings.Contains(line, `<object class="`): // object
-			iFace.idxLine++
-			iFace.Objects = append(iFace.Objects, iFace.readObject(GtkObject{
-				Class:    values[0],
-				Id:       tmpId,
-				Property: []GtkProps{},
-				Signal:   []GtkProps{},
-				Packing:  []GtkProps{}}))
-
-			/* Is a case where DLV debugger can not recover the value of some slice structures,here: "Property", "Signal", "Packing"
-			look like empty, it is really boring. But values still available in code ... don't understand why */
-			/* test out */
+			/* DEBUG purpose: In a case where DLV debugger can not recover the value of some slice structures,here:
+			"Property", "Signal", "Packing" look like empty, it is really boring. But values still available in code ...*/
+			// var tmpGtkObj GtkObject
 			// fmt.Printf("%#v\n", iFace.Objects[len(iFace.Objects)-1].Property)
 			// fmt.Printf("%#v\n", iFace.Objects[len(iFace.Objects)-1].Packing)
-
 			// theObject := iFace.readObject(GtkObject{Class: values[0], Id: values[1], Property: []GtkProps{}, Signal: []GtkProps{}, Packing: []GtkProps{}})
 			// tmpGtkObj.Class = theObject.Class
 			// tmpGtkObj.Id = theObject.Id
@@ -150,6 +158,7 @@ func (iFace *GtkInterface) parseGladeXmlFile() {
 			// copy(tmpGtkObj.Signal, theObject.Signal)
 			// copy(tmpGtkObj.Packing, theObject.Packing)
 			// iFace.Objects = append(iFace.Objects, tmpGtkObj)
+
 		}
 	}
 }
@@ -278,7 +287,7 @@ func (iFace *GtkInterface) sanitizeXml(inBytes []byte) (newString []string, err 
 			}
 		}
 	}
-	// // Search or errors in glade xml file
+	// // Search for errors in glade xml file
 	// var detectValidGladeXmlFile = func() error {
 	// 	var newObjectCount int
 	// 	enclosures := [][]string{

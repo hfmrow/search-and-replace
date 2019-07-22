@@ -26,6 +26,7 @@ func signalsPropHandler() {
 	mainObjects.chkWildcard.Connect("toggled", chkWildcardToggled)                 /*MANUAL*/
 	mainObjects.chkWoleWord.Connect("toggled", chkWoleWordToggled)                 /*MANUAL*/
 	mainObjects.entryExtMask.Connect("focus-out-event", entryExtMaskFocusOut)      /*MANUAL*/
+	mainObjects.entryExtMask.Connect("activate", entryExtMaskEnterKeyPressed)      /*MANUAL*/
 	mainObjects.fileChooserBtn.Connect("selection-changed", fileChooserBtnClicked) /*MANUAL*/
 	mainObjects.findWinCancelBtn.Connect("clicked", findWinCancelBtnClicked)       /*MANUAL*/
 	mainObjects.findWinChkBackUp.Connect("toggled", findWinChkBackUpToggled)       /*MANUAL*/

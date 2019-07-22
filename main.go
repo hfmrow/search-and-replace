@@ -96,12 +96,16 @@ func mainApplication() {
 	/* Retreive command line arguments */
 	switch {
 	case len(os.Args) == 1:
-		scanFilesAndDisp()
+		entryExtMaskFocusOut()
+		// scanFilesAndDisp()
 	case len(os.Args) > 1:
 		if fileInfo, err = os.Stat(os.Args[1]); err == nil {
 			if fileInfo.IsDir() {
 				mainOptions.Directory = os.Args[1]
-				scanFilesAndDisp()
+				mainObjects.fileChooserBtn.SetCurrentFolder(os.Args[1])
+				mainObjects.SwitchFileChooserButton.SetActive(!cmdLineArg)
+				entryExtMaskFocusOut()
+				// scanFilesAndDisp()
 			} else {
 				mainOptions.currentInFilesList = mainOptions.currentInFilesList[:0]
 				for _, file := range os.Args {

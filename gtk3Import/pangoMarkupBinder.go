@@ -76,16 +76,23 @@ var markupType = map[string][]string{
 }
 
 type PangoColor struct {
-	Black          string
-	Brown          string
-	White          string
-	Red            string
-	Green          string
-	Blue           string
-	Magenta        string
-	Purple         string
-	Turquoise      string
-	Violet         string
+	Black     string
+	Brown     string
+	White     string
+	Red       string
+	Green     string
+	Blue      string
+	Cyan      string
+	Magenta   string
+	Purple    string
+	Turquoise string
+	Violet    string
+	Darkred   string
+	Darkgreen string
+	Darkblue  string
+	Darkgray  string
+
+	Darkcyan       string
 	Lightblue      string
 	Lightgray      string
 	Lightgreen     string
@@ -102,10 +109,16 @@ func (pc *PangoColor) Init() {
 	pc.Red = "#FF2222"
 	pc.Green = "#22BB22"
 	pc.Blue = "#0044FF"
+	pc.Cyan = "#14FFFA"
 	pc.Magenta = "#D72D6C"
 	pc.Purple = "#8B0037"
 	pc.Turquoise = "#009187"
 	pc.Violet = "#7F00FF"
+	pc.Darkred = "#300000"
+	pc.Darkgreen = "#003000"
+	pc.Darkblue = "#000030"
+	pc.Darkcyan = "#003333"
+	pc.Darkgray = "#303030"
 	pc.Lightturquoise = "#80FFE7"
 	pc.Lightblue = "#ADD8E6"
 	pc.Lightgray = "#E4DDDD"
