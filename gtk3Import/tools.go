@@ -15,6 +15,22 @@ import (
 	"github.com/gotk3/gotk3/gtk"
 )
 
+// Fill / Clean comboBoxText
+func ComboBoxTextFill(cbxEntry *gtk.ComboBoxText, entries []string, removAll ...bool) {
+	if len(removAll) == 0 {
+		for _, word := range entries {
+			cbxEntry.PrependText(word)
+		}
+	} else if removAll[0] {
+		cbxEntry.RemoveAll()
+	}
+}
+
+// Get text from gtk.comboBoxTextEntry object
+func ComboBoxTextGetEntry(cbxEntry *gtk.ComboBoxText) string {
+	return cbxEntry.GetActiveText()
+}
+
 // SpinbuttonSetValues: Configure spin button
 func SpinbuttonSetValues(sb *gtk.SpinButton, min, max, value int, step ...int) (err error) {
 	incStep := 1
@@ -82,4 +98,13 @@ func TruncateString(inString, prefix string, max, option int) string {
 		}
 	}
 	return inString
+}
+
+// LowercaseAtFirst: true if 1st char is lowercase (Exist into GenLib too !)
+func LowercaseAtFirst(inString string) bool {
+	if len(inString) != 0 {
+		charType, _ := regexp.Compile("[[:lower:]]")
+		return charType.MatchString(inString[:1])
+	}
+	return true
 }

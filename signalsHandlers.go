@@ -38,6 +38,8 @@ func treeviewFilesReceived(tw *gtk.TreeView, context *gdk.DragContext, x, y int,
 	if err != nil {
 		gi.DlgMessage(mainObjects.mainWin, "error", mainOptions.TxtAlert, err.Error(), "", "Ok")
 	}
+	cmdLineArg = true
+	mainObjects.SwitchFileChooserButton.SetActive(!cmdLineArg)
 }
 
 // Signal handler changed ... FocusOut
@@ -48,6 +50,11 @@ func entrySearchFocusOut(e *gtk.Entry) {
 // Signal handler changed ... FocusOut
 func entryReplaceFocusOut(e *gtk.Entry) {
 	genericEntryFocusOut(e)
+}
+
+// entryExtMaskEnterKeyPressed: Update data and disp on enter pressed
+func entryExtMaskEnterKeyPressed() {
+	entryExtMaskFocusOut()
 }
 
 // Signal handler changed ... FocusOut - to trim entry
@@ -67,7 +74,7 @@ func entryExtMaskFocusOut() bool {
 	if _, err = os.Stat(mainOptions.Directory); os.IsNotExist(err) && !cmdLineArg {
 		gi.DlgMessage(mainObjects.mainWin, "error", mainOptions.TxtAlert, "\n"+sts["dir-rem"]+"\n\n"+err.Error(), "", "Ok")
 		// mainOptions.Directory = filepath.Dir(os.Args[0])
-		scanFilesAndDisp()
+
 	} else {
 		err = getFilesSelection(mainOptions.currentInFilesList)
 		if err != nil {
@@ -76,6 +83,7 @@ func entryExtMaskFocusOut() bool {
 			go dispError()
 		}
 	}
+	scanFilesAndDisp()
 	return false // GDK_EVENT_PROPAGATE signal
 }
 
@@ -320,7 +328,8 @@ func btnReplaceInClipboardClicked() {
 func fileChooserBtnClicked() {
 	mainOptions.Directory = mainObjects.fileChooserBtn.GetFilename()
 	cmdLineArg = false
-	scanFilesAndDisp()
+	entryExtMaskFocusOut()
+	// scanFilesAndDisp()
 }
 
 // Signal handler clicked ...
