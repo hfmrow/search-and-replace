@@ -4,42 +4,250 @@ package main
 
 import (
 	"fmt"
-	"net/url"
+	"io/ioutil"
+	"log"
 	"os"
+	"regexp"
+	"strconv"
 	"strings"
 
-	"github.com/gotk3/gotk3/gdk"
 	"github.com/gotk3/gotk3/glib"
 	"github.com/gotk3/gotk3/gtk"
-	g "github.com/hfmrow/sAndReplace/genLib"
-	gi "github.com/hfmrow/sAndReplace/gtk3Import"
+
+	glfsft "github.com/hfmrow/genLib/files/fileText"
+	gltsbh "github.com/hfmrow/genLib/tools/bench"
+
+	gidg "github.com/hfmrow/gtk3Import/dialog"
 )
 
-// SwitchFileChooserButtonStateSet:
-func SwitchFileChooserButtonStateSet() {
-	mainObjects.fileChooserBtn.SetSensitive(mainObjects.SwitchFileChooserButton.GetActive())
-}
-
-// treeviewFilesReceived:
-func treeviewFilesReceived(tw *gtk.TreeView, context *gdk.DragContext, x, y int, data_ptr uintptr, info, time uint) {
+// Signal handler dblClick ... doudble click on found result to display text preview
+func findTreeViewDblClick(tw *gtk.TreeView) {
+	var parentContent string
+	var text []byte
+	var line int
 	var err error
-	mainOptions.currentInFilesList = mainOptions.currentInFilesList[:0]
-	// Convert pointer to datas
-	data := gtk.GetData(data_ptr)
-	list := strings.Split(string(data), g.GetTextEOL(data))
-	for _, file := range list {
-		if len(file) != 0 {
-			if u, err := url.PathUnescape(file); err == nil {
-				mainOptions.currentInFilesList = append(mainOptions.currentInFilesList, strings.TrimPrefix(u, "file://"))
+	var value *glib.Value
+	var selContent string
+	var iters []*gtk.TreeIter
+	var iter *gtk.TreeIter
+	var path *gtk.TreePath
+
+	if iters, err = tvsTree.GetSelectedIters(); err == nil {
+		if value, err = tvsTree.TreeStore.GetValue(iters[0], 0); err == nil { // Field 0: content
+			selContent, err = value.GetString()
+			if path, err = tvsTree.TreeStore.GetPath(iters[0]); err == nil {
+
+				var regLine = regexp.MustCompile(`[><]`)
+				currentLine := regLine.Split(selContent, -1)
+
+				// Retrieve line number if xist ...
+				if len(currentLine) > 1 {
+					line, _ = strconv.Atoi(strings.TrimSpace(currentLine[2]))
+				}
+
+				// Get the parent node of the current node or itself if it already is
+				path.Up()
+				if len(path.String()) == 0 {
+					parentContent = selContent
+				} else {
+					iter, _ = tvsTree.TreeStore.GetIter(path)
+					value, _ = tvsTree.TreeStore.GetValue(iter, 0)
+					parentContent, _ = value.GetString()
+				}
+
+				if text, err = ioutil.ReadFile(parentContent); err == nil {
+					showTextWin(string(text), truncatePath(parentContent,
+						mainOptions.FilePathLength), line)
+				}
 			}
 		}
 	}
-	err = getFilesSelection(mainOptions.currentInFilesList)
+
 	if err != nil {
-		gi.DlgMessage(mainObjects.mainWin, "error", mainOptions.TxtAlert, err.Error(), "", "Ok")
+		gidg.DialogMessage(mainObjects.mainWin, "error", sts["alert"], "\n\n"+err.Error(), "", "Ok")
 	}
-	cmdLineArg = true
-	mainObjects.SwitchFileChooserButton.SetActive(!cmdLineArg)
+}
+
+// Signal handler dblClick on main listView ...
+func listViewFilesRowActivated(tw *gtk.TreeView) {
+	var err error
+	var value *glib.Value
+	var filename string
+	var iters []*gtk.TreeIter
+	var isTxt, gtLimit bool
+
+	if iters, err = tvsList.GetSelectedIters(); err == nil {
+		if value, err = tvsList.ListStore.GetValue(iters[0], 3); err == nil { // Field 3: get full path
+			filename, err = value.GetString() // Get selected file path
+		}
+		// Check for text file
+		if isTxt, gtLimit, err = glfsft.IsTextFileSimple(filename,
+			mainOptions.FileSizeLimit,
+			mainOptions.LineEndThreshold,
+			mainOptions.OverCharsThreshold); err == nil {
+			if isTxt && gtLimit {
+				textWinTextToShowBytes, err = ioutil.ReadFile(filename)
+				// mainObjects.textWin.SetModal(true)
+				showTextWin(string(textWinTextToShowBytes), truncatePath(filename, mainOptions.FilePathLength), 0)
+			}
+		}
+	}
+	if err != nil {
+		gidg.DialogMessage(mainObjects.mainWin, "error", sts["alert"], "\n\n"+err.Error(), "", "Ok")
+	}
+}
+
+// Signal handler clicked ...
+func btnFindClicked() {
+	// TODO /* BENCH Search Time */
+	bench := new(gltsbh.Bench)
+	bench.Lapse("Start")
+	/* BENCH */
+
+	var err error
+	var found bool
+	var occurrences, countFiles int
+	removeEmptyResult := true
+	entrySearchText := getEntryText(mainObjects.entrySearch)
+	entryReplaceText := getEntryText(mainObjects.entryReplace)
+
+	if len(entrySearchText) != 0 {
+
+		mainOptions.mainFound, occurrences, err = Find(entrySearchText,
+			entryReplaceText, removeEmptyResult)
+		if err != nil {
+			gidg.DialogMessage(mainObjects.mainWin,
+				"warning", sts["alert"], "\n\n"+err.Error(), "", "Ok")
+		} else { // Something was found ?
+			if occurrences > 0 {
+				countFiles = showResults(&mainOptions.mainFound)
+
+				findWinTitle.Update([]string{fmt.Sprintf("%s %d %s %d %s", sts["totalOccurrences"], occurrences, sts["in"], countFiles, sts["file"])})
+
+				x, y := mainObjects.mainWin.GetPosition()
+				mainObjects.findWin.SetModal(true)
+				mainObjects.findWin.Move(x+mainOptions.CascadeDepth, y+mainOptions.CascadeDepth)
+				mainObjects.findWin.Resize(mainObjects.mainWin.GetSize())
+				mainObjects.findWin.Show()
+				found = true
+
+				bench.Stop()
+				searchTime = fmt.Sprintf("%dm %ds %dms", bench.NumTime[0].Min, bench.NumTime[0].Sec, bench.NumTime[0].Ms)
+
+			} // Nope !
+			if !found && !applyChanges {
+				gidg.DialogMessage(mainObjects.mainWin,
+					"warning", sts["missing"],
+					"\n\n"+sts["notFound"], "", "Ok")
+			}
+		}
+	} else {
+		gidg.DialogMessage(mainObjects.mainWin,
+			"warning", sts["missing"],
+			"\n\n"+sts["nothingToSearch"], "", "Ok")
+	}
+	updateStatusBar()
+	searchTime = ""
+}
+
+// Signal handler toggled ...
+func textWinChkShowModificationsToggled() {
+	var occurrences int
+	var err error
+	var buff *gtk.TextBuffer
+	var txt string
+
+	if buff, err = mainObjects.textWinTextview.GetBuffer(); err == nil {
+		if mainObjects.textWinChkShowModifications.GetActive() {
+			entrySearchText := getEntryText(mainObjects.entrySearch)
+			if len(entrySearchText) == 0 {
+				gidg.DialogMessage(mainObjects.mainWin,
+					"warning", sts["missing"],
+					"\n\n"+sts["nothingToSearch"], "", "Ok")
+				mainObjects.textWinChkShowModifications.SetActive(false)
+				return // No action, back to previous state
+			} else {
+				if txt, err = buff.GetText(buff.GetStartIter(), buff.GetEndIter(), true); err == nil {
+					textWinTextToShowBytes = []byte(txt)
+					var outText []byte
+					if err = onTheFlyReplace(textWinTextToShowBytes, &outText, entrySearchText); err == nil {
+						buff.SetText(string(outText))
+					}
+				}
+			}
+		} else {
+			mark := buff.GetInsert()
+			iter := buff.GetIterAtMark(mark)
+
+			if occurrences, err = highlightText(buff, string(textWinTextToShowBytes), iter.GetLine()); err == nil {
+				textWinTitle.Update([]string{fmt.Sprintf("%s %d", sts["totalOccurrences"], occurrences)})
+			}
+		}
+	}
+	if err != nil {
+		gidg.DialogMessage(mainObjects.mainWin, "warning", sts["alert"], "\n\n"+err.Error(), "", "Ok")
+		mainObjects.textWinChkShowModifications.SetActive(false)
+	}
+}
+
+// fileChooserBtnSelectionChanged
+func fileChooserBtnSelectionChanged(fc *gtk.FileChooserButton) {
+	// fmt.Println(mainObjects.fileChooserBtn.GetFilename())
+	if mainObjects.switchFileChooserButton.GetActive() {
+		filename := mainObjects.fileChooserBtn.GetFilename()
+		if _, err := os.Stat(filename); err == nil {
+			currentInFilesList = append(currentInFilesList, filename)
+			updateTreeViewFilesDisplay()
+		}
+	}
+}
+
+// findWinChkDispForbFilesToggled
+func findWinChkDispForbFilesToggled(chk *gtk.CheckButton) {
+	if mainObjects.findWin.GetVisible() {
+		showResults(&mainOptions.mainFound)
+	}
+}
+
+// btnScanClicked:
+func btnScanClicked() {
+	filename := mainObjects.fileChooserBtn.GetFilename()
+	if _, err := os.Stat(filename); err == nil {
+		currentInFilesList = currentInFilesList[:0]
+		currentInFilesList = append(currentInFilesList, filename)
+	}
+	updateTreeViewFilesDisplay()
+}
+
+// spinButtonDepthChangeValue:
+func spinButtonDepthValueChanged() {
+	updateTreeViewFilesDisplay()
+}
+
+// Signal handler changed ... FocusOut - to trim entry
+func entryExtMaskFocusOut() bool {
+	updateTreeViewFilesDisplay()
+	return false // GDK_EVENT_PROPAGATE signal
+}
+
+// switchFileChooserButtonStateSet:
+func switchFileChooserButtonStateSet() bool {
+	// mainObjects.fileChooserBtn.SetSensitive(mainObjects.switchFileChooserButton.GetActive())
+	// mainObjects.btnScan.SetSensitive(mainObjects.switchFileChooserButton.GetActive())
+	// return fileChooserDoUpdt
+	return false
+}
+
+// switchFileChooserButtonEventAfter
+func switchFileChooserButtonEventAfter() {
+	// if !fromDnD {
+	// 	mainObjects.switchFileChooserButton.SetActive(true)
+	// }
+}
+
+// chkFollowSymlinkDirToggled:
+func chkFollowSymlinkDirToggled() {
+	updateTreeViewFilesDisplay()
 }
 
 // Signal handler changed ... FocusOut
@@ -53,109 +261,19 @@ func entryReplaceFocusOut(e *gtk.Entry) {
 }
 
 // entryExtMaskEnterKeyPressed: Update data and disp on enter pressed
-func entryExtMaskEnterKeyPressed() {
-	entryExtMaskFocusOut()
-}
-
-// Signal handler changed ... FocusOut - to trim entry
-func entryExtMaskFocusOut() bool {
-
-	var dispError = func() {
-		// idle run to permit gtk3 working right during goroutine
-		_, err := glib.IdleAdd(func() {
-			gi.DlgMessage(mainObjects.mainWin, "error", sts["file-rem"], err.Error(), "", "Ok")
-		})
-		Check(err)
-	}
-
-	BuildExtSlice()
-
-	// Check if directory exist ...
-	if _, err = os.Stat(mainOptions.Directory); os.IsNotExist(err) && !cmdLineArg {
-		gi.DlgMessage(mainObjects.mainWin, "error", mainOptions.TxtAlert, "\n"+sts["dir-rem"]+"\n\n"+err.Error(), "", "Ok")
-		// mainOptions.Directory = filepath.Dir(os.Args[0])
-
-	} else {
-		err = getFilesSelection(mainOptions.currentInFilesList)
-		if err != nil {
-			// Tips, calling goroutine allow to finish this function and
-			// returning the "GDK_EVENT_PROPAGATE" signal to avoid GDK error
-			go dispError()
-		}
-	}
-	scanFilesAndDisp()
-	return false // GDK_EVENT_PROPAGATE signal
-}
-
-// Signal handler changed ...
-func treeViewSelectionChanged(ts *gtk.TreeSelection) {
-	// Returns glib.List of gtk.TreePath pointers
-	rows := ts.GetSelectedRows(mainObjects.listStore)
-	items := make([]string, 0, rows.Length())
-
-	for l := rows; l != nil; l = l.Next() {
-		path := l.Data().(*gtk.TreePath)
-		iter, _ := mainObjects.listStore.GetIter(path)
-		value, _ := mainObjects.listStore.GetValue(iter, 3) // Field 3: get full path
-		str, _ := value.GetString()
-		items = append(items, str)
-	}
-	treeviewSelectedRows = items
-	filesSelected = len(treeviewSelectedRows)
-	updateStatusBar()
-}
-
-// Signal handler dblClick ... doudble click on ound result to display text preview
-func findTreeViewDblClick(tw *gtk.TreeView) {
-	ts, _ := tw.GetSelection()
-	rows := ts.GetSelectedRows(mainObjects.treeStore)
-	path := rows.Data().(*gtk.TreePath)
-	tIter, _ := mainObjects.treeStore.GetIter(path)
-	value, _ := mainObjects.treeStore.GetValue(tIter, 0)
-	str, _ := value.GetString()
-	if g.FileExist(str) {
-		text, err := g.ReadFile(str)
-		if err != nil {
-			gi.DlgMessage(mainObjects.mainWin, "error", mainOptions.TxtAlert, err.Error(), "", "Ok")
-		} else {
-			mainObjects.textWin.SetModal(true)
-			showTextWin(string(text))
-		}
-	}
-}
-
-// Signal handler dblClick ...
-func treeViewDblClick(tw *gtk.TreeView) {
-	var err error
-	ts, _ := tw.GetSelection()
-	rows := ts.GetSelectedRows(mainObjects.listStore)
-	path := rows.Data().(*gtk.TreePath)
-	iter, _ := mainObjects.listStore.GetIter(path)
-	value, _ := mainObjects.listStore.GetValue(iter, 3) // Field 3: get full path
-	// Get selected file path
-	filename, _ := value.GetString()
-
-	// Check for text file
-	isTxt, _ := g.IsTextFile(filename)
-	if strings.Contains(isTxt, "utf-") {
-		textWinTextToShowBytes, err = g.ReadFile(filename)
-		if err != nil {
-			gi.DlgMessage(mainObjects.mainWin, "error", mainOptions.TxtAlert, err.Error(), "", "Ok")
-		} else {
-			// Is there any words out there ...
-			if len(textWinTextToShowBytes) != 0 {
-				mainObjects.textWin.SetModal(false)
-				showTextWin(string(textWinTextToShowBytes))
-			}
-		}
-	}
+func entryExtMaskEnterKeyPressed(e *gtk.Entry) {
+	ExtSliceToOpt()
+	updateTreeViewFilesDisplay()
 }
 
 // Signal handler toggled ... (Wrap text)
 func textWinChkWrapToggled() {
 	if mainObjects.textWinChkWrap.GetActive() {
+		mainObjects.textWinScrolledwindowNumbers.SetVisible(false)
+		mainObjects.textWinTextview.SetProperty("left-margin", 6)
 		mainObjects.textWinTextview.SetWrapMode(gtk.WRAP_WORD)
 	} else {
+		mainObjects.textWinScrolledwindowNumbers.SetVisible(true)
 		mainObjects.textWinTextview.SetWrapMode(gtk.WRAP_NONE)
 	}
 }
@@ -218,106 +336,37 @@ func chkWildcardToggled() {
 	}
 }
 
-// Signal handler toggled ...
-func textWinChkShowModificationsToggled() {
-	buff, err := mainObjects.textWinTextview.GetBuffer()
-	if err != nil {
-		gi.DlgMessage(mainObjects.mainWin, "warning", mainOptions.TxtAlert,
-			"\n\n"+g.FormatText(err.Error(), 69, true), "", "Ok")
-		mainObjects.textWinChkShowModifications.SetActive(false)
-		return // No action, back to previous state
-	}
-	if mainObjects.textWinChkShowModifications.GetActive() {
-		entrySearchText := getEntryText(mainObjects.entrySearch1)
-		if len(entrySearchText) == 0 {
-			gi.DlgMessage(mainObjects.mainWin,
-				"warning", mainOptions.TxtSomethingMissing,
-				"\n\n"+mainOptions.TxtNothingToSearch, "", "Ok")
-			mainObjects.textWinChkShowModifications.SetActive(false)
-			return // No action, back to previous state
-		} else {
-
-			txt, _ := buff.GetText(buff.GetStartIter(), buff.GetEndIter(), false)
-			textWinTextToShowBytes = []byte(txt)
-
-			var outText []byte
-			err := onTheFlyReplace(textWinTextToShowBytes, &outText, entrySearchText)
-			if err != nil {
-				gi.DlgMessage(mainObjects.mainWin, "warning", mainOptions.TxtAlert,
-					"\n\n"+g.FormatText(err.Error(), 69, true), "", "Ok")
-				mainObjects.textWinChkShowModifications.SetActive(false)
-				return // No action, back to previous state
-			} else {
-				buff.SetText(string(outText))
-			}
-		}
-	} else {
-		buff.SetText(string(textWinTextToShowBytes))
-	}
-}
-
 // Signal handler clicked ...
 func findWinReplaceBtnClicked() {
 	applyChanges = true
 	btnFindClicked() // Do replace in files
 	applyChanges = false
 	genericHideWindow(mainObjects.findWin) // Hide find window
-	fileChooserBtnClicked()                // Reload files list
-}
-
-// Signal handler clicked ...
-func btnFindClicked() {
-	removeEmptyResult := true
-	entrySearchText := getEntryText(mainObjects.entrySearch1)
-	entryReplaceText := getEntryText(mainObjects.entryReplace1)
-
-	if len(entrySearchText) != 0 {
-		mainFound, err := Find(entrySearchText, entryReplaceText, removeEmptyResult)
-		if err != nil {
-			gi.DlgMessage(mainObjects.mainWin,
-				"warning", mainOptions.TxtAlert,
-				err.Error(), "", "Ok")
-		} else {
-			if len(mainFound) != 0 {
-				if !mainObjects.findWin.GetVisible() {
-					showResults(&mainFound)
-					mainObjects.findWin.Show()
-				}
-			} else {
-				gi.DlgMessage(mainObjects.mainWin,
-					"warning", mainOptions.TxtSomethingMissing,
-					"\n\n"+mainOptions.TxtNothingFound, "", "Ok")
-			}
-		}
-	} else {
-		gi.DlgMessage(mainObjects.mainWin,
-			"warning", mainOptions.TxtSomethingMissing,
-			"\n\n"+mainOptions.TxtNothingToSearch, "", "Ok")
-	}
+	// fileChooserBtnClicked()                // Reload files list
 }
 
 // Signal handler clicked ...
 func btnShowClipboardClicked() {
-	textWinTextToShowBytes = []byte(clipboardGet())
-	showTextWin(string(textWinTextToShowBytes))
+	if mainObjects.entrySearch.GetTextLength() != 0 {
+		textWinTextToShowBytes = []byte(clipboardGet())
+		showTextWin(string(textWinTextToShowBytes), sts["clpbrdPreview"], 0)
+	}
 }
 
 // Signal handler clicked ...
 func btnReplaceInClipboardClicked() {
-	entrySearchText, err := mainObjects.entrySearch1.GetText()
+	entrySearchText, err := mainObjects.entrySearch.GetText()
 	if err != nil {
-		gi.DlgMessage(mainObjects.mainWin, "error", mainOptions.TxtAlert,
-			"\n\n"+g.FormatText(err.Error(), 69, true), "", "Ok")
+		gidg.DialogMessage(mainObjects.mainWin, "error", sts["alert"], "\n\n"+err.Error(), "", "Ok")
 	} else if len(entrySearchText) == 0 {
-		gi.DlgMessage(mainObjects.mainWin,
-			"warning", mainOptions.TxtSomethingMissing,
-			"\n\n"+mainOptions.TxtNothingToSearch, "", "Ok")
+		gidg.DialogMessage(mainObjects.mainWin,
+			"warning", sts["missing"],
+			"\n\n"+sts["nothingToSearch"], "", "Ok")
 	} else {
 		outText := new([]byte)
 		err := onTheFlyReplace([]byte(clipboardGet()), outText, entrySearchText)
 		if err != nil {
-			gi.DlgMessage(mainObjects.mainWin, "warning", mainOptions.TxtAlert,
-				"\n\n"+g.FormatText(err.Error(), 69, true), "", "Ok")
+			gidg.DialogMessage(mainObjects.mainWin, "warning", sts["alert"], "\n\n"+err.Error(), "", "Ok")
 		} else {
 			clipboardSet(string(*outText))
 		}
@@ -325,16 +374,9 @@ func btnReplaceInClipboardClicked() {
 }
 
 // Signal handler clicked ...
-func fileChooserBtnClicked() {
-	mainOptions.Directory = mainObjects.fileChooserBtn.GetFilename()
-	cmdLineArg = false
-	entryExtMaskFocusOut()
-	// scanFilesAndDisp()
-}
-
-// Signal handler clicked ...
 func findWinCancelBtnClicked() {
 	genericHideWindow(mainObjects.findWin)
+	genericHideWindow(mainObjects.textWin)
 }
 
 // Signal handler clicked ...
@@ -346,6 +388,7 @@ func textWinBtnDoneClicked() {
 // Signal handler delete_event (hidding window)
 func genericHideWindow(w *gtk.Window) bool {
 	if w.GetVisible() {
+		w.SetModal(false)
 		w.Hide()
 	}
 	return true
@@ -353,12 +396,12 @@ func genericHideWindow(w *gtk.Window) bool {
 
 // Used with gtk.Entry objects.
 func genericEntryFocusOut(e *gtk.Entry) {
-	entry, err := e.GetText()
-	if err != nil {
-		gi.DlgMessage(mainObjects.mainWin, "error", mainOptions.TxtAlert, "\n\n"+g.FormatText(err.Error(), 69, true), "", "Ok")
+	if entry, err := e.GetText(); err == nil {
+		entry = strings.Replace(fmt.Sprintf("%q", entry), `"`, ``, -1)
+		e.SetText(entry)
+	} else {
+		gidg.DialogMessage(mainObjects.mainWin, "error", sts["alert"], "\n\n"+err.Error(), "", "Ok")
 	}
-	entry = strings.Replace(fmt.Sprintf("%q", entry), `"`, ``, -1)
-	e.SetText(entry)
 }
 
 // imgTop handler release signal (Display about box)
@@ -368,9 +411,9 @@ func imgTopReleaseEvent() {
 
 // Signal handler on Exit window ... Saving options before quit
 func mainWinOnExit() {
-	if !devMode {
-		mainOptions.UpdateOptions()
-		err = mainOptions.Write()
-		g.CheckE(err, "WriteJson", optFilename)
+	var err error
+	mainOptions.UpdateOptions()
+	if err = mainOptions.Write(); err != nil {
+		log.Fatalf("Error writing option file: %s\n", err.Error())
 	}
 }

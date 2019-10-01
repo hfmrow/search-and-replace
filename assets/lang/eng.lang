@@ -1,7 +1,7 @@
 {
 	"ProgInfos": {
 		"Name": "SearchAndReplace",
-		"Version": "v1.5",
+		"Version": "v1.7.4",
 		"Creat": "H.F.M",
 		"MainObjStructName": "mainObjects",
 		"GladeXmlFilename": "/media/syndicate/storage/Documents/dev/go/src/github.com/hfmrow/sAndReplace/assets/glade/main.glade",
@@ -12,7 +12,7 @@
 		"LangNameShrt": "eng",
 		"Author": "H.F.M",
 		"Date": "Mon, 11 Mar 2019 04:04:21",
-		"Updated": "Mon, 22 Jul 2019 19:06:14",
+		"Updated": "Wed, 02 Oct 2019 00:15:31",
 		"Contributors": [
 			""
 		]
@@ -23,15 +23,15 @@
 		"SkipEmptyName": true,
 		"DoBackup": true
 	},
-	"ObjectsCount": 33,
+	"ObjectsCount": 34,
 	"Objects": [
 		{
 			"Class": "GtkButton",
 			"Id": "btnFind",
-			"Label": "Find in files",
+			"Label": "Search in file(s)",
 			"LabelMarkup": false,
 			"LabelWrap": false,
-			"Tooltip": "Find in selected files.",
+			"Tooltip": "Search in selected file(s)",
 			"TooltipMarkup": false,
 			"Text": "",
 			"Uri": "",
@@ -53,8 +53,21 @@
 		},
 		{
 			"Class": "GtkButton",
+			"Id": "btnScan",
+			"Label": "Scan files",
+			"LabelMarkup": false,
+			"LabelWrap": false,
+			"Tooltip": "Scanning selected directory and display found files.\n\n\u003cb\u003eDisabled\u003c/b\u003e when files comes from \u003cb\u003edrag and drop\u003c/b\u003e\nor of the \u003cb\u003ecommand line\u003c/b\u003e arguments.",
+			"TooltipMarkup": true,
+			"Text": "",
+			"Uri": "",
+			"Comment": "",
+			"Idx": 2
+		},
+		{
+			"Class": "GtkButton",
 			"Id": "btnShowClipboard",
-			"Label": "View it",
+			"Label": "View clipboard",
 			"LabelMarkup": false,
 			"LabelWrap": false,
 			"Tooltip": "Display clipboard content.",
@@ -62,7 +75,7 @@
 			"Text": "",
 			"Uri": "",
 			"Comment": "",
-			"Idx": 2
+			"Idx": 3
 		},
 		{
 			"Class": "GtkCheckButton",
@@ -75,20 +88,20 @@
 			"Text": "",
 			"Uri": "",
 			"Comment": "",
-			"Idx": 3
+			"Idx": 4
 		},
 		{
 			"Class": "GtkCheckButton",
 			"Id": "chkCharacterClass",
-			"Label": "Posix character class  ",
+			"Label": "Posix character class",
 			"LabelMarkup": false,
 			"LabelWrap": false,
-			"Tooltip": "Use character classes to search.\ni.e: \"Ok!\"\nwill be transformed as:\n[[:upper:]][[:lower:]][[:punct:]]",
-			"TooltipMarkup": false,
+			"Tooltip": "Use character classes to search.\ni.e: \"\u003cspan foreground=\"#6D0000FF\"\u003e\u003cb\u003eOk!\u003c/b\u003e\u003c/span\u003e\"\nwill be transformed as:\n\u003cb\u003e[[:\u003cspan foreground=\"#6D0000FF\"\u003eupper\u003c/span\u003e:]][[:\u003cspan foreground=\"#6D0000FF\"\u003elower\u003c/span\u003e:]][[:\u003cspan foreground=\"#6D0000FF\"\u003epunct\u003c/span\u003e:]]\u003c/b\u003e\n\n\u003cspan foreground=\"#3465A4FF\"\u003eUse this function with caution, a poorly designed \u003cb\u003epattern\u003c/b\u003e\ncould result in a very long search if there are lot of files.\u003c/span\u003e",
+			"TooltipMarkup": true,
 			"Text": "",
 			"Uri": "",
 			"Comment": "",
-			"Idx": 4
+			"Idx": 5
 		},
 		{
 			"Class": "GtkCheckButton",
@@ -101,28 +114,15 @@
 			"Text": "",
 			"Uri": "",
 			"Comment": "",
-			"Idx": 5
-		},
-		{
-			"Class": "GtkCheckButton",
-			"Id": "chkFollowSymlinkDir",
-			"Label": "Follow symlink directory",
-			"LabelMarkup": false,
-			"LabelWrap": false,
-			"Tooltip": "Always follow the directory\neven if it is a symbolic link.",
-			"TooltipMarkup": false,
-			"Text": "",
-			"Uri": "",
-			"Comment": "",
 			"Idx": 6
 		},
 		{
 			"Class": "GtkCheckButton",
-			"Id": "chkRegex",
-			"Label": "Use regex",
+			"Id": "chkFollowSymlinkDir",
+			"Label": "Follow symlink dir.",
 			"LabelMarkup": false,
 			"LabelWrap": false,
-			"Tooltip": "Consider the search entry as\na regular expression.",
+			"Tooltip": "If directory is a symbolic link, follow it.",
 			"TooltipMarkup": false,
 			"Text": "",
 			"Uri": "",
@@ -131,11 +131,11 @@
 		},
 		{
 			"Class": "GtkCheckButton",
-			"Id": "chkSubDir",
-			"Label": "Scan sub directories",
+			"Id": "chkRegex",
+			"Label": "Regex",
 			"LabelMarkup": false,
 			"LabelWrap": false,
-			"Tooltip": "Allow subdirectory scanning.",
+			"Tooltip": "Consider the search entry as\na regular expression.",
 			"TooltipMarkup": false,
 			"Text": "",
 			"Uri": "",
@@ -145,10 +145,10 @@
 		{
 			"Class": "GtkCheckButton",
 			"Id": "chkUseEscapeChar",
-			"Label": "Use escape character",
+			"Label": "Escape character",
 			"LabelMarkup": false,
 			"LabelWrap": false,
-			"Tooltip": "When searching for expression,\nyou allow the use of escape characters\nlike \" \\ n \".",
+			"Tooltip": "When searching for expression,\nyou allow the use of escape characters\nlike \"\\n\" for line feed or \"\\t\" for tab ...",
 			"TooltipMarkup": false,
 			"Text": "",
 			"Uri": "",
@@ -196,11 +196,11 @@
 		},
 		{
 			"Class": "GtkEntry",
-			"Id": "entryReplace1",
+			"Id": "entryReplace",
 			"Label": "",
 			"LabelMarkup": false,
 			"LabelWrap": false,
-			"Tooltip": "The text entered in this control\nwill replace the found text.",
+			"Tooltip": "",
 			"TooltipMarkup": false,
 			"Text": "",
 			"Uri": "",
@@ -209,11 +209,11 @@
 		},
 		{
 			"Class": "GtkEntry",
-			"Id": "entrySearch1",
+			"Id": "entrySearch",
 			"Label": "",
 			"LabelMarkup": false,
 			"LabelWrap": false,
-			"Tooltip": "The text entered in this control\nwill be replaced once found.",
+			"Tooltip": "",
 			"TooltipMarkup": false,
 			"Text": "",
 			"Uri": "",
@@ -260,43 +260,17 @@
 			"Idx": 17
 		},
 		{
-			"Class": "GtkLabel",
-			"Id": "findWinLabel",
-			"Label": "",
+			"Class": "GtkCheckButton",
+			"Id": "findWinChkDispForbFiles",
+			"Label": "Display forbidden files",
 			"LabelMarkup": false,
 			"LabelWrap": false,
-			"Tooltip": "",
+			"Tooltip": "By this way you can show skipped files during search process.\nSome of these are \u003c 8 bytes or are binary type.",
 			"TooltipMarkup": false,
 			"Text": "",
 			"Uri": "",
-			"Comment": "This is a blank label.\nNot designed to be labeled.",
+			"Comment": "",
 			"Idx": 18
-		},
-		{
-			"Class": "GtkLabel",
-			"Id": "findWinLabel1",
-			"Label": "",
-			"LabelMarkup": false,
-			"LabelWrap": false,
-			"Tooltip": "",
-			"TooltipMarkup": false,
-			"Text": "",
-			"Uri": "",
-			"Comment": "This is a blank label.\nNot designed to be labeled.",
-			"Idx": 19
-		},
-		{
-			"Class": "GtkLabel",
-			"Id": "findWinLabel2",
-			"Label": "",
-			"LabelMarkup": false,
-			"LabelWrap": false,
-			"Tooltip": "",
-			"TooltipMarkup": false,
-			"Text": "",
-			"Uri": "",
-			"Comment": "This is a blank label.\nNot designed to be labeled.",
-			"Idx": 20
 		},
 		{
 			"Class": "GtkButton",
@@ -309,7 +283,7 @@
 			"Text": "",
 			"Uri": "",
 			"Comment": "",
-			"Idx": 21
+			"Idx": 19
 		},
 		{
 			"Class": "GtkTreeView",
@@ -317,12 +291,12 @@
 			"Label": "",
 			"LabelMarkup": false,
 			"LabelWrap": false,
-			"Tooltip": "",
+			"Tooltip": "Double click on filename to show it in preview window.",
 			"TooltipMarkup": false,
 			"Text": "",
 			"Uri": "",
 			"Comment": "",
-			"Idx": 22
+			"Idx": 20
 		},
 		{
 			"Class": "GtkImage",
@@ -335,25 +309,51 @@
 			"Text": "",
 			"Uri": "",
 			"Comment": "",
-			"Idx": 23
+			"Idx": 21
 		},
 		{
 			"Class": "GtkLabel",
 			"Id": "lblExtMask",
-			"Label": " Mask : ",
-			"LabelMarkup": false,
+			"Label": "\u003cb\u003e\u003cspan foreground=\"#204A87FF\"\u003eFile extension mask\u003c/span\u003e\u003c/b\u003e",
+			"LabelMarkup": true,
 			"LabelWrap": false,
 			"Tooltip": "",
 			"TooltipMarkup": false,
 			"Text": "",
 			"Uri": "",
 			"Comment": "No tooltip needed.",
-			"Idx": 24
+			"Idx": 22
 		},
 		{
 			"Class": "GtkLabel",
 			"Id": "lblReplace",
-			"Label": "Replace with",
+			"Label": "\u003cb\u003e\u003cspan foreground=\"#204A87FF\"\u003eReplace with\u003c/span\u003e\u003c/b\u003e",
+			"LabelMarkup": true,
+			"LabelWrap": false,
+			"Tooltip": "",
+			"TooltipMarkup": false,
+			"Text": "",
+			"Uri": "",
+			"Comment": "",
+			"Idx": 23
+		},
+		{
+			"Class": "GtkLabel",
+			"Id": "lblSearch",
+			"Label": "\u003cb\u003e\u003cspan foreground=\"#204A87FF\"\u003eSearch for\u003c/span\u003e\u003c/b\u003e",
+			"LabelMarkup": true,
+			"LabelWrap": false,
+			"Tooltip": "",
+			"TooltipMarkup": false,
+			"Text": "",
+			"Uri": "",
+			"Comment": "",
+			"Idx": 24
+		},
+		{
+			"Class": "GtkTreeView",
+			"Id": "listViewFiles",
+			"Label": "",
 			"LabelMarkup": false,
 			"LabelWrap": false,
 			"Tooltip": "",
@@ -364,9 +364,9 @@
 			"Idx": 25
 		},
 		{
-			"Class": "GtkLabel",
-			"Id": "lblSearch",
-			"Label": "Search for",
+			"Class": "GtkButton",
+			"Id": "mainWinBtnClose",
+			"Label": "Close",
 			"LabelMarkup": false,
 			"LabelWrap": false,
 			"Tooltip": "",
@@ -377,17 +377,30 @@
 			"Idx": 26
 		},
 		{
-			"Class": "GtkSwitch",
-			"Id": "SwitchFileChooserButton",
+			"Class": "GtkSpinButton",
+			"Id": "spinButtonDepth",
 			"Label": "",
 			"LabelMarkup": false,
 			"LabelWrap": false,
-			"Tooltip": "Enable/Disable the directory selection button.\n\nWhen files are passed by argument, the directory\nselection button is disabled.",
-			"TooltipMarkup": false,
+			"Tooltip": "Choose the depth for sub-directory scanning.\n\n\u003cb\u003e\u003cspan foreground=\"#5C3566FF\"\u003e0\u003c/span\u003e\u003c/b\u003e mean \u003cb\u003edon't scan sub directories\u003c/b\u003e.\n\u003cb\u003e\u003cspan foreground=\"#5C3566FF\"\u003e-1\u003c/span\u003e\u003c/b\u003e mean \u003cb\u003eno restriction\u003c/b\u003e.",
+			"TooltipMarkup": true,
 			"Text": "",
 			"Uri": "",
 			"Comment": "",
 			"Idx": 27
+		},
+		{
+			"Class": "GtkSwitch",
+			"Id": "switchFileChooserButton",
+			"Label": "",
+			"LabelMarkup": false,
+			"LabelWrap": false,
+			"Tooltip": "Switch \u003cb\u003e\u003cspan foreground=\"#3465A4FF\"\u003e\u003cspan background=\"#EDD400FF\"\u003eon\u003c/span\u003e\u003c/span\u003e\u003c/b\u003e to allow the \u003cspan foreground=\"#5C3566FF\"\u003eSelect Directories button\u003c/span\u003e to scan\nthe directory automatically after choosing a folder.",
+			"TooltipMarkup": true,
+			"Text": "",
+			"Uri": "",
+			"Comment": "",
+			"Idx": 28
 		},
 		{
 			"Class": "GtkButton",
@@ -400,7 +413,7 @@
 			"Text": "",
 			"Uri": "",
 			"Comment": "",
-			"Idx": 28
+			"Idx": 29
 		},
 		{
 			"Class": "GtkCheckButton",
@@ -413,7 +426,7 @@
 			"Text": "",
 			"Uri": "",
 			"Comment": "",
-			"Idx": 29
+			"Idx": 30
 		},
 		{
 			"Class": "GtkCheckButton",
@@ -426,7 +439,7 @@
 			"Text": "",
 			"Uri": "",
 			"Comment": "",
-			"Idx": 30
+			"Idx": 31
 		},
 		{
 			"Class": "GtkTextView",
@@ -439,33 +452,58 @@
 			"Text": "",
 			"Uri": "",
 			"Comment": "",
-			"Idx": 31
+			"Idx": 32
 		},
 		{
-			"Class": "GtkTreeView",
-			"Id": "treeviewFiles",
+			"Class": "GtkTextView",
+			"Id": "textWinTextviewNumbers",
 			"Label": "",
 			"LabelMarkup": false,
 			"LabelWrap": false,
-			"Tooltip": "You can drop files here.",
+			"Tooltip": "",
 			"TooltipMarkup": false,
 			"Text": "",
 			"Uri": "",
 			"Comment": "",
-			"Idx": 32
+			"Idx": 33
 		}
 	],
 	"Sentences": {
+		"alert": "Alert ...",
 		"allow": "Allow",
 		"cancel": "Cancel",
+		"clpbrdPreview": "Clipboard content preview.",
 		"deny": "Deny",
 		"dir-rem": "Directory does not exist. The current application directory will be used.",
+		"dispTime": "Display time:",
+		"emptyCB": "Nothing to do with an empty clipboard ...",
+		"file": "file(s)",
+		"file-LinkNotExist": "File does not exist, or symlink endpoint not found.",
+		"file-perm": "File permissions error.",
 		"file-rem": "File(s) does not exist.",
+		"forbiddenFiles": "Some files could not be accessed ...\nUnchecking \"Follow symlink\" may be useful.",
+		"in": "in",
+		"missing": "Something missing",
 		"no": "No",
+		"noFileSel": "No selected file(s) to search in ...",
+		"notFound": "Nothing was found ...",
+		"nothingToSearch": "Nothing to search ...",
 		"ok": "Ok",
 		"openf": "Open file",
+		"regexpErr": "Regex mistake ...",
+		"removed": "File has been removed before processing.",
 		"retry": "Retry",
 		"savef": "Save file",
+		"sbFile": "File",
+		"sbFileSel": "File selected:",
+		"sbFiles": "Files:",
+		"sbFilesSel": "Files selected:",
+		"scanTime": "Scan files time:",
+		"searchTime": "Search time:",
+		"status": "Status:",
+		"titlePreviewText": "Preview window",
+		"titleSearchResults": "Search results",
+		"totalOccurrences": "Occurrence(s) found:",
 		"yes": "Yes"
 	}
 }

@@ -1,6 +1,6 @@
 // gohSignals.go
 
-// Source file auto-generated on Fri, 19 Jul 2019 03:46:10 using Gotk3ObjHandler v1.3 ©2019 H.F.M
+// Source file auto-generated on Tue, 01 Oct 2019 16:36:13 using Gotk3ObjHandler v1.3.8 ©2018-19 H.F.M
 
 /*
 	This program comes with absolutely no warranty. See the The MIT License (MIT) for details:
@@ -9,37 +9,46 @@
 
 package main
 
-/***************************/
-/* Signals Implementations */
-/***************************/
-// signalsPropHandler: initialise signals used by gtk objects ...
+/*********************************************************/
+/* Signals Implementations:                             */
+/* initialise signals used by gtk objects ...          */
+/* This section preserve user modification on update. */
+/*****************************************************/
 func signalsPropHandler() {
-	mainObjects.btnFind.Connect("clicked", btnFindClicked)                             /*MANUAL*/
-	mainObjects.btnReplaceInClipboard.Connect("clicked", btnReplaceInClipboardClicked) /*MANUAL*/
-	mainObjects.btnShowClipboard.Connect("clicked", btnShowClipboardClicked)           /*MANUAL*/
-	mainObjects.chkCaseSensitive.Connect("toggled", chkCaseSensitiveToggled)           /*MANUAL*/
+	mainObjects.btnFind.Connect("clicked", btnFindClicked)
+	mainObjects.btnReplaceInClipboard.Connect("clicked", btnReplaceInClipboardClicked)
+	mainObjects.btnScan.Connect("clicked", btnScanClicked)
+	mainObjects.btnShowClipboard.Connect("clicked", btnShowClipboardClicked)
+	mainObjects.chkCaseSensitive.Connect("toggled", chkCaseSensitiveToggled)
 	mainObjects.chkCharacterClass.Connect("toggled", chkCharacterClassToggled)
-	mainObjects.chkFollowSymlinkDir.Connect("toggled", fileChooserBtnClicked)      /*MANUAL*/
-	mainObjects.chkRegex.Connect("toggled", chkRegexToggled)                       /*MANUAL*/
-	mainObjects.chkSubDir.Connect("toggled", fileChooserBtnClicked)                /*MANUAL*/
-	mainObjects.chkUseEscapeChar.Connect("toggled", chkUseEscapeCharToggled)       /*MANUAL*/
-	mainObjects.chkWildcard.Connect("toggled", chkWildcardToggled)                 /*MANUAL*/
-	mainObjects.chkWoleWord.Connect("toggled", chkWoleWordToggled)                 /*MANUAL*/
-	mainObjects.entryExtMask.Connect("focus-out-event", entryExtMaskFocusOut)      /*MANUAL*/
-	mainObjects.entryExtMask.Connect("activate", entryExtMaskEnterKeyPressed)      /*MANUAL*/
-	mainObjects.fileChooserBtn.Connect("selection-changed", fileChooserBtnClicked) /*MANUAL*/
-	mainObjects.findWinCancelBtn.Connect("clicked", findWinCancelBtnClicked)       /*MANUAL*/
-	mainObjects.findWinChkBackUp.Connect("toggled", findWinChkBackUpToggled)       /*MANUAL*/
-	mainObjects.findWinReplaceBtn.Connect("clicked", findWinReplaceBtnClicked)     /*MANUAL*/
-	mainObjects.findWinTreeView.Connect("row-activated", findTreeViewDblClick)     /*MANUAL*/
-	mainObjects.ImgTopEventbox.Connect("button-release-event", imgTopReleaseEvent) /*MANUAL*/
+	mainObjects.chkFollowSymlinkDir.Connect("toggled", chkFollowSymlinkDirToggled)
+	mainObjects.chkRegex.Connect("toggled", chkRegexToggled)
+	mainObjects.chkUseEscapeChar.Connect("toggled", chkUseEscapeCharToggled)
+	mainObjects.chkWildcard.Connect("toggled", chkWildcardToggled)
+	mainObjects.chkWoleWord.Connect("toggled", chkWoleWordToggled)
+	mainObjects.entryExtMask.Connect("focus-out-event", entryExtMaskFocusOut)
+	mainObjects.entryExtMask.Connect("activate", entryExtMaskFocusOut)
+	mainObjects.entryReplace.Connect("notify", blankNotify)
+	mainObjects.entrySearch.Connect("activate", entrySearchFocusOut)
+	fileChooserSigHandlerSelChanged, _ = mainObjects.fileChooserBtn.Connect("selection-changed", fileChooserBtnSelectionChanged)
+	mainObjects.findWin.Connect("delete_event", genericHideWindow)
+	mainObjects.findWinCancelBtn.Connect("clicked", findWinCancelBtnClicked)
+	mainObjects.findWinChkBackUp.Connect("toggled", findWinChkBackUpToggled)
+	mainObjects.findWinChkDispForbFiles.Connect("toggled", findWinChkDispForbFilesToggled)
+	mainObjects.findWinReplaceBtn.Connect("clicked", findWinReplaceBtnClicked)
+	mainObjects.findWinTreeView.Connect("row-activated", findTreeViewDblClick)
+	mainObjects.ImgTopEventbox.Connect("button-release-event", imgTopReleaseEvent)
+	mainObjects.listViewFiles.Connect("row-activated", listViewFilesRowActivated)
 	mainObjects.mainWin.Connect("delete-event", mainWinOnExit)
-	mainObjects.SwitchFileChooserButton.Connect("state-set", SwitchFileChooserButtonStateSet)
-	mainObjects.textWinBtnDone.Connect("clicked", textWinBtnDoneClicked)                           /*MANUAL*/
-	mainObjects.textWinChkShowModifications.Connect("toggled", textWinChkShowModificationsToggled) /*MANUAL*/
-	mainObjects.textWinChkWrap.Connect("toggled", textWinChkWrapToggled)                           /*MANUAL*/
-	initDropSets()                                                                                 /*MANUAL*/
-	mainObjects.treeviewFiles.Connect("row-activated", treeViewDblClick)                           /*MANUAL*/
-	mainObjects.treeviewFiles.Connect("drag-data-received", treeviewFilesReceived)                 /*MANUAL*/
-	mainObjects.treeviewSelection.Connect("changed", treeViewSelectionChanged)                     /*MANUAL*/
+	mainObjects.mainWinBtnClose.Connect("clicked", windowDestroy)
+	spinButtonDepthSigHandlerChanged, _ = mainObjects.spinButtonDepth.Connect("value-changed", spinButtonDepthValueChanged)
+	mainObjects.switchFileChooserButton.Connect("state-set", switchFileChooserButtonStateSet)
+	mainObjects.switchFileChooserButton.Connect("event-after", switchFileChooserButtonEventAfter)
+	mainObjects.textWin.Connect("delete_event", genericHideWindow)
+	mainObjects.textWinBtnDone.Connect("clicked", textWinBtnDoneClicked)
+	mainObjects.textWinChkShowModifications.Connect("toggled", textWinChkShowModificationsToggled)
+	mainObjects.textWinChkWrap.Connect("toggled", textWinChkWrapToggled)
+	mainObjects.textWinScrolledwindowNumbers.Connect("notify", blankNotify)
+	mainObjects.textWinTextviewNumbers.Connect("notify", blankNotify)
+
 }

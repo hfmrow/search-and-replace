@@ -1,6 +1,6 @@
 // translate.go
 
-// File generated on Mon, 22 Jul 2019 18:53:45 using Gotk3ObjectsTranslate v1.3 2019 H.F.M
+// File generated on Wed, 02 Oct 2019 00:15:27 using Gotk3ObjectsTranslate v1.3 2019 H.F.M
 
 /*
 * 	This program comes with absolutely no warranty.
@@ -16,8 +16,6 @@ import (
 	"fmt"
 	"io/ioutil"
 	"os"
-	"regexp"
-	"sort"
 	"strings"
 
 	"github.com/gotk3/gotk3/gtk"
@@ -27,37 +25,38 @@ import (
 func (trans *MainTranslate) initGtkObjectsText() {
 	trans.setTextToGtkObjects(&mainObjects.btnFind.Widget, "btnFind")
 	trans.setTextToGtkObjects(&mainObjects.btnReplaceInClipboard.Widget, "btnReplaceInClipboard")
+	trans.setTextToGtkObjects(&mainObjects.btnScan.Widget, "btnScan")
 	trans.setTextToGtkObjects(&mainObjects.btnShowClipboard.Widget, "btnShowClipboard")
 	trans.setTextToGtkObjects(&mainObjects.chkCaseSensitive.Widget, "chkCaseSensitive")
 	trans.setTextToGtkObjects(&mainObjects.chkCharacterClass.Widget, "chkCharacterClass")
 	trans.setTextToGtkObjects(&mainObjects.chkCharacterClassStrictMode.Widget, "chkCharacterClassStrictMode")
 	trans.setTextToGtkObjects(&mainObjects.chkFollowSymlinkDir.Widget, "chkFollowSymlinkDir")
 	trans.setTextToGtkObjects(&mainObjects.chkRegex.Widget, "chkRegex")
-	trans.setTextToGtkObjects(&mainObjects.chkSubDir.Widget, "chkSubDir")
 	trans.setTextToGtkObjects(&mainObjects.chkUseEscapeChar.Widget, "chkUseEscapeChar")
 	trans.setTextToGtkObjects(&mainObjects.chkWildcard.Widget, "chkWildcard")
 	trans.setTextToGtkObjects(&mainObjects.chkWoleWord.Widget, "chkWoleWord")
 	trans.setTextToGtkObjects(&mainObjects.entryExtMask.Widget, "entryExtMask")
-	trans.setTextToGtkObjects(&mainObjects.entryReplace1.Widget, "entryReplace1")
-	trans.setTextToGtkObjects(&mainObjects.entrySearch1.Widget, "entrySearch1")
+	trans.setTextToGtkObjects(&mainObjects.entryReplace.Widget, "entryReplace")
+	trans.setTextToGtkObjects(&mainObjects.entrySearch.Widget, "entrySearch")
 	trans.setTextToGtkObjects(&mainObjects.fileChooserBtn.Widget, "fileChooserBtn")
 	trans.setTextToGtkObjects(&mainObjects.findWinCancelBtn.Widget, "findWinCancelBtn")
 	trans.setTextToGtkObjects(&mainObjects.findWinChkBackUp.Widget, "findWinChkBackUp")
-	trans.setTextToGtkObjects(&mainObjects.findWinLabel.Widget, "findWinLabel")
-	trans.setTextToGtkObjects(&mainObjects.findWinLabel1.Widget, "findWinLabel1")
-	trans.setTextToGtkObjects(&mainObjects.findWinLabel2.Widget, "findWinLabel2")
+	trans.setTextToGtkObjects(&mainObjects.findWinChkDispForbFiles.Widget, "findWinChkDispForbFiles")
 	trans.setTextToGtkObjects(&mainObjects.findWinReplaceBtn.Widget, "findWinReplaceBtn")
 	trans.setTextToGtkObjects(&mainObjects.findWinTreeView.Widget, "findWinTreeView")
 	trans.setTextToGtkObjects(&mainObjects.imgTop.Widget, "imgTop")
 	trans.setTextToGtkObjects(&mainObjects.lblExtMask.Widget, "lblExtMask")
 	trans.setTextToGtkObjects(&mainObjects.lblReplace.Widget, "lblReplace")
 	trans.setTextToGtkObjects(&mainObjects.lblSearch.Widget, "lblSearch")
-	trans.setTextToGtkObjects(&mainObjects.SwitchFileChooserButton.Widget, "SwitchFileChooserButton")
+	trans.setTextToGtkObjects(&mainObjects.listViewFiles.Widget, "listViewFiles")
+	trans.setTextToGtkObjects(&mainObjects.mainWinBtnClose.Widget, "mainWinBtnClose")
+	trans.setTextToGtkObjects(&mainObjects.spinButtonDepth.Widget, "spinButtonDepth")
+	trans.setTextToGtkObjects(&mainObjects.switchFileChooserButton.Widget, "switchFileChooserButton")
 	trans.setTextToGtkObjects(&mainObjects.textWinBtnDone.Widget, "textWinBtnDone")
 	trans.setTextToGtkObjects(&mainObjects.textWinChkShowModifications.Widget, "textWinChkShowModifications")
 	trans.setTextToGtkObjects(&mainObjects.textWinChkWrap.Widget, "textWinChkWrap")
 	trans.setTextToGtkObjects(&mainObjects.textWinTextview.Widget, "textWinTextview")
-	trans.setTextToGtkObjects(&mainObjects.treeviewFiles.Widget, "treeviewFiles")
+	trans.setTextToGtkObjects(&mainObjects.textWinTextviewNumbers.Widget, "textWinTextviewNumbers")
 }
 // Translations structure declaration. To be used in main application.
 var translate = new(MainTranslate)
@@ -67,17 +66,43 @@ var translate = new(MainTranslate)
 // They'll be added to language file each time application started
 // when "devMode" is set at true.
 var sts = map[string]string{
-	`cancel`: `Cancel`,
-	`ok`: `Ok`,
-	`dir-rem`: `Directory does not exist. The current application directory will be used.`,
-	`openf`: `Open file`,
-	`retry`: `Retry`,
-	`allow`: `Allow`,
-	`file-rem`: `File(s) does not exist.`,
-	`no`: `No`,
-	`yes`: `Yes`,
-	`deny`: `Deny`,
+	`totalOccurrences`: `Occurrence(s) found:`,
+	`sbFilesSel`: `Files selected:`,
 	`savef`: `Save file`,
+	`ok`: `Ok`,
+	`titlePreviewText`: `Preview window`,
+	`file-LinkNotExist`: `File does not exist, or symlink endpoint not found.`,
+	`file-perm`: `File permissions error.`,
+	`yes`: `Yes`,
+	`sbFileSel`: `File selected:`,
+	`retry`: `Retry`,
+	`sbFiles`: `Files:`,
+	`sbFile`: `File`,
+	`searchTime`: `Search time:`,
+	`removed`: `File has been removed before processing.`,
+	`status`: `Status:`,
+	`in`: `in`,
+	`nothingToSearch`: `Nothing to search ...`,
+	`allow`: `Allow`,
+	`scanTime`: `Scan files time:`,
+	`file`: `file(s)`,
+	`noFileSel`: `No selected file(s) to search in ...`,
+	`clpbrdPreview`: `Clipboard content preview.`,
+	`deny`: `Deny`,
+	`dir-rem`: `Directory does not exist. The current application directory will be used.`,
+	`no`: `No`,
+	`openf`: `Open file`,
+	`alert`: `Alert ...`,
+	`regexpErr`: `Regex mistake ...`,
+	`cancel`: `Cancel`,
+	`file-rem`: `File(s) does not exist.`,
+	`forbiddenFiles`: `Some files could not be accessed ...
+Unchecking "Follow symlink" may be useful.`,
+	`notFound`: `Nothing was found ...`,
+	`emptyCB`: `Nothing to do with an empty clipboard ...`,
+	`titleSearchResults`: `Search results`,
+	`missing`: `Something missing`,
+	`dispTime`: `Display time:`,
 }
 
 
@@ -114,27 +139,6 @@ func MainTranslateNew(filename string, devModeActive ...bool) (mt *MainTranslate
 		fmt.Printf("%s\n%s\n", "Error loading language file !\nNot an error when is just creating from glade Xml or GOH project file.", err.Error())
 	}
 	return mt
-}
-
-// sortId: sort by numbering methode
-func (trans *MainTranslate) sortId() {
-	var tmpWordList []string
-	for _, wrd := range trans.Objects {
-		tmpWordList = append(tmpWordList, wrd.Id)
-	}
-	numberedWords := new(WordWithDigit)
-	numberedWords.Init(tmpWordList)
-	sort.SliceStable(trans.Objects, func(i, j int) bool {
-		return numberedWords.FillWordToMatchMaxLength(trans.Objects[i].Id) < numberedWords.FillWordToMatchMaxLength(trans.Objects[j].Id)
-	})
-}
-
-// buildIdx: build index for each object.
-func (trans *MainTranslate) buildIdx() {
-	trans.sortId()
-	for idx, _ := range trans.Objects {
-		trans.Objects[idx].Idx = idx
-	}
 }
 
 // readFile: language file.
@@ -214,6 +218,7 @@ type propObject struct {
 // Property that exists for Gtk3 Object ...	(Used for Class capability)
 var propPerObjects = []propObject{
 	{Class: "GtkButton", Label: true, Tooltip: true, TooltipMarkup: true},
+	{Class: "GtkToolButton", Label: true, Tooltip: true, TooltipMarkup: true},
 	{Class: "GtkToggleButton", Label: true, Tooltip: true, TooltipMarkup: true},
 	{Class: "GtkLabel", Label: true, LabelMarkup: true, Tooltip: true, TooltipMarkup: true, LabelWrap: true},
 	{Class: "GtkSpinButton", Tooltip: true, TooltipMarkup: true},
@@ -265,82 +270,4 @@ func (trans *MainTranslate) setTextToGtkObjects(obj *gtk.Widget, objectId string
 			}
 		}
 	}
-}
-
-// Digit sorting functions
-type WordWithDigit struct {
-	maxLength, maxLengthLeft int
-	zeroMask                 string
-	ForceRightDigit          bool
-}
-
-func (w *WordWithDigit) Init(words []string) {
-	for _, word := range words {
-		if len(word) > w.maxLength {
-			w.maxLength = len(word)
-			if digitsPosition(word) == 0 {
-				digits := getDigits(word)
-				if len(digits) > w.maxLengthLeft {
-					w.maxLengthLeft = len(digits)
-				}
-			}
-		}
-	}
-}
-
-// FillWordToMatchMaxLength: Convert word(s) into numbered one, like "label1" -> "label000001" etc...
-// results are based on list of words that determine max length of them to determinate
-// the final length of the modified word. This is used in case of sorting list
-// of words that contains numeric value to avoid the disorder result
-// like "1label", "10label", "2label" etc ...
-func (w *WordWithDigit) FillWordToMatchMaxLength(inString string) (outString string) {
-	var word string
-
-	inString = strings.ToLower(strings.TrimSpace(inString))
-	zeroCount := w.maxLength - len(inString)
-	for idx := 0; idx < zeroCount; idx++ {
-		w.zeroMask += "0"
-	}
-	wordPos := digitsPosition(inString)
-	digits := getDigits(inString)
-	switch wordPos {
-	case 0: // Left
-		word = inString[len(digits):len(inString)]
-		outString = word + w.zeroMask + digits
-	case 1: // Right
-		word = inString[:len(inString)-len(digits)]
-		outString = word + w.zeroMask + digits
-	case -1: // None
-		outString = inString + w.zeroMask
-	}
-	w.zeroMask = ""
-	return outString
-}
-
-// numPosition: detect position of digit part: 0=left, 1=right, -1=none
-func digitsPosition(inString string) int {
-	digitS := regexp.MustCompile("^[[:digit:]]")
-	digitE := regexp.MustCompile("[[:digit:]]$")
-	switch {
-	case digitS.MatchString(inString):
-		return 0 // Left
-	case digitE.MatchString(inString):
-		return 1 // Right
-	}
-	return -1 // None
-}
-
-// getDigits: return digit part of string prior at start or at end, -1=none
-func getDigits(inString string) (value string) {
-	digitS := regexp.MustCompile("(^[0-9]*)")
-	digitE := regexp.MustCompile("([0-9]*$)")
-	start := digitS.FindString(inString)
-	end := digitE.FindString(inString)
-	switch {
-	case len(start) != 0: // Left
-		value = start
-	case len(end) != 0: // Right
-		value = end
-	}
-	return value
 }

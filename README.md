@@ -1,4 +1,4 @@
-# Search and Replace
+# Search and Replace 1.7.6
 *This program is designed to search and replace text pattern in one or multiples files over directory, subdirectory. Search and replace in clipboard allowed. Drag and drop can be used.*
 
 Take a look [here, H.F.M repositories](https://github.com/hfmrow/) for other useful linux softwares.
@@ -18,30 +18,15 @@ Take a look [here, H.F.M repositories](https://github.com/hfmrow/) for other use
 - Allow the displaying of preview with highlighted patterns before modification.
 - Wildcard, regex, case sensitive, character classes can be used.
 - Whole word functionality, Escape character can be used.
-- Drag and drop capacity available.
+- Drag and drop capacity.
 - Files can be sorted by extension or using a mask for filename.
 - Backup function available.
 - Each function have his tooltip for explanations.
 
 ## Some pictures and explanations  
 
-*This is the main screen.*  
-![Main](readME-Pic/mainScr.png  "Main")  
-
-*Search files selection.*  
-![files selection](readME-Pic/searchAction.png  "files selection")  
-
-*Search display preview*  
-![display preview](readME-Pic/dispPrev.png  "display preview")  
-
-*Search display preview clipboard*  
-![display preview clipboard](readME-Pic/previewClipboard.png  "display preview clipboard")  
-
-*Search display clipboard replacement*  
-![display clipboard replacement](readME-Pic/previewClipboardReplaced.png  "display clipboard replacement")  
-
-*Tooltip display*  
-![Tooltip display](readME-Pic/tooltipDisp.png  "Tooltip display")  
+*This is the main screen, and childs*  
+![Main](assets/readme/whole.png  "Main")  
 
 ## How to compile
 - Be sure you have golang installed in right way. [Go installation](https://golang.org/doc/install).
@@ -62,19 +47,20 @@ into
 
 This operation indicate that externals datas (Image/Icons) must be embedded into the executable file.
 
-### Misc/Os informations
-- I'm working on:
-
-| DISTRIB  | LinuxMint |
-| -------- | --------- |
-| VERSION  | 19.1  |
-| CODENAME  | tessa  |
-| RELEASE  | #21~18.04.1-Ubuntu SMP Thu Jun 27 04:04:37 UTC 2019  |
-| UBUNTU_CODENAME  | bionic  |
-| KERNEL  | 5.0.0-20-generic  |
-| HDWPLATFORM  | x86_64  |
-| GTK  | libgtk-3-0:amd64 3.22.30-1ubuntu3  |
-| GLIB  | Ubuntu GLIBC 2.27-3ubuntu1  |
+### Os information (build using)
+| Name       | Version / Info / Name       |
+|-----------------|-----------------------------------------------------|
+| GOLANG          | V1.13 -> GO111MODULE="off", GOPROXY="direct"        |
+| DISTRIB         | LinuxMint                                           |
+| VERSION         | 19.1                                                |
+| CODENAME        | tessa                                               |
+| RELEASE         | #31~18.04.1-Ubuntu SMP Thu Sep 12 18:29:21 UTC 2019 |
+| UBUNTU_CODENAME | bionic                                              |
+| KERNEL          | 5.0.0-29-generic                                    |
+| HDWPLATFORM     | x86_64                                              |
+| GTK+ 3          | libgtk-3-0:amd64 3.22.30-1ubuntu3                   |
+| GLIB 2          | 2.56.4                                              |
+| CAIRO           | 1.15.10                                             |
 
 - The compilation have not been tested under Windows or Mac OS, but all file access functions, line-end manipulations or charset implementation are made with OS portability in mind.
 

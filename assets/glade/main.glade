@@ -34,12 +34,9 @@ Author: H.F.M 2018
   <!-- interface-copyright H.F.M 2018 -->
   <!-- interface-authors H.F.M 2018 -->
   <object class="GtkWindow" id="findWin">
-    <property name="width_request">640</property>
-    <property name="height_request">480</property>
-    <property name="can_focus">True</property>
-    <property name="modal">True</property>
+    <property name="can_focus">False</property>
     <property name="window_position">center</property>
-    <property name="skip_taskbar_hint">True</property>
+    <property name="skip_pager_hint">True</property>
     <child>
       <placeholder/>
     </child>
@@ -47,17 +44,12 @@ Author: H.F.M 2018
       <object class="GtkGrid" id="findWinGrid">
         <property name="visible">True</property>
         <property name="can_focus">False</property>
-        <property name="margin_left">2</property>
-        <property name="margin_right">2</property>
         <property name="margin_top">2</property>
         <property name="margin_bottom">2</property>
         <child>
           <object class="GtkScrolledWindow" id="findWinScrollWin">
             <property name="visible">True</property>
             <property name="can_focus">True</property>
-            <property name="margin_left">2</property>
-            <property name="margin_right">2</property>
-            <property name="margin_top">2</property>
             <property name="margin_bottom">2</property>
             <property name="hexpand">True</property>
             <property name="vexpand">True</property>
@@ -67,7 +59,7 @@ Author: H.F.M 2018
                 <property name="visible">True</property>
                 <property name="can_focus">True</property>
                 <child internal-child="selection">
-                  <object class="GtkTreeSelection" id="findWinTreeviewSelection"/>
+                  <object class="GtkTreeSelection"/>
                 </child>
               </object>
             </child>
@@ -82,29 +74,12 @@ Author: H.F.M 2018
             <property name="visible">True</property>
             <property name="can_focus">False</property>
             <property name="row_homogeneous">True</property>
-            <property name="column_homogeneous">True</property>
-            <child>
-              <object class="GtkLabel" id="findWinLabel">
-                <property name="visible">True</property>
-                <property name="can_focus">False</property>
-              </object>
-              <packing>
-                <property name="left_attach">2</property>
-                <property name="top_attach">0</property>
-              </packing>
-            </child>
             <child>
               <object class="GtkButton" id="findWinReplaceBtn">
                 <property name="label" translatable="yes">Replace</property>
                 <property name="visible">True</property>
                 <property name="can_focus">True</property>
                 <property name="receives_default">True</property>
-                <property name="margin_left">2</property>
-                <property name="margin_right">2</property>
-                <property name="margin_top">2</property>
-                <property name="margin_bottom">2</property>
-                <property name="xalign">0.50999999046325684</property>
-                <property name="yalign">0.69999998807907104</property>
               </object>
               <packing>
                 <property name="left_attach">0</property>
@@ -117,14 +92,25 @@ Author: H.F.M 2018
                 <property name="visible">True</property>
                 <property name="can_focus">True</property>
                 <property name="receives_default">False</property>
-                <property name="margin_left">2</property>
-                <property name="margin_right">2</property>
-                <property name="xalign">0</property>
-                <property name="yalign">0.85000002384185791</property>
+                <property name="halign">start</property>
                 <property name="draw_indicator">True</property>
               </object>
               <packing>
                 <property name="left_attach">1</property>
+                <property name="top_attach">0</property>
+              </packing>
+            </child>
+            <child>
+              <object class="GtkCheckButton" id="findWinChkDispForbFiles">
+                <property name="label" translatable="yes">Display forbidden files</property>
+                <property name="visible">True</property>
+                <property name="can_focus">True</property>
+                <property name="receives_default">False</property>
+                <property name="halign">start</property>
+                <property name="draw_indicator">True</property>
+              </object>
+              <packing>
+                <property name="left_attach">2</property>
                 <property name="top_attach">0</property>
               </packing>
             </child>
@@ -134,34 +120,11 @@ Author: H.F.M 2018
                 <property name="visible">True</property>
                 <property name="can_focus">True</property>
                 <property name="receives_default">True</property>
-                <property name="margin_left">2</property>
-                <property name="margin_right">2</property>
-                <property name="margin_top">2</property>
-                <property name="margin_bottom">2</property>
-                <property name="yalign">0.69999998807907104</property>
-              </object>
-              <packing>
-                <property name="left_attach">5</property>
-                <property name="top_attach">0</property>
-              </packing>
-            </child>
-            <child>
-              <object class="GtkLabel" id="findWinLabel1">
-                <property name="visible">True</property>
-                <property name="can_focus">False</property>
+                <property name="halign">end</property>
+                <property name="hexpand">True</property>
               </object>
               <packing>
                 <property name="left_attach">3</property>
-                <property name="top_attach">0</property>
-              </packing>
-            </child>
-            <child>
-              <object class="GtkLabel" id="findWinLabel2">
-                <property name="visible">True</property>
-                <property name="can_focus">False</property>
-              </object>
-              <packing>
-                <property name="left_attach">4</property>
                 <property name="top_attach">0</property>
               </packing>
             </child>
@@ -216,14 +179,13 @@ Author: H.F.M 2018
               <object class="GtkGrid" id="replaceGrid">
                 <property name="visible">True</property>
                 <property name="can_focus">False</property>
+                <property name="margin_bottom">2</property>
                 <property name="row_homogeneous">True</property>
                 <property name="column_homogeneous">True</property>
                 <child>
-                  <object class="GtkEntry" id="entryReplace1">
+                  <object class="GtkEntry" id="entryReplace">
                     <property name="visible">True</property>
                     <property name="can_focus">True</property>
-                    <property name="margin_top">2</property>
-                    <property name="margin_bottom">2</property>
                   </object>
                   <packing>
                     <property name="left_attach">1</property>
@@ -253,172 +215,15 @@ Author: H.F.M 2018
                   </packing>
                 </child>
                 <child>
-                  <object class="GtkEntry" id="entrySearch1">
+                  <object class="GtkEntry" id="entrySearch">
                     <property name="visible">True</property>
                     <property name="can_focus">True</property>
                     <property name="margin_left">2</property>
                     <property name="margin_right">2</property>
-                    <property name="margin_top">2</property>
-                    <property name="margin_bottom">2</property>
                   </object>
                   <packing>
                     <property name="left_attach">0</property>
                     <property name="top_attach">1</property>
-                  </packing>
-                </child>
-                <child>
-                  <object class="GtkCheckButton" id="chkUseEscapeChar">
-                    <property name="label" translatable="yes">Use escape character</property>
-                    <property name="visible">True</property>
-                    <property name="can_focus">True</property>
-                    <property name="receives_default">False</property>
-                    <property name="margin_bottom">2</property>
-                    <property name="xalign">0</property>
-                    <property name="yalign">0.69999998807907104</property>
-                    <property name="draw_indicator">True</property>
-                  </object>
-                  <packing>
-                    <property name="left_attach">0</property>
-                    <property name="top_attach">3</property>
-                  </packing>
-                </child>
-                <child>
-                  <object class="GtkGrid" id="gridOptSearch">
-                    <property name="visible">True</property>
-                    <property name="can_focus">False</property>
-                    <property name="row_homogeneous">True</property>
-                    <property name="column_homogeneous">True</property>
-                    <child>
-                      <object class="GtkCheckButton" id="chkWoleWord">
-                        <property name="label" translatable="yes">Whole word</property>
-                        <property name="visible">True</property>
-                        <property name="can_focus">True</property>
-                        <property name="receives_default">False</property>
-                        <property name="xalign">0</property>
-                        <property name="draw_indicator">True</property>
-                      </object>
-                      <packing>
-                        <property name="left_attach">0</property>
-                        <property name="top_attach">0</property>
-                      </packing>
-                    </child>
-                    <child>
-                      <object class="GtkCheckButton" id="chkCaseSensitive">
-                        <property name="label" translatable="yes">Case sensitive</property>
-                        <property name="visible">True</property>
-                        <property name="can_focus">True</property>
-                        <property name="receives_default">False</property>
-                        <property name="xalign">0</property>
-                        <property name="draw_indicator">True</property>
-                      </object>
-                      <packing>
-                        <property name="left_attach">1</property>
-                        <property name="top_attach">0</property>
-                      </packing>
-                    </child>
-                  </object>
-                  <packing>
-                    <property name="left_attach">1</property>
-                    <property name="top_attach">2</property>
-                  </packing>
-                </child>
-                <child>
-                  <object class="GtkCheckButton" id="chkFollowSymlinkDir">
-                    <property name="label" translatable="yes">Follow symlink directory</property>
-                    <property name="visible">True</property>
-                    <property name="can_focus">True</property>
-                    <property name="receives_default">False</property>
-                    <property name="xalign">0</property>
-                    <property name="draw_indicator">True</property>
-                  </object>
-                  <packing>
-                    <property name="left_attach">2</property>
-                    <property name="top_attach">2</property>
-                  </packing>
-                </child>
-                <child>
-                  <object class="GtkGrid" id="gridOptionsRxWc">
-                    <property name="visible">True</property>
-                    <property name="can_focus">False</property>
-                    <property name="row_homogeneous">True</property>
-                    <property name="column_homogeneous">True</property>
-                    <child>
-                      <object class="GtkCheckButton" id="chkRegex">
-                        <property name="label" translatable="yes">Use regex</property>
-                        <property name="visible">True</property>
-                        <property name="can_focus">True</property>
-                        <property name="receives_default">False</property>
-                        <property name="xalign">0</property>
-                        <property name="draw_indicator">True</property>
-                      </object>
-                      <packing>
-                        <property name="left_attach">0</property>
-                        <property name="top_attach">0</property>
-                      </packing>
-                    </child>
-                    <child>
-                      <object class="GtkCheckButton" id="chkWildcard">
-                        <property name="label" translatable="yes">Use *? wildcard</property>
-                        <property name="visible">True</property>
-                        <property name="can_focus">True</property>
-                        <property name="receives_default">False</property>
-                        <property name="xalign">0</property>
-                        <property name="draw_indicator">True</property>
-                      </object>
-                      <packing>
-                        <property name="left_attach">1</property>
-                        <property name="top_attach">0</property>
-                      </packing>
-                    </child>
-                  </object>
-                  <packing>
-                    <property name="left_attach">0</property>
-                    <property name="top_attach">2</property>
-                  </packing>
-                </child>
-                <child>
-                  <object class="GtkGrid" id="grid1">
-                    <property name="visible">True</property>
-                    <property name="can_focus">False</property>
-                    <child>
-                      <object class="GtkButton" id="btnReplaceInClipboard">
-                        <property name="label" translatable="yes">Replace in clipboard</property>
-                        <property name="visible">True</property>
-                        <property name="can_focus">True</property>
-                        <property name="receives_default">True</property>
-                        <property name="margin_left">2</property>
-                        <property name="margin_top">2</property>
-                        <property name="margin_bottom">2</property>
-                        <property name="hexpand">True</property>
-                        <property name="yalign">0.69999998807907104</property>
-                      </object>
-                      <packing>
-                        <property name="left_attach">0</property>
-                        <property name="top_attach">0</property>
-                      </packing>
-                    </child>
-                    <child>
-                      <object class="GtkButton" id="btnShowClipboard">
-                        <property name="label" translatable="yes">View it</property>
-                        <property name="visible">True</property>
-                        <property name="can_focus">True</property>
-                        <property name="receives_default">True</property>
-                        <property name="margin_left">2</property>
-                        <property name="margin_right">2</property>
-                        <property name="margin_top">2</property>
-                        <property name="margin_bottom">2</property>
-                        <property name="hexpand">True</property>
-                        <property name="yalign">0.69999998807907104</property>
-                      </object>
-                      <packing>
-                        <property name="left_attach">1</property>
-                        <property name="top_attach">0</property>
-                      </packing>
-                    </child>
-                  </object>
-                  <packing>
-                    <property name="left_attach">1</property>
-                    <property name="top_attach">3</property>
                   </packing>
                 </child>
                 <child>
@@ -440,56 +245,12 @@ Author: H.F.M 2018
                     <property name="can_focus">True</property>
                     <property name="margin_left">2</property>
                     <property name="margin_right">2</property>
-                    <property name="margin_top">2</property>
-                    <property name="margin_bottom">2</property>
                     <property name="hexpand">True</property>
                     <property name="text" translatable="yes">*.*</property>
                   </object>
                   <packing>
                     <property name="left_attach">2</property>
                     <property name="top_attach">1</property>
-                  </packing>
-                </child>
-                <child>
-                  <object class="GtkGrid">
-                    <property name="visible">True</property>
-                    <property name="can_focus">False</property>
-                    <property name="row_homogeneous">True</property>
-                    <child>
-                      <object class="GtkCheckButton" id="chkSubDir">
-                        <property name="label" translatable="yes">Scan sub directories</property>
-                        <property name="visible">True</property>
-                        <property name="can_focus">True</property>
-                        <property name="receives_default">False</property>
-                        <property name="margin_top">2</property>
-                        <property name="margin_bottom">2</property>
-                        <property name="hexpand">True</property>
-                        <property name="xalign">0</property>
-                        <property name="draw_indicator">True</property>
-                      </object>
-                      <packing>
-                        <property name="left_attach">0</property>
-                        <property name="top_attach">0</property>
-                      </packing>
-                    </child>
-                    <child>
-                      <object class="GtkSwitch" id="SwitchFileChooserButton">
-                        <property name="visible">True</property>
-                        <property name="can_focus">True</property>
-                        <property name="margin_top">2</property>
-                        <property name="margin_bottom">2</property>
-                        <property name="hexpand">True</property>
-                        <property name="active">True</property>
-                      </object>
-                      <packing>
-                        <property name="left_attach">1</property>
-                        <property name="top_attach">0</property>
-                      </packing>
-                    </child>
-                  </object>
-                  <packing>
-                    <property name="left_attach">2</property>
-                    <property name="top_attach">3</property>
                   </packing>
                 </child>
               </object>
@@ -499,27 +260,40 @@ Author: H.F.M 2018
               </packing>
             </child>
             <child>
-              <object class="GtkGrid" id="gridAction">
+              <object class="GtkGrid">
                 <property name="visible">True</property>
                 <property name="can_focus">False</property>
-                <property name="valign">start</property>
-                <property name="column_homogeneous">True</property>
+                <property name="margin_bottom">2</property>
+                <property name="row_homogeneous">True</property>
                 <child>
-                  <object class="GtkGrid" id="posixGrid">
+                  <object class="GtkGrid">
                     <property name="visible">True</property>
                     <property name="can_focus">False</property>
                     <property name="row_homogeneous">True</property>
                     <child>
-                      <object class="GtkCheckButton" id="chkCharacterClass">
-                        <property name="label" translatable="yes">Posix character class  </property>
+                      <object class="GtkCheckButton" id="chkWoleWord">
+                        <property name="label" translatable="yes">Whole word</property>
                         <property name="visible">True</property>
                         <property name="can_focus">True</property>
                         <property name="receives_default">False</property>
-                        <property name="margin_bottom">2</property>
-                        <property name="xalign">0</property>
-                        <property name="yalign">0.69999998807907104</property>
+                        <property name="halign">start</property>
+                        <property name="margin_left">2</property>
                         <property name="draw_indicator">True</property>
-                        <signal name="toggled" handler="chkCharacterClassToggled" swapped="no"/>
+                      </object>
+                      <packing>
+                        <property name="left_attach">0</property>
+                        <property name="top_attach">1</property>
+                      </packing>
+                    </child>
+                    <child>
+                      <object class="GtkCheckButton" id="chkCaseSensitive">
+                        <property name="label" translatable="yes">Case sensitive</property>
+                        <property name="visible">True</property>
+                        <property name="can_focus">True</property>
+                        <property name="receives_default">False</property>
+                        <property name="halign">start</property>
+                        <property name="margin_left">2</property>
+                        <property name="draw_indicator">True</property>
                       </object>
                       <packing>
                         <property name="left_attach">0</property>
@@ -527,22 +301,90 @@ Author: H.F.M 2018
                       </packing>
                     </child>
                     <child>
-                      <object class="GtkCheckButton" id="chkCharacterClassStrictMode">
-                        <property name="label" translatable="yes">Strict mode</property>
+                      <object class="GtkCheckButton" id="chkCharacterClass">
+                        <property name="label" translatable="yes">Posix character class  </property>
+                        <property name="visible">True</property>
                         <property name="can_focus">True</property>
                         <property name="receives_default">False</property>
-                        <property name="no_show_all">True</property>
+                        <property name="halign">start</property>
                         <property name="margin_left">2</property>
-                        <property name="margin_bottom">2</property>
-                        <property name="hexpand">True</property>
-                        <property name="xalign">0.5</property>
-                        <property name="yalign">0.99000000953674316</property>
-                        <property name="always_show_image">True</property>
-                        <property name="draw_indicator">False</property>
+                        <property name="draw_indicator">True</property>
+                        <signal name="toggled" handler="chkCharacterClassToggled" swapped="no"/>
+                      </object>
+                      <packing>
+                        <property name="left_attach">0</property>
+                        <property name="top_attach">2</property>
+                      </packing>
+                    </child>
+                    <child>
+                      <object class="GtkGrid">
+                        <property name="visible">True</property>
+                        <property name="can_focus">False</property>
+                        <property name="row_homogeneous">True</property>
+                        <child>
+                          <object class="GtkCheckButton" id="chkRegex">
+                            <property name="label" translatable="yes">Regex</property>
+                            <property name="visible">True</property>
+                            <property name="can_focus">True</property>
+                            <property name="receives_default">False</property>
+                            <property name="halign">start</property>
+                            <property name="margin_left">2</property>
+                            <property name="draw_indicator">True</property>
+                          </object>
+                          <packing>
+                            <property name="left_attach">1</property>
+                            <property name="top_attach">0</property>
+                          </packing>
+                        </child>
+                        <child>
+                          <object class="GtkCheckButton" id="chkCharacterClassStrictMode">
+                            <property name="label" translatable="yes">Strict mode</property>
+                            <property name="visible">True</property>
+                            <property name="can_focus">True</property>
+                            <property name="receives_default">False</property>
+                            <property name="halign">start</property>
+                            <property name="margin_left">2</property>
+                            <property name="draw_indicator">True</property>
+                          </object>
+                          <packing>
+                            <property name="left_attach">0</property>
+                            <property name="top_attach">0</property>
+                          </packing>
+                        </child>
+                      </object>
+                      <packing>
+                        <property name="left_attach">1</property>
+                        <property name="top_attach">2</property>
+                      </packing>
+                    </child>
+                    <child>
+                      <object class="GtkCheckButton" id="chkUseEscapeChar">
+                        <property name="label" translatable="yes">Escape character</property>
+                        <property name="visible">True</property>
+                        <property name="can_focus">True</property>
+                        <property name="receives_default">False</property>
+                        <property name="halign">start</property>
+                        <property name="margin_left">2</property>
+                        <property name="draw_indicator">True</property>
                       </object>
                       <packing>
                         <property name="left_attach">1</property>
                         <property name="top_attach">0</property>
+                      </packing>
+                    </child>
+                    <child>
+                      <object class="GtkCheckButton" id="chkWildcard">
+                        <property name="label" translatable="yes">Wildcard</property>
+                        <property name="visible">True</property>
+                        <property name="can_focus">True</property>
+                        <property name="receives_default">False</property>
+                        <property name="halign">start</property>
+                        <property name="margin_left">2</property>
+                        <property name="draw_indicator">True</property>
+                      </object>
+                      <packing>
+                        <property name="left_attach">1</property>
+                        <property name="top_attach">1</property>
                       </packing>
                     </child>
                   </object>
@@ -552,33 +394,137 @@ Author: H.F.M 2018
                   </packing>
                 </child>
                 <child>
-                  <object class="GtkButton" id="btnFind">
-                    <property name="label" translatable="yes">Find in files</property>
+                  <object class="GtkGrid">
                     <property name="visible">True</property>
-                    <property name="can_focus">True</property>
-                    <property name="receives_default">True</property>
-                    <property name="margin_left">2</property>
-                    <property name="margin_right">2</property>
-                    <property name="margin_bottom">2</property>
-                    <property name="hexpand">True</property>
-                    <property name="yalign">0.69999998807907104</property>
+                    <property name="can_focus">False</property>
+                    <child>
+                      <object class="GtkButton" id="btnShowClipboard">
+                        <property name="label" translatable="yes">View clipboard</property>
+                        <property name="visible">True</property>
+                        <property name="can_focus">True</property>
+                        <property name="receives_default">True</property>
+                        <property name="margin_left">2</property>
+                        <property name="margin_right">2</property>
+                        <property name="hexpand">True</property>
+                      </object>
+                      <packing>
+                        <property name="left_attach">2</property>
+                        <property name="top_attach">1</property>
+                      </packing>
+                    </child>
+                    <child>
+                      <object class="GtkButton" id="btnReplaceInClipboard">
+                        <property name="label" translatable="yes">Replace in clipboard</property>
+                        <property name="visible">True</property>
+                        <property name="can_focus">True</property>
+                        <property name="receives_default">True</property>
+                        <property name="margin_left">2</property>
+                        <property name="margin_right">2</property>
+                        <property name="margin_bottom">2</property>
+                        <property name="hexpand">True</property>
+                      </object>
+                      <packing>
+                        <property name="left_attach">2</property>
+                        <property name="top_attach">0</property>
+                      </packing>
+                    </child>
+                    <child>
+                      <object class="GtkGrid">
+                        <property name="visible">True</property>
+                        <property name="can_focus">False</property>
+                        <property name="row_homogeneous">True</property>
+                        <child>
+                          <object class="GtkSpinButton" id="spinButtonDepth">
+                            <property name="visible">True</property>
+                            <property name="can_focus">True</property>
+                            <property name="margin_left">2</property>
+                            <property name="margin_bottom">2</property>
+                          </object>
+                          <packing>
+                            <property name="left_attach">0</property>
+                            <property name="top_attach">0</property>
+                          </packing>
+                        </child>
+                        <child>
+                          <object class="GtkSwitch" id="switchFileChooserButton">
+                            <property name="visible">True</property>
+                            <property name="can_focus">True</property>
+                            <property name="halign">center</property>
+                            <property name="margin_left">2</property>
+                            <property name="hexpand">True</property>
+                            <property name="active">True</property>
+                          </object>
+                          <packing>
+                            <property name="left_attach">1</property>
+                            <property name="top_attach">0</property>
+                          </packing>
+                        </child>
+                      </object>
+                      <packing>
+                        <property name="left_attach">0</property>
+                        <property name="top_attach">0</property>
+                      </packing>
+                    </child>
+                    <child>
+                      <object class="GtkButton" id="btnScan">
+                        <property name="label" translatable="yes">Scan files</property>
+                        <property name="visible">True</property>
+                        <property name="can_focus">True</property>
+                        <property name="receives_default">True</property>
+                        <property name="margin_left">2</property>
+                        <property name="margin_right">2</property>
+                        <property name="hexpand">True</property>
+                      </object>
+                      <packing>
+                        <property name="left_attach">0</property>
+                        <property name="top_attach">1</property>
+                      </packing>
+                    </child>
+                    <child>
+                      <object class="GtkFileChooserButton" id="fileChooserBtn">
+                        <property name="visible">True</property>
+                        <property name="can_focus">False</property>
+                        <property name="hexpand">True</property>
+                        <property name="action">select-folder</property>
+                        <property name="title" translatable="yes">Select a dir</property>
+                      </object>
+                      <packing>
+                        <property name="left_attach">1</property>
+                        <property name="top_attach">1</property>
+                      </packing>
+                    </child>
+                    <child>
+                      <object class="GtkCheckButton" id="chkFollowSymlinkDir">
+                        <property name="label" translatable="yes">Follow symlink dir.</property>
+                        <property name="visible">True</property>
+                        <property name="can_focus">True</property>
+                        <property name="receives_default">False</property>
+                        <property name="margin_left">2</property>
+                        <property name="draw_indicator">True</property>
+                      </object>
+                      <packing>
+                        <property name="left_attach">1</property>
+                        <property name="top_attach">0</property>
+                      </packing>
+                    </child>
                   </object>
                   <packing>
-                    <property name="left_attach">1</property>
+                    <property name="left_attach">2</property>
                     <property name="top_attach">0</property>
                   </packing>
                 </child>
                 <child>
-                  <object class="GtkFileChooserButton" id="fileChooserBtn">
+                  <object class="GtkButton" id="btnFind">
+                    <property name="label" translatable="yes">Search in file(s)</property>
                     <property name="visible">True</property>
-                    <property name="can_focus">False</property>
-                    <property name="margin_right">2</property>
-                    <property name="margin_bottom">2</property>
-                    <property name="action">select-folder</property>
-                    <property name="title" translatable="yes">Select a dir</property>
+                    <property name="can_focus">True</property>
+                    <property name="receives_default">True</property>
+                    <property name="margin_left">2</property>
+                    <property name="hexpand">True</property>
+                    <property name="always_show_image">True</property>
                   </object>
                   <packing>
-                    <property name="left_attach">2</property>
+                    <property name="left_attach">1</property>
                     <property name="top_attach">0</property>
                   </packing>
                 </child>
@@ -605,7 +551,7 @@ Author: H.F.M 2018
             <property name="shadow_type">in</property>
             <property name="overlay_scrolling">False</property>
             <child>
-              <object class="GtkTreeView" id="treeviewFiles">
+              <object class="GtkTreeView" id="listViewFiles">
                 <property name="visible">True</property>
                 <property name="can_focus">True</property>
                 <property name="hscroll_policy">natural</property>
@@ -621,29 +567,50 @@ Author: H.F.M 2018
           <packing>
             <property name="expand">True</property>
             <property name="fill">True</property>
-            <property name="position">2</property>
+            <property name="position">3</property>
           </packing>
         </child>
         <child>
-          <object class="GtkStatusbar" id="statusbar">
+          <object class="GtkGrid">
             <property name="visible">True</property>
             <property name="can_focus">False</property>
-            <property name="margin_left">4</property>
-            <property name="margin_right">4</property>
-            <property name="margin_start">10</property>
-            <property name="margin_end">10</property>
-            <property name="margin_top">2</property>
-            <property name="margin_bottom">2</property>
-            <property name="hexpand">True</property>
-            <property name="orientation">vertical</property>
-            <property name="spacing">2</property>
-            <property name="homogeneous">True</property>
+            <child>
+              <object class="GtkStatusbar" id="statusbar">
+                <property name="visible">True</property>
+                <property name="can_focus">False</property>
+                <property name="margin_left">2</property>
+                <property name="margin_right">2</property>
+                <property name="margin_start">10</property>
+                <property name="margin_end">10</property>
+                <property name="hexpand">True</property>
+                <property name="orientation">vertical</property>
+                <property name="spacing">2</property>
+                <property name="homogeneous">True</property>
+              </object>
+              <packing>
+                <property name="left_attach">0</property>
+                <property name="top_attach">0</property>
+              </packing>
+            </child>
+            <child>
+              <object class="GtkButton" id="mainWinBtnClose">
+                <property name="label" translatable="yes">Close</property>
+                <property name="visible">True</property>
+                <property name="can_focus">True</property>
+                <property name="receives_default">True</property>
+                <property name="halign">end</property>
+                <property name="margin_right">2</property>
+              </object>
+              <packing>
+                <property name="left_attach">1</property>
+                <property name="top_attach">0</property>
+              </packing>
+            </child>
           </object>
           <packing>
             <property name="expand">False</property>
             <property name="fill">True</property>
-            <property name="pack_type">end</property>
-            <property name="position">3</property>
+            <property name="position">4</property>
           </packing>
         </child>
       </object>
@@ -651,9 +618,8 @@ Author: H.F.M 2018
   </object>
   <object class="GtkWindow" id="textWin">
     <property name="can_focus">False</property>
-    <property name="modal">True</property>
     <property name="window_position">center</property>
-    <property name="skip_taskbar_hint">True</property>
+    <property name="skip_pager_hint">True</property>
     <child>
       <placeholder/>
     </child>
@@ -666,14 +632,15 @@ Author: H.F.M 2018
           <object class="GtkGrid" id="textWinGridTop">
             <property name="visible">True</property>
             <property name="can_focus">False</property>
+            <property name="margin_top">2</property>
+            <property name="margin_bottom">2</property>
+            <property name="row_homogeneous">True</property>
             <child>
               <object class="GtkCheckButton" id="textWinChkWrap">
                 <property name="label" translatable="yes">Wrap text  </property>
                 <property name="visible">True</property>
                 <property name="can_focus">True</property>
                 <property name="receives_default">False</property>
-                <property name="xalign">0</property>
-                <property name="yalign">0.69999998807907104</property>
                 <property name="draw_indicator">True</property>
               </object>
               <packing>
@@ -687,8 +654,6 @@ Author: H.F.M 2018
                 <property name="visible">True</property>
                 <property name="can_focus">True</property>
                 <property name="receives_default">False</property>
-                <property name="xalign">0</property>
-                <property name="yalign">0.69999998807907104</property>
                 <property name="draw_indicator">True</property>
               </object>
               <packing>
@@ -704,19 +669,47 @@ Author: H.F.M 2018
           </packing>
         </child>
         <child>
-          <object class="GtkScrolledWindow" id="textWinScrolledwindow">
+          <object class="GtkGrid">
             <property name="visible">True</property>
-            <property name="can_focus">True</property>
-            <property name="margin_left">2</property>
-            <property name="margin_right">2</property>
-            <property name="margin_top">2</property>
-            <property name="shadow_type">in</property>
+            <property name="can_focus">False</property>
+            <property name="margin_bottom">2</property>
             <child>
-              <object class="GtkTextView" id="textWinTextview">
+              <object class="GtkScrolledWindow" id="textWinScrolledwindow">
                 <property name="visible">True</property>
                 <property name="can_focus">True</property>
-                <property name="monospace">True</property>
+                <property name="hexpand">True</property>
+                <property name="vexpand">True</property>
+                <property name="shadow_type">in</property>
+                <child>
+                  <object class="GtkTextView" id="textWinTextview">
+                    <property name="name">textWinTextview</property>
+                    <property name="visible">True</property>
+                    <property name="can_focus">True</property>
+                  </object>
+                </child>
               </object>
+              <packing>
+                <property name="left_attach">1</property>
+                <property name="top_attach">0</property>
+              </packing>
+            </child>
+            <child>
+              <object class="GtkScrolledWindow" id="textWinScrolledwindowNumbers">
+                <property name="visible">True</property>
+                <property name="can_focus">True</property>
+                <property name="shadow_type">in</property>
+                <child>
+                  <object class="GtkTextView" id="textWinTextviewNumbers">
+                    <property name="name">textWinTextviewNumbers</property>
+                    <property name="visible">True</property>
+                    <property name="can_focus">True</property>
+                  </object>
+                </child>
+              </object>
+              <packing>
+                <property name="left_attach">0</property>
+                <property name="top_attach">0</property>
+              </packing>
             </child>
           </object>
           <packing>
@@ -726,38 +719,13 @@ Author: H.F.M 2018
           </packing>
         </child>
         <child>
-          <object class="GtkGrid" id="textWinGridBottom">
+          <object class="GtkButton" id="textWinBtnDone">
+            <property name="label" translatable="yes">Done</property>
             <property name="visible">True</property>
-            <property name="can_focus">False</property>
-            <property name="column_homogeneous">True</property>
-            <child>
-              <object class="GtkButton" id="textWinBtnDone">
-                <property name="label" translatable="yes">Done</property>
-                <property name="visible">True</property>
-                <property name="can_focus">True</property>
-                <property name="receives_default">True</property>
-                <property name="margin_left">2</property>
-                <property name="margin_right">2</property>
-                <property name="margin_top">2</property>
-                <property name="margin_bottom">2</property>
-              </object>
-              <packing>
-                <property name="left_attach">4</property>
-                <property name="top_attach">0</property>
-              </packing>
-            </child>
-            <child>
-              <placeholder/>
-            </child>
-            <child>
-              <placeholder/>
-            </child>
-            <child>
-              <placeholder/>
-            </child>
-            <child>
-              <placeholder/>
-            </child>
+            <property name="can_focus">True</property>
+            <property name="receives_default">True</property>
+            <property name="halign">end</property>
+            <property name="margin_bottom">2</property>
           </object>
           <packing>
             <property name="expand">False</property>
