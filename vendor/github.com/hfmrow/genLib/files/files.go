@@ -9,7 +9,7 @@ import (
 	"path/filepath"
 	"strings"
 
-	gsl "github.com/hfmrow/genLib/slices"
+	glss "github.com/hfmrow/genLib/slices"
 )
 
 var TmpCount int
@@ -24,7 +24,7 @@ func CompareFilesContent(filename1, filename2, filenameOutDiff string) (diff []s
 		if data2, err = ReadFile(filename2); err == nil {
 			slice2 = strings.Split(string(data2), "\n")
 			for _, f1 := range slice1 {
-				if !gsl.IsExistSl(slice2, f1) {
+				if !glss.IsExistSl(slice2, f1) {
 					diff = append(diff, f1)
 				}
 			}

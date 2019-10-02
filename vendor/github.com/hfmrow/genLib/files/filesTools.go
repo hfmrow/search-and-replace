@@ -12,6 +12,32 @@ import (
 	"strings"
 )
 
+// splitPath: make a slice from a string path
+func splitPath(path string) (outSlice []string) {
+	// remove leading and ending "/"
+	path = strings.Trim(path, string(os.PathSeparator))
+	return strings.Split(path, string(os.PathSeparator))
+}
+
+// removePathBefore: remove directories before or after the chosen name
+func removePathBefore(path []string, at string, after ...bool) []string {
+	var afterMark bool
+	if len(after) > 0 {
+		afterMark = after[0]
+	}
+	for idx := len(path) - 1; idx >= 0; idx-- {
+		if path[idx] == at {
+			if afterMark {
+				path = path[idx+1:]
+			} else {
+				path = path[idx:]
+			}
+			break
+		}
+	}
+	return path
+}
+
 // IsDirEmpty:
 func IsDirEmpty(name string) (empty bool, err error) {
 	var f *os.File

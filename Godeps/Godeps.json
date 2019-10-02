@@ -1,194 +1,187 @@
 {
-	"ImportPath": "github.com/hfmrow/sAndReplace",
-	"GoVersion": "go1.13",
-	"GodepVersion": "v80",
 	"Deps": [
 		{
-			"ImportPath": "github.com/dustin/go-humanize",
 			"Comment": "v1.0.0",
+			"ImportPath": "github.com/dustin/go-humanize",
 			"Rev": "9f541cc9db5d55bce703bd99987c9d5cb8eea45e"
 		},
 		{
-			"ImportPath": "github.com/gotk3/gotk3/cairo",
-			"Comment": "GOTK3_0_3_0-174-gf6994e9",
-			"Rev": "f6994e9a155820c77b644ecafadb19f549e55a92"
-		},
-		{
-			"ImportPath": "github.com/gotk3/gotk3/gdk",
-			"Comment": "GOTK3_0_3_0-174-gf6994e9",
-			"Rev": "f6994e9a155820c77b644ecafadb19f549e55a92"
-		},
-		{
-			"ImportPath": "github.com/gotk3/gotk3/glib",
-			"Comment": "GOTK3_0_3_0-174-gf6994e9",
-			"Rev": "f6994e9a155820c77b644ecafadb19f549e55a92"
-		},
-		{
-			"ImportPath": "github.com/gotk3/gotk3/gtk",
-			"Comment": "GOTK3_0_3_0-174-gf6994e9",
-			"Rev": "f6994e9a155820c77b644ecafadb19f549e55a92"
-		},
-		{
-			"ImportPath": "github.com/gotk3/gotk3/pango",
-			"Comment": "GOTK3_0_3_0-174-gf6994e9",
-			"Rev": "f6994e9a155820c77b644ecafadb19f549e55a92"
-		},
-		{
+			"Comment": "",
 			"ImportPath": "github.com/hfmrow/genLib/files",
-			"Rev": "b49761cecdfc5787122e5a1f38b197790e135d3b"
+			"Rev": "30802d368ee1686422392047ce7952e69057e94f"
 		},
 		{
+			"Comment": "",
 			"ImportPath": "github.com/hfmrow/genLib/files/fileText",
-			"Rev": "b49761cecdfc5787122e5a1f38b197790e135d3b"
+			"Rev": "30802d368ee1686422392047ce7952e69057e94f"
 		},
 		{
+			"Comment": "",
 			"ImportPath": "github.com/hfmrow/genLib/slices",
-			"Rev": "b49761cecdfc5787122e5a1f38b197790e135d3b"
+			"Rev": "30802d368ee1686422392047ce7952e69057e94f"
 		},
 		{
+			"Comment": "",
 			"ImportPath": "github.com/hfmrow/genLib/strings",
-			"Rev": "b49761cecdfc5787122e5a1f38b197790e135d3b"
+			"Rev": "30802d368ee1686422392047ce7952e69057e94f"
 		},
 		{
+			"Comment": "",
 			"ImportPath": "github.com/hfmrow/genLib/strings/cClass",
-			"Rev": "b49761cecdfc5787122e5a1f38b197790e135d3b"
+			"Rev": "30802d368ee1686422392047ce7952e69057e94f"
 		},
 		{
+			"Comment": "",
 			"ImportPath": "github.com/hfmrow/genLib/tools/bench",
-			"Rev": "b49761cecdfc5787122e5a1f38b197790e135d3b"
+			"Rev": "30802d368ee1686422392047ce7952e69057e94f"
 		},
 		{
+			"Comment": "",
 			"ImportPath": "github.com/hfmrow/genLib/tools/errors",
-			"Rev": "b49761cecdfc5787122e5a1f38b197790e135d3b"
+			"Rev": "30802d368ee1686422392047ce7952e69057e94f"
 		},
 		{
+			"Comment": "",
 			"ImportPath": "github.com/hfmrow/gtk3Import/dialog",
 			"Rev": "4ebcf96077b2397565be3d3854f8cd35be7c4c5c"
 		},
 		{
+			"Comment": "",
 			"ImportPath": "github.com/hfmrow/gtk3Import/dialog/about",
 			"Rev": "4ebcf96077b2397565be3d3854f8cd35be7c4c5c"
 		},
 		{
+			"Comment": "",
 			"ImportPath": "github.com/hfmrow/gtk3Import/misc",
 			"Rev": "4ebcf96077b2397565be3d3854f8cd35be7c4c5c"
 		},
 		{
+			"Comment": "",
 			"ImportPath": "github.com/hfmrow/gtk3Import/pango",
 			"Rev": "4ebcf96077b2397565be3d3854f8cd35be7c4c5c"
 		},
 		{
+			"Comment": "",
 			"ImportPath": "github.com/hfmrow/gtk3Import/pixbuff",
 			"Rev": "4ebcf96077b2397565be3d3854f8cd35be7c4c5c"
 		},
 		{
+			"Comment": "",
 			"ImportPath": "github.com/hfmrow/gtk3Import/textView",
 			"Rev": "4ebcf96077b2397565be3d3854f8cd35be7c4c5c"
 		},
 		{
+			"Comment": "",
 			"ImportPath": "github.com/hfmrow/gtk3Import/tools",
 			"Rev": "4ebcf96077b2397565be3d3854f8cd35be7c4c5c"
 		},
 		{
+			"Comment": "",
 			"ImportPath": "github.com/hfmrow/gtk3Import/treeview",
 			"Rev": "4ebcf96077b2397565be3d3854f8cd35be7c4c5c"
 		},
 		{
+			"Comment": "",
 			"ImportPath": "golang.org/x/net/html",
 			"Rev": "e147a9138326bc0e9d4e179541ffd8af41cff8a9"
 		},
 		{
+			"Comment": "",
 			"ImportPath": "golang.org/x/net/html/atom",
 			"Rev": "e147a9138326bc0e9d4e179541ffd8af41cff8a9"
 		},
 		{
+			"Comment": "",
 			"ImportPath": "golang.org/x/net/html/charset",
 			"Rev": "e147a9138326bc0e9d4e179541ffd8af41cff8a9"
 		},
 		{
+			"Comment": "v0.3.0-68-g17bcc04",
 			"ImportPath": "golang.org/x/text/encoding",
-			"Comment": "v0.3.0-68-g17bcc04",
 			"Rev": "17bcc049122f272a32787ba38073ee47433023e9"
 		},
 		{
+			"Comment": "v0.3.0-68-g17bcc04",
 			"ImportPath": "golang.org/x/text/encoding/charmap",
-			"Comment": "v0.3.0-68-g17bcc04",
 			"Rev": "17bcc049122f272a32787ba38073ee47433023e9"
 		},
 		{
+			"Comment": "v0.3.0-68-g17bcc04",
 			"ImportPath": "golang.org/x/text/encoding/htmlindex",
-			"Comment": "v0.3.0-68-g17bcc04",
 			"Rev": "17bcc049122f272a32787ba38073ee47433023e9"
 		},
 		{
+			"Comment": "v0.3.0-68-g17bcc04",
 			"ImportPath": "golang.org/x/text/encoding/internal",
-			"Comment": "v0.3.0-68-g17bcc04",
 			"Rev": "17bcc049122f272a32787ba38073ee47433023e9"
 		},
 		{
+			"Comment": "v0.3.0-68-g17bcc04",
 			"ImportPath": "golang.org/x/text/encoding/internal/identifier",
-			"Comment": "v0.3.0-68-g17bcc04",
 			"Rev": "17bcc049122f272a32787ba38073ee47433023e9"
 		},
 		{
+			"Comment": "v0.3.0-68-g17bcc04",
 			"ImportPath": "golang.org/x/text/encoding/japanese",
-			"Comment": "v0.3.0-68-g17bcc04",
 			"Rev": "17bcc049122f272a32787ba38073ee47433023e9"
 		},
 		{
+			"Comment": "v0.3.0-68-g17bcc04",
 			"ImportPath": "golang.org/x/text/encoding/korean",
-			"Comment": "v0.3.0-68-g17bcc04",
 			"Rev": "17bcc049122f272a32787ba38073ee47433023e9"
 		},
 		{
+			"Comment": "v0.3.0-68-g17bcc04",
 			"ImportPath": "golang.org/x/text/encoding/simplifiedchinese",
-			"Comment": "v0.3.0-68-g17bcc04",
 			"Rev": "17bcc049122f272a32787ba38073ee47433023e9"
 		},
 		{
+			"Comment": "v0.3.0-68-g17bcc04",
 			"ImportPath": "golang.org/x/text/encoding/traditionalchinese",
-			"Comment": "v0.3.0-68-g17bcc04",
 			"Rev": "17bcc049122f272a32787ba38073ee47433023e9"
 		},
 		{
+			"Comment": "v0.3.0-68-g17bcc04",
 			"ImportPath": "golang.org/x/text/encoding/unicode",
-			"Comment": "v0.3.0-68-g17bcc04",
 			"Rev": "17bcc049122f272a32787ba38073ee47433023e9"
 		},
 		{
+			"Comment": "v0.3.0-68-g17bcc04",
 			"ImportPath": "golang.org/x/text/internal/language",
-			"Comment": "v0.3.0-68-g17bcc04",
 			"Rev": "17bcc049122f272a32787ba38073ee47433023e9"
 		},
 		{
+			"Comment": "v0.3.0-68-g17bcc04",
 			"ImportPath": "golang.org/x/text/internal/language/compact",
-			"Comment": "v0.3.0-68-g17bcc04",
 			"Rev": "17bcc049122f272a32787ba38073ee47433023e9"
 		},
 		{
+			"Comment": "v0.3.0-68-g17bcc04",
 			"ImportPath": "golang.org/x/text/internal/tag",
-			"Comment": "v0.3.0-68-g17bcc04",
 			"Rev": "17bcc049122f272a32787ba38073ee47433023e9"
 		},
 		{
+			"Comment": "v0.3.0-68-g17bcc04",
 			"ImportPath": "golang.org/x/text/internal/utf8internal",
-			"Comment": "v0.3.0-68-g17bcc04",
 			"Rev": "17bcc049122f272a32787ba38073ee47433023e9"
 		},
 		{
+			"Comment": "v0.3.0-68-g17bcc04",
 			"ImportPath": "golang.org/x/text/language",
-			"Comment": "v0.3.0-68-g17bcc04",
 			"Rev": "17bcc049122f272a32787ba38073ee47433023e9"
 		},
 		{
+			"Comment": "v0.3.0-68-g17bcc04",
 			"ImportPath": "golang.org/x/text/runes",
-			"Comment": "v0.3.0-68-g17bcc04",
 			"Rev": "17bcc049122f272a32787ba38073ee47433023e9"
 		},
 		{
-			"ImportPath": "golang.org/x/text/transform",
 			"Comment": "v0.3.0-68-g17bcc04",
+			"ImportPath": "golang.org/x/text/transform",
 			"Rev": "17bcc049122f272a32787ba38073ee47433023e9"
 		}
-	]
+	],
+	"GoVersion": "go1.13",
+	"GodepVersion": "v80",
+	"ImportPath": "github.com/hfmrow/sAndReplace"
 }
