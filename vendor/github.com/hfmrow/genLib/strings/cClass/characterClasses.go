@@ -25,8 +25,9 @@ func charToCharClasses(inpString string, caseSensitive, strictMode bool) string 
 			cClass{regex: `[[:punct:]]`},
 			cClass{regex: `[[:graph:]]`}}
 		charClassesCI = []cClass{
-			cClass{regex: `[[:alpha:]]`},
-			cClass{regex: `[[:digit:]]`},
+			cClass{regex: `[[:alnum:]]`},
+			// cClass{regex: `[[:alpha:]]`},
+			// cClass{regex: `[[:digit:]]`},
 			cClass{regex: `[[:blank:]]`},
 			cClass{regex: `[[:space:]]`},
 			cClass{regex: `[[:cntrl:]]`},
@@ -37,10 +38,13 @@ func charToCharClasses(inpString string, caseSensitive, strictMode bool) string 
 			cClass{regex: `[[:upper:]]`},
 			cClass{regex: `[[:lower:]]`},
 			cClass{regex: `[[:digit:]]`},
+			cClass{regex: `[[:space:]]`},
 			cClass{regex: `[[:punct:]]`}}
 		charClassesCI = []cClass{
-			cClass{regex: `[[:alpha:]]`},
-			cClass{regex: `[[:digit:]]`},
+			cClass{regex: `[[:alnum:]]`},
+			// cClass{regex: `[[:alpha:]]`},
+			// cClass{regex: `[[:digit:]]`},
+			cClass{regex: `[[:space:]]`},
 			cClass{regex: `[[:punct:]]`}}
 	}
 	var tmpString string

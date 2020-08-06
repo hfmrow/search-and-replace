@@ -7,11 +7,13 @@ import (
 	"os"
 
 	"github.com/gotk3/gotk3/gtk"
+
 	gler "github.com/hfmrow/genLib/tools/errors"
 )
 
 // DialogError: Display error messaged dialog returning true in error case.
 // options: devMode, forceExit bool
+// NOTICE: exit option must not be used if a "defer" function is initiated !
 func DialogError(window *gtk.Window, title, text string, err error, options ...bool) bool {
 	var devMode, forceExit = true, false
 	switch {
@@ -21,7 +23,7 @@ func DialogError(window *gtk.Window, title, text string, err error, options ...b
 		devMode = options[0]
 		forceExit = options[1]
 	case len(options) > 2:
-		fmt.Printf("Wrong , arguments number, %v\n", options)
+		fmt.Printf("DialogError: Wrong , arguments number, %v\n", options)
 		os.Exit(1)
 	}
 	if gler.Check(err) {
@@ -30,7 +32,7 @@ func DialogError(window *gtk.Window, title, text string, err error, options ...b
 				window,
 				"error",
 				title,
-				fmt.Sprintf("\n\n"+text+":\n%s", err.Error()),
+				fmt.Sprintf("\n\n"+text+":\n\n%s", err.Error()),
 				"",
 				"Stop",
 				"Continue") == 0 {
@@ -41,7 +43,7 @@ func DialogError(window *gtk.Window, title, text string, err error, options ...b
 				window,
 				"error",
 				title,
-				fmt.Sprintf("\n\n"+text+":\n%s", err.Error()),
+				fmt.Sprintf("\n\n"+text+":\n\n%s", err.Error()),
 				"",
 				"Ok")
 			if forceExit {

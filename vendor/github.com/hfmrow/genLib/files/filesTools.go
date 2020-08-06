@@ -3,6 +3,8 @@ package files
 import (
 	"bufio"
 	"bytes"
+	"encoding/binary"
+	"fmt"
 	"io"
 	"io/ioutil"
 	"log"
@@ -12,15 +14,37 @@ import (
 	"strings"
 )
 
+// FileMatch: If a pattern contained in "patterns" match,
+// true is returned
+func FileMatch(name string, patterns []string) bool {
+	for _, pattern := range patterns {
+		if match, err := filepath.Match(pattern, name); match {
+			return match
+		} else if err != nil {
+			fmt.Printf("FileMatch: %s, %s, - %s\n", pattern, name, err.Error())
+		}
+	}
+	return false
+}
+
+// sizeToBytes: convert uint32 size to bytes representation (32bits) "000001f1"
+func SizeToBytes(size uint32) []byte {
+	buf := new(bytes.Buffer)
+	if err := binary.Write(buf, binary.BigEndian, size); err != nil {
+		fmt.Println("binary.Write failed:", err)
+	}
+	return buf.Bytes()
+}
+
 // splitPath: make a slice from a string path
-func splitPath(path string) (outSlice []string) {
+func SplitPath(path string) (outSlice []string) {
 	// remove leading and ending "/"
 	path = strings.Trim(path, string(os.PathSeparator))
 	return strings.Split(path, string(os.PathSeparator))
 }
 
 // removePathBefore: remove directories before or after the chosen name
-func removePathBefore(path []string, at string, after ...bool) []string {
+func RemovePathBefore(path []string, at string, after ...bool) []string {
 	var afterMark bool
 	if len(after) > 0 {
 		afterMark = after[0]
@@ -36,6 +60,28 @@ func removePathBefore(path []string, at string, after ...bool) []string {
 		}
 	}
 	return path
+}
+
+// IsDirOrSymlinkDir: File is a directory or a symlinked directory ?
+// Need: os.FileInfo - > os.Lstat
+func IsDirOrSymlinkDir(slRoot string, slStat os.FileInfo) (slIsDir bool) {
+	var err error
+	var fName string
+	if slStat.IsDir() {
+		return true
+	} else if slStat.Mode()&os.ModeSymlink != 0 {
+		if fName, err = os.Readlink(filepath.Join(slRoot, slStat.Name())); err == nil {
+			if slStat, err = os.Stat(fName); err == nil {
+				if slStat.IsDir() {
+					return true
+				}
+			}
+		}
+	}
+	if err != nil {
+		log.Printf("Unable to scan: %s\n", err.Error)
+	}
+	return
 }
 
 // IsDirEmpty:

@@ -7,6 +7,8 @@
 *	This is a pango markup binder to gotk3 pango library ...
 *	I have made it to make more simple markup handling when i'm working on gtk objects.
 *	It can be used in treeview, dialog, label, ... Each object where you ca.n set "markup" content
+
+*	The principle of this helper is to apply markup to an entire text using indexes retrieved by regex functions.
  */
 
 package gtk3Import
@@ -73,70 +75,15 @@ var markupType = map[string][]string{
 	"wgt":         {`<span font_weight="`, `">`, `</span>`}, // One of 'ultralight', 'light', 'normal', 'bold', 'ultrabold', 'heavy', or a numeric weight
 }
 
-type PangoColor struct {
-	Black     string
-	Brown     string
-	White     string
-	Red       string
-	Green     string
-	Blue      string
-	Cyan      string
-	Magenta   string
-	Purple    string
-	Turquoise string
-	Violet    string
-
-	Darkred   string
-	Darkgreen string
-	Darkblue  string
-	Darkgray  string
-	Darkcyan  string
-
-	Lightblue      string
-	Lightgray      string
-	Lightgreen     string
-	Lightturquoise string
-	Lightred       string
-	Lightyellow    string
-}
-
-func (pc *PangoColor) Init() {
-	//	Colors initialisation
-	pc.Black = "#000000"
-	pc.Brown = "#7C2020"
-	pc.White = "#FFFFFF"
-	pc.Red = "#FF2222"
-	pc.Green = "#22BB22"
-	pc.Blue = "#0044FF"
-	pc.Cyan = "#14FFFA"
-	pc.Magenta = "#D72D6C"
-	pc.Purple = "#8B0037"
-	pc.Turquoise = "#009187"
-	pc.Violet = "#7F00FF"
-	pc.Darkred = "#300000"
-	pc.Darkgreen = "#003000"
-	pc.Darkblue = "#000030"
-	pc.Darkcyan = "#003333"
-	pc.Darkgray = "#303030"
-	pc.Lightturquoise = "#80FFE7"
-	pc.Lightblue = "#ADD8E6"
-	pc.Lightgray = "#E4DDDD"
-	pc.Lightgreen = "#87FF87"
-	pc.Lightred = "#FF6666"
-	pc.Lightyellow = "#FFFF6F"
-}
-
 type PangoMarkup struct {
 	InString      string
 	OutString     string
 	OutStringSl   []string
 	markPositions [][]int
 	markTypes     [][]string
-	Colors        PangoColor
 }
 
 func (pm *PangoMarkup) Init(inString string) {
-	pm.Colors.Init()
 	// Object initialisation/cleaning
 	pm.InString = inString
 	pm.markPositions = [][]int{}
@@ -280,3 +227,56 @@ func markupSeparate(text string, mType ...string) []string {
 		return []string{fmt.Sprint("Markup type error: ", mType)}
 	}
 }
+
+// type PangoColor struct {
+// 	Black     string
+// 	Brown     string
+// 	White     string
+// 	Red       string
+// 	Green     string
+// 	Blue      string
+// 	Cyan      string
+// 	Magenta   string
+// 	Purple    string
+// 	Turquoise string
+// 	Violet    string
+
+// 	Darkred   string
+// 	Darkgreen string
+// 	Darkblue  string
+// 	Darkgray  string
+// 	Darkcyan  string
+
+// 	Lightblue      string
+// 	Lightgray      string
+// 	Lightgreen     string
+// 	Lightturquoise string
+// 	Lightred       string
+// 	Lightyellow    string
+// }
+
+// func (pc *PangoColor) Init() {
+// 	//	Colors initialisation
+// 	pc.Black = "#000000"
+// 	pc.Brown = "#7C2020"
+// 	pc.White = "#FFFFFF"
+// 	pc.Red = "#FF2222"
+// 	pc.Green = "#22BB22"
+// 	pc.Blue = "#0044FF"
+// 	pc.Cyan = "#14FFFA"
+// 	pc.Magenta = "#D72D6C"
+// 	pc.Purple = "#8B0037"
+// 	pc.Turquoise = "#009187"
+// 	pc.Violet = "#7F00FF"
+// 	pc.Darkred = "#300000"
+// 	pc.Darkgreen = "#003000"
+// 	pc.Darkblue = "#000030"
+// 	pc.Darkcyan = "#003333"
+// 	pc.Darkgray = "#303030"
+// 	pc.Lightturquoise = "#80FFE7"
+// 	pc.Lightblue = "#ADD8E6"
+// 	pc.Lightgray = "#E4DDDD"
+// 	pc.Lightgreen = "#87FF87"
+// 	pc.Lightred = "#FF6666"
+// 	pc.Lightyellow = "#FFFF6F"
+// }

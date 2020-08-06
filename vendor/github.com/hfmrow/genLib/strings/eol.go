@@ -1,7 +1,7 @@
 // eol.go
 
 /*
-* Some end of line functions used by different OS
+*	Some end of line functions used by different OS
  */
 
 package strings
@@ -10,50 +10,14 @@ import (
 	"bytes"
 	"errors"
 	"io/ioutil"
+	"os"
 	"runtime"
-	"strings"
 )
-
-var platforms = [][]string{
-	{"darwin", "386", "\n"},
-	{"darwin", "amd64", "\n"},
-	{"dragonfly", "amd64", "\n"},
-	{"freebsd", "386", "\n"},
-	{"freebsd", "amd64", "\n"},
-	{"freebsd", "arm", "\n"},
-	{"linux", "386", "\n"},
-	{"linux", "amd64", "\n"},
-	{"linux", "arm", "\n"},
-	{"linux", "arm64", "\n"},
-	{"linux", "ppc64", "\n"},
-	{"linux", "ppc64le", "\n"},
-	{"linux", "mips", "\n"},
-	{"linux", "mipsle", "\n"},
-	{"linux", "mips64", "\n"},
-	{"linux", "mips64le", "\n"},
-	{"linux", "s390x", "\n"},
-	{"nacl", "386", "\n"},
-	{"nacl", "amd64p32", "\n"},
-	{"nacl", "arm", "\n"},
-	{"netbsd", "386", "\n"},
-	{"netbsd", "amd64", "\n"},
-	{"netbsd", "arm", "\n"},
-	{"openbsd", "386", "\n"},
-	{"openbsd", "amd64", "\n"},
-	{"openbsd", "arm", "\n"},
-	{"plan9", "386", "\n"},
-	{"plan9", "amd64", "\n"},
-	{"plan9", "arm", "\n"},
-	{"solaris", "amd64", "\n"},
-	{"windows", "386", "\r\n"},
-	{"windows", "amd64", "\r\n"}}
 
 // GetOsLineEnd: Get current OS line-feed
 func GetOsLineEnd() string {
-	for _, row := range platforms {
-		if row[0] == runtime.GOOS {
-			return row[2]
-		}
+	if "windows" == runtime.GOOS {
+		return "\r\n"
 	}
 	return "\n"
 }
@@ -95,14 +59,6 @@ func SetTextEOL(inTextBytes []byte, eol string) (outTextBytes []byte, err error)
 	return outTextBytes, nil
 }
 
-// SplitAtEOL: split data to slice
-func SplitAtEOL(data []byte) (outSlice []string) {
-	bLF := []byte{0x0A}
-	bCRLF := []byte{0x0D, 0x0A}
-	data = bytes.ReplaceAll(data, bCRLF, bLF)
-	return strings.Split(string(data), string(bLF))
-}
-
 // GetFileEOL: Open file and get (CR, LF, CRLF) > string or get OS line end.
 func GetFileEOL(filename string) (outString string, err error) {
 	textFileBytes, err := ioutil.ReadFile(filename)
@@ -123,7 +79,7 @@ func SetFileEOL(filename, eol string) error {
 	if err != nil {
 		return err
 	}
-	err = ioutil.WriteFile(filename, textFileBytes, 0644)
+	err = ioutil.WriteFile(filename, textFileBytes, os.ModePerm)
 	if err != nil {
 		return err
 	}

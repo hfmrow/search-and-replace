@@ -52,7 +52,7 @@ func DialogMessage(window *gtk.Window, dlgType, title, text string, iconFileName
 	// Image
 	if len(iconFileName.(string)) != 0 {
 		if box, err = msgDialog.GetContentArea(); err == nil {
-			p.SetBoxImage(box, iconFileName)
+			p.SetPict(box, iconFileName, 18)
 		} else {
 			fmt.Println(fmt.Sprintf("DlgMessage, could not get content area: %s", err))
 		}
@@ -74,8 +74,10 @@ func DialogMessage(window *gtk.Window, dlgType, title, text string, iconFileName
 		if err != nil {
 			log.Fatal(btn+" button could not be created: ", err)
 		}
-		parent, _ := button.GetParent()
-		parent.SetHAlign(gtk.ALIGN_END)
+		if iWidget, err := button.GetParent(); err == nil {
+			parent := iWidget.ToWidget()
+			parent.SetHAlign(gtk.ALIGN_END)
+		}
 		button.SetSizeRequest(100, 1)
 		button.SetBorderWidth(2)
 	}

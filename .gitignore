@@ -31,8 +31,10 @@
 
 # Personal unwanted files and folders
 gohBackup/*
+*artWork/*
 *.opt
 *~
+*~~
 *.debug
 *.xz
 *.7z

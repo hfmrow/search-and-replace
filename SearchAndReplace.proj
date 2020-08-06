@@ -1,12 +1,14 @@
 {
-	"GOHVersion": "v1.3.8",
+	"GOHVersion": "v1.5",
 	"AppName": "Search And Replace",
 	"AppCreator": "H.F.M",
-	"AppVers": "v1.7.6",
+	"AppVers": "v1.8",
+	"AppDescr": "",
 	"License": "",
 	"LicenseShort": "",
 	"LicenseAbr": "MIT",
-	"YearCreate": "2018-19",
+	"YearCreate": "2018-20",
+	"Repository": "github.com/hfmrow/sAndReplace",
 	"ManualAdd": "/*MANUAL*/",
 	"DefaultSignal": "notify",
 	"PackageName": "main",
@@ -16,7 +18,7 @@
 	"Gotk3Path": "github.com/gotk3/gotk3",
 	"GladeXmlFile": "/media/syndicate/storage/Documents/dev/go/src/github.com/hfmrow/sAndReplace/assets/glade/main.glade",
 	"GladeXmlFileRel": "assets/glade/main.glade",
-	"GladeXmlFileCheckSum": "80f3b7929bad449a39a13b96986bc298",
+	"GladeXmlFileCheckSum": "9b4be7dd4f76584da31c262d0006dd8b",
 	"BackupExt": [
 		"*.go",
 		"*.lang",
@@ -26,18 +28,17 @@
 	"Assets": {
 		"Activated": true,
 		"FirstCharLower": true,
-		"ScanSubDir": true,
+		"ScanSubDir": false,
 		"BinData": true,
 		"Directory": "/media/syndicate/storage/Documents/dev/go/src/github.com/hfmrow/sAndReplace/assets/images",
-		"ExtInName": [
-			""
-		],
+		"ExtInName": null,
 		"ScanExt": [
-			".png"
+			"*.png",
+			"*.gif"
 		]
 	},
 	"OutFiles": {
-		"Custom": "textViewTwoCols.go",
+		"Custom": "filesFunc.go",
 		"License": "LICENSE",
 		"OutProjectFilename": "/media/syndicate/storage/Documents/dev/go/src/github.com/hfmrow/sAndReplace/SearchAndReplace.proj",
 		"OutProjectPath": "/media/syndicate/storage/Documents/dev/go/src/github.com/hfmrow/sAndReplace/",
@@ -53,7 +54,6 @@
 	},
 	"MainGladeVarNameMinimal": "mainGlade",
 	"FlagsBuild": {
-		"BuildAll": false,
 		"SortObjNames": true,
 		"SkipEmptyName": true,
 		"SkipLowercaseNames": false,
@@ -64,6 +64,11 @@
 		"CheckIsGotk3ObjAvailable": true,
 		"WarnMissingFuncDecl": true,
 		"WarnMissingObjDecl": true,
+		"AddLicToMainFile": true,
+		"NamingCSS": false,
+		"NamingCSSLowerCase": false,
+		"NamingCSSForce": false,
+		"NamingCSSClear": false,
 		"ChooseGotk3Dir": false,
 		"Assets": false,
 		"Main": false,
@@ -75,10 +80,21 @@
 		"Images": false,
 		"License": false
 	},
-	"ObjectsCount": 51,
+	"ObjectsCount": 62,
 	"ObjectsAdded": 0,
 	"ObjectsRemoved": 0,
 	"ActualObjects": [
+		{
+			"ObjectType": "GtkGrid",
+			"ObjectName": "BoxTextViewPreview",
+			"Suffix": "",
+			"Prefix": "",
+			"Value": "",
+			"Commented": "",
+			"ManualyAdded": false,
+			"Unkowen": false,
+			"NewObject": false
+		},
 		{
 			"ObjectType": "GtkButton",
 			"ObjectName": "btnFind",
@@ -191,7 +207,7 @@
 		},
 		{
 			"ObjectType": "GtkCheckButton",
-			"ObjectName": "chkWildcard",
+			"ObjectName": "chkWholeWord",
 			"Suffix": "",
 			"Prefix": "",
 			"Value": "",
@@ -202,7 +218,7 @@
 		},
 		{
 			"ObjectType": "GtkCheckButton",
-			"ObjectName": "chkWoleWord",
+			"ObjectName": "chkWildcard",
 			"Suffix": "",
 			"Prefix": "",
 			"Value": "",
@@ -432,8 +448,30 @@
 			"NewObject": false
 		},
 		{
+			"ObjectType": "GtkButton",
+			"ObjectName": "MainButtonOptions",
+			"Suffix": "",
+			"Prefix": "",
+			"Value": "",
+			"Commented": "",
+			"ManualyAdded": false,
+			"Unkowen": false,
+			"NewObject": false
+		},
+		{
 			"ObjectType": "GtkGrid",
-			"ObjectName": "mainGrid",
+			"ObjectName": "MainGrid",
+			"Suffix": "",
+			"Prefix": "",
+			"Value": "",
+			"Commented": "",
+			"ManualyAdded": false,
+			"Unkowen": false,
+			"NewObject": false
+		},
+		{
+			"ObjectType": "GtkGrid",
+			"ObjectName": "MainTopGrig",
 			"Suffix": "",
 			"Prefix": "",
 			"Value": "",
@@ -456,6 +494,105 @@
 		{
 			"ObjectType": "GtkButton",
 			"ObjectName": "mainWinBtnClose",
+			"Suffix": "",
+			"Prefix": "",
+			"Value": "",
+			"Commented": "",
+			"ManualyAdded": false,
+			"Unkowen": false,
+			"NewObject": false
+		},
+		{
+			"ObjectType": "GtkButton",
+			"ObjectName": "OptionButtonDone",
+			"Suffix": "",
+			"Prefix": "",
+			"Value": "",
+			"Commented": "",
+			"ManualyAdded": false,
+			"Unkowen": false,
+			"NewObject": false
+		},
+		{
+			"ObjectType": "GtkEntry",
+			"ObjectName": "OptionsEntryMaxFileSize",
+			"Suffix": "",
+			"Prefix": "",
+			"Value": "",
+			"Commented": "",
+			"ManualyAdded": false,
+			"Unkowen": false,
+			"NewObject": false
+		},
+		{
+			"ObjectType": "GtkEntry",
+			"ObjectName": "OptionsEntryMinFileSize",
+			"Suffix": "",
+			"Prefix": "",
+			"Value": "",
+			"Commented": "",
+			"ManualyAdded": false,
+			"Unkowen": false,
+			"NewObject": false
+		},
+		{
+			"ObjectType": "GtkImage",
+			"ObjectName": "OptionsImageTop",
+			"Suffix": "",
+			"Prefix": "",
+			"Value": "",
+			"Commented": "",
+			"ManualyAdded": false,
+			"Unkowen": false,
+			"NewObject": false
+		},
+		{
+			"ObjectType": "GtkLabel",
+			"ObjectName": "OptionsLabelChooseDepth",
+			"Suffix": "",
+			"Prefix": "",
+			"Value": "",
+			"Commented": "",
+			"ManualyAdded": false,
+			"Unkowen": false,
+			"NewObject": false
+		},
+		{
+			"ObjectType": "GtkLabel",
+			"ObjectName": "OptionsLabelEnableDirChooser",
+			"Suffix": "",
+			"Prefix": "",
+			"Value": "",
+			"Commented": "",
+			"ManualyAdded": false,
+			"Unkowen": false,
+			"NewObject": false
+		},
+		{
+			"ObjectType": "GtkLabel",
+			"ObjectName": "OptionsLabelMaxFileSize",
+			"Suffix": "",
+			"Prefix": "",
+			"Value": "",
+			"Commented": "",
+			"ManualyAdded": false,
+			"Unkowen": false,
+			"NewObject": false
+		},
+		{
+			"ObjectType": "GtkLabel",
+			"ObjectName": "OptionsLabelMinFileSize",
+			"Suffix": "",
+			"Prefix": "",
+			"Value": "",
+			"Commented": "",
+			"ManualyAdded": false,
+			"Unkowen": false,
+			"NewObject": false
+		},
+		{
+			"ObjectType": "GtkWindow",
+			"ObjectName": "OptionsWindow",
 			"Suffix": "",
 			"Prefix": "",
 			"Value": "",
@@ -565,7 +702,40 @@
 		},
 		{
 			"ObjectType": "GtkCheckButton",
+			"ObjectName": "textWinChkSyntxHighlight",
+			"Suffix": "",
+			"Prefix": "",
+			"Value": "",
+			"Commented": "",
+			"ManualyAdded": false,
+			"Unkowen": false,
+			"NewObject": false
+		},
+		{
+			"ObjectType": "GtkCheckButton",
 			"ObjectName": "textWinChkWrap",
+			"Suffix": "",
+			"Prefix": "",
+			"Value": "",
+			"Commented": "",
+			"ManualyAdded": false,
+			"Unkowen": false,
+			"NewObject": false
+		},
+		{
+			"ObjectType": "GtkComboBoxText",
+			"ObjectName": "textWinComboBoxLanguage",
+			"Suffix": "",
+			"Prefix": "",
+			"Value": "",
+			"Commented": "",
+			"ManualyAdded": false,
+			"Unkowen": false,
+			"NewObject": false
+		},
+		{
+			"ObjectType": "GtkComboBoxText",
+			"ObjectName": "textWinComboBoxTextStyleChooser",
 			"Suffix": "",
 			"Prefix": "",
 			"Value": "",
@@ -586,50 +756,6 @@
 			"NewObject": false
 		},
 		{
-			"ObjectType": "GtkScrolledWindow",
-			"ObjectName": "textWinScrolledwindow",
-			"Suffix": "",
-			"Prefix": "",
-			"Value": "",
-			"Commented": "",
-			"ManualyAdded": false,
-			"Unkowen": false,
-			"NewObject": false
-		},
-		{
-			"ObjectType": "GtkScrolledWindow",
-			"ObjectName": "textWinScrolledwindowNumbers",
-			"Suffix": "",
-			"Prefix": "",
-			"Value": "",
-			"Commented": "",
-			"ManualyAdded": false,
-			"Unkowen": false,
-			"NewObject": false
-		},
-		{
-			"ObjectType": "GtkTextView",
-			"ObjectName": "textWinTextview",
-			"Suffix": "",
-			"Prefix": "",
-			"Value": "",
-			"Commented": "",
-			"ManualyAdded": false,
-			"Unkowen": false,
-			"NewObject": false
-		},
-		{
-			"ObjectType": "GtkTextView",
-			"ObjectName": "textWinTextviewNumbers",
-			"Suffix": "",
-			"Prefix": "",
-			"Value": "",
-			"Commented": "",
-			"ManualyAdded": false,
-			"Unkowen": false,
-			"NewObject": false
-		},
-		{
 			"ObjectType": "GtkTreeSelection",
 			"ObjectName": "treeviewSelection",
 			"Suffix": "",
@@ -641,126 +767,144 @@
 			"NewObject": false
 		}
 	],
-	"VarFilesCount": 13,
+	"VarFilesCount": 15,
 	"VarFilesAdded": 0,
 	"VarFilesRemoved": 0,
 	"VarFilesList": [
 		{
-			"VarName": "clipboardIcon18",
-			"FilenameRel": "assets/images/Clipboard-icon-18.png",
-			"FilenameAbs": "/media/syndicate/storage/Documents/dev/go/src/github.com/hfmrow/sAndReplace/assets/images/Clipboard-icon-18.png",
-			"LineNb": -1,
+			"VarName": "clipboard",
+			"FilenameRel": "assets/images/clipboard.png",
+			"FilenameAbs": "/media/syndicate/storage/Documents/dev/go/src/github.com/hfmrow/sAndReplace/assets/images/clipboard.png",
 			"Suffix": "",
 			"Prefix": "",
-			"MainGladeVarNameMinimal": ""
+			"MainGladeVarNameMinimal": "",
+			"LineNb": -1
 		},
 		{
-			"VarName": "clipboardPasteIcon18",
-			"FilenameRel": "assets/images/Clipboard-Paste-icon-18.png",
-			"FilenameAbs": "/media/syndicate/storage/Documents/dev/go/src/github.com/hfmrow/sAndReplace/assets/images/Clipboard-Paste-icon-18.png",
-			"LineNb": -1,
+			"VarName": "clipboardRepl",
+			"FilenameRel": "assets/images/clipboard-repl.png",
+			"FilenameAbs": "/media/syndicate/storage/Documents/dev/go/src/github.com/hfmrow/sAndReplace/assets/images/clipboard-repl.png",
 			"Suffix": "",
 			"Prefix": "",
-			"MainGladeVarNameMinimal": ""
+			"MainGladeVarNameMinimal": "",
+			"LineNb": -1
 		},
 		{
-			"VarName": "filesystemsFolder20",
-			"FilenameRel": "assets/images/Filesystems-folder-20.png",
-			"FilenameAbs": "/media/syndicate/storage/Documents/dev/go/src/github.com/hfmrow/sAndReplace/assets/images/Filesystems-folder-20.png",
-			"LineNb": -1,
+			"VarName": "crossIcon48",
+			"FilenameRel": "assets/images/Cross-icon-48.png",
+			"FilenameAbs": "/media/syndicate/storage/Documents/dev/go/src/github.com/hfmrow/sAndReplace/assets/images/Cross-icon-48.png",
 			"Suffix": "",
 			"Prefix": "",
-			"MainGladeVarNameMinimal": ""
+			"MainGladeVarNameMinimal": "",
+			"LineNb": -1
 		},
 		{
-			"VarName": "findMultipleDocuments48x48",
-			"FilenameRel": "assets/images/find-multiple-documents-48x48.png",
-			"FilenameAbs": "/media/syndicate/storage/Documents/dev/go/src/github.com/hfmrow/sAndReplace/assets/images/find-multiple-documents-48x48.png",
-			"LineNb": -1,
+			"VarName": "folder48",
+			"FilenameRel": "assets/images/folder-48.png",
+			"FilenameAbs": "/media/syndicate/storage/Documents/dev/go/src/github.com/hfmrow/sAndReplace/assets/images/folder-48.png",
 			"Suffix": "",
 			"Prefix": "",
-			"MainGladeVarNameMinimal": ""
+			"MainGladeVarNameMinimal": "",
+			"LineNb": -1
+		},
+		{
+			"VarName": "linearProgressHorzBlue",
+			"FilenameRel": "assets/images/linear-progress-horz-blue.gif",
+			"FilenameAbs": "/media/syndicate/storage/Documents/dev/go/src/github.com/hfmrow/sAndReplace/assets/images/linear-progress-horz-blue.gif",
+			"Suffix": "",
+			"Prefix": "",
+			"MainGladeVarNameMinimal": "",
+			"LineNb": -1
+		},
+		{
+			"VarName": "logout48",
+			"FilenameRel": "assets/images/logout-48.png",
+			"FilenameAbs": "/media/syndicate/storage/Documents/dev/go/src/github.com/hfmrow/sAndReplace/assets/images/logout-48.png",
+			"Suffix": "",
+			"Prefix": "",
+			"MainGladeVarNameMinimal": "",
+			"LineNb": -1
 		},
 		{
 			"VarName": "mainGlade",
 			"FilenameRel": "assets/glade/main.glade",
 			"FilenameAbs": "/media/syndicate/storage/Documents/dev/go/src/github.com/hfmrow/sAndReplace/assets/glade/main.glade",
-			"LineNb": -1,
 			"Suffix": "",
 			"Prefix": "",
-			"MainGladeVarNameMinimal": ""
+			"MainGladeVarNameMinimal": "",
+			"LineNb": -1
 		},
 		{
-			"VarName": "sanderSearchAndReplace400x27",
-			"FilenameRel": "assets/images/Sander-search-and-replace-400x27.png",
-			"FilenameAbs": "/media/syndicate/storage/Documents/dev/go/src/github.com/hfmrow/sAndReplace/assets/images/Sander-search-and-replace-400x27.png",
-			"LineNb": -1,
+			"VarName": "mimetypeSourceIconGolang48",
+			"FilenameRel": "assets/images/Mimetype-source-icon-golang-48.png",
+			"FilenameAbs": "/media/syndicate/storage/Documents/dev/go/src/github.com/hfmrow/sAndReplace/assets/images/Mimetype-source-icon-golang-48.png",
 			"Suffix": "",
 			"Prefix": "",
-			"MainGladeVarNameMinimal": ""
+			"MainGladeVarNameMinimal": "",
+			"LineNb": -1
 		},
 		{
-			"VarName": "sanderSearchAndReplace700x48",
-			"FilenameRel": "assets/images/Sander-search-and-replace-700x48.png",
-			"FilenameAbs": "/media/syndicate/storage/Documents/dev/go/src/github.com/hfmrow/sAndReplace/assets/images/Sander-search-and-replace-700x48.png",
-			"LineNb": -1,
+			"VarName": "options",
+			"FilenameRel": "assets/images/Options.png",
+			"FilenameAbs": "/media/syndicate/storage/Documents/dev/go/src/github.com/hfmrow/sAndReplace/assets/images/Options.png",
 			"Suffix": "",
 			"Prefix": "",
-			"MainGladeVarNameMinimal": ""
+			"MainGladeVarNameMinimal": "",
+			"LineNb": -1
 		},
 		{
-			"VarName": "searchB36",
-			"FilenameRel": "assets/images/search-b-36.png",
-			"FilenameAbs": "/media/syndicate/storage/Documents/dev/go/src/github.com/hfmrow/sAndReplace/assets/images/search-b-36.png",
-			"LineNb": -1,
+			"VarName": "replace",
+			"FilenameRel": "assets/images/replace.png",
+			"FilenameAbs": "/media/syndicate/storage/Documents/dev/go/src/github.com/hfmrow/sAndReplace/assets/images/replace.png",
 			"Suffix": "",
 			"Prefix": "",
-			"MainGladeVarNameMinimal": ""
+			"MainGladeVarNameMinimal": "",
+			"LineNb": -1
 		},
 		{
-			"VarName": "searchB38",
-			"FilenameRel": "assets/images/search-b-38.png",
-			"FilenameAbs": "/media/syndicate/storage/Documents/dev/go/src/github.com/hfmrow/sAndReplace/assets/images/search-b-38.png",
-			"LineNb": -1,
+			"VarName": "searchAndReplaceTop27",
+			"FilenameRel": "assets/images/search-and-replace-top-27.png",
+			"FilenameAbs": "/media/syndicate/storage/Documents/dev/go/src/github.com/hfmrow/sAndReplace/assets/images/search-and-replace-top-27.png",
 			"Suffix": "",
 			"Prefix": "",
-			"MainGladeVarNameMinimal": ""
+			"MainGladeVarNameMinimal": "",
+			"LineNb": -1
 		},
 		{
-			"VarName": "searchHardDisk20",
-			"FilenameRel": "assets/images/Search-Hard-Disk-20.png",
-			"FilenameAbs": "/media/syndicate/storage/Documents/dev/go/src/github.com/hfmrow/sAndReplace/assets/images/Search-Hard-Disk-20.png",
-			"LineNb": -1,
+			"VarName": "searchAndReplaceTop48",
+			"FilenameRel": "assets/images/search-and-replace-top-48.png",
+			"FilenameAbs": "/media/syndicate/storage/Documents/dev/go/src/github.com/hfmrow/sAndReplace/assets/images/search-and-replace-top-48.png",
 			"Suffix": "",
 			"Prefix": "",
-			"MainGladeVarNameMinimal": ""
+			"MainGladeVarNameMinimal": "",
+			"LineNb": -1
 		},
 		{
-			"VarName": "signCancel20",
-			"FilenameRel": "assets/images/Sign-cancel-20.png",
-			"FilenameAbs": "/media/syndicate/storage/Documents/dev/go/src/github.com/hfmrow/sAndReplace/assets/images/Sign-cancel-20.png",
-			"LineNb": -1,
+			"VarName": "searchFolder48",
+			"FilenameRel": "assets/images/search-folder-48.png",
+			"FilenameAbs": "/media/syndicate/storage/Documents/dev/go/src/github.com/hfmrow/sAndReplace/assets/images/search-folder-48.png",
 			"Suffix": "",
 			"Prefix": "",
-			"MainGladeVarNameMinimal": ""
+			"MainGladeVarNameMinimal": "",
+			"LineNb": -1
 		},
 		{
-			"VarName": "signSelect20",
-			"FilenameRel": "assets/images/Sign-Select-20.png",
-			"FilenameAbs": "/media/syndicate/storage/Documents/dev/go/src/github.com/hfmrow/sAndReplace/assets/images/Sign-Select-20.png",
-			"LineNb": -1,
+			"VarName": "searchIcon48",
+			"FilenameRel": "assets/images/search-icon-48.png",
+			"FilenameAbs": "/media/syndicate/storage/Documents/dev/go/src/github.com/hfmrow/sAndReplace/assets/images/search-icon-48.png",
 			"Suffix": "",
 			"Prefix": "",
-			"MainGladeVarNameMinimal": ""
+			"MainGladeVarNameMinimal": "",
+			"LineNb": -1
 		},
 		{
-			"VarName": "textReplace20",
-			"FilenameRel": "assets/images/text-replace-20.png",
-			"FilenameAbs": "/media/syndicate/storage/Documents/dev/go/src/github.com/hfmrow/sAndReplace/assets/images/text-replace-20.png",
-			"LineNb": -1,
+			"VarName": "tickIcon48",
+			"FilenameRel": "assets/images/Tick-icon-48.png",
+			"FilenameAbs": "/media/syndicate/storage/Documents/dev/go/src/github.com/hfmrow/sAndReplace/assets/images/Tick-icon-48.png",
 			"Suffix": "",
 			"Prefix": "",
-			"MainGladeVarNameMinimal": ""
+			"MainGladeVarNameMinimal": "",
+			"LineNb": -1
 		}
 	]
 }

@@ -7,8 +7,8 @@
 package gtk3Import
 
 import (
-	"fmt"
 	"io/ioutil"
+	"log"
 
 	"github.com/gotk3/gotk3/gdk"
 	"github.com/gotk3/gotk3/gtk"
@@ -41,7 +41,7 @@ func CssWdgScnLoad(filename string, wdgt ...*gtk.Widget) {
 		}
 	}
 	if err != nil {
-		fmt.Println(err.Error())
+		log.Printf("CssWdgScnLoad:\n%s\nError: %s\n", filename, err.Error())
 	}
 }
 

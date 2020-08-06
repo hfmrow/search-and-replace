@@ -2,16 +2,7 @@
 
 package files
 
-// golang copy directory recursively from: https://github.com/otiai10/copy
-
-import (
-	"io"
-	"io/ioutil"
-	"os"
-	"path/filepath"
-)
-
-/********************************************************************
+/**************************************************************
 
 		golang copy directory recursively (MIT) license.
 
@@ -21,7 +12,15 @@ import (
 
 		Retrieved from: https://github.com/otiai10/copy
 
-*********************************************************************/
+**************************************************************/
+
+import (
+	"io"
+	"io/ioutil"
+	"os"
+	"path/filepath"
+)
+
 const (
 	// tmpPermissionForDirectory makes the destination directory writable,
 	// so that stuff can be copied recursively even if any original directory is NOT writable.

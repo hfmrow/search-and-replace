@@ -48,38 +48,10 @@ func WriteFile(filename string, datas []byte, doBackup ...bool) (err error) {
 	return ioutil.WriteFile(filename, datas, os.ModePerm)
 }
 
-// copyFile:
-// func CopyFile(inFile, outFile string, doBackup ...bool) (err error) {
-// 	var inBytes []byte
-// 	if inBytes, err = ioutil.ReadFile(inFile); err == nil {
-// 		if len(doBackup) != 0 {
-// 			if doBackup[0] {
-// 				if err = os.Rename(outFile, outFile+"~"); err != nil {
-// 					return err
-// 				}
-// 			}
-// 		}
-// 		err = ioutil.WriteFile(outFile, inBytes, os.ModePerm)
-// 	}
-// 	return err
-// }
-
 // ReadFile:
 func ReadFile(filename string) (data []byte, err error) {
 	return ioutil.ReadFile(filename)
 }
-
-// renameProjectFiles: Mass rename function
-// func RenameListFiles(fromFileList, toFileList []string) (err error) {
-// 	for idx, file := range fromFileList {
-// 		if file != toFileList[idx] {
-// 			if err = os.Rename(file, toFileList[idx]); err != nil {
-// 				return err
-// 			}
-// 		}
-// 	}
-// 	return err
-// }
 
 // GetFileBytesString: Retrieve 'from' 'to' bytes from file in string format.
 func ReadFileToStrBytes(filename string, from, to int) (outString string) {
@@ -108,65 +80,6 @@ func ReadFileToStrBytes(filename string, from, to int) (outString string) {
 	}
 	return WriteBytesString(buff)
 }
-
-// // FindDir retrieve file in a specific directory with more options.
-// func FindDir(dir, mask string, returnedStrSlice *[][]string, scanSub, showDir, followSymlinkDir bool) error {
-// 	var fName, time, size string
-// 	// Remove unwanted os path separator if exist
-// 	//	dir = strings.TrimSuffix(dir, string(os.PathSeparator))
-
-// 	files, err := ioutil.ReadDir(dir)
-// 	if err != nil {
-// 		return err
-// 	}
-// 	for _, file := range files {
-// 		fName = filepath.Join(dir, file.Name())
-// 		if followSymlinkDir { // Check for symlink ..
-// 			file, err = os.Lstat(fName)
-// 			if err != nil {
-// 				return err
-// 			}
-// 			if file.Mode()&os.ModeSymlink != 0 { // Is a symlink ?
-// 				fName, err := os.Readlink(fName) // Then read it...
-// 				if err != nil {
-// 					return err
-// 				}
-// 				file, err = os.Stat(fName) // Get symlink infos.
-// 				if err != nil {
-// 					return err
-// 				}
-// 				fName = filepath.Join(dir, file.Name())
-// 			}
-// 		}
-// 		// Recursive play if it's a directory
-// 		if file.IsDir() && scanSub {
-// 			tmpFileList := new([][]string)
-// 			err = FindDir(fName, mask, tmpFileList, scanSub, true, followSymlinkDir)
-// 			*returnedStrSlice = append(*returnedStrSlice, *tmpFileList...)
-// 			if err != nil {
-// 				return err
-// 			}
-// 		}
-// 		// get information to be displayed.
-// 		size = fmt.Sprintf("%s", humanize.Bytes(uint64(file.Size())))
-// 		time = fmt.Sprintf("%s.", humanize.Time(file.ModTime()))
-// 		// Check for ext matching well.
-// 		ok, err := filepath.Match(mask, file.Name())
-// 		if err != nil {
-// 			return err
-// 		}
-// 		if ok {
-// 			if showDir { // Limit display directories if requested
-// 				*returnedStrSlice = append(*returnedStrSlice, []string{file.Name(), size, time, fName})
-// 			} else {
-// 				if !file.IsDir() {
-// 					*returnedStrSlice = append(*returnedStrSlice, []string{file.Name(), size, time, fName})
-// 				}
-// 			}
-// 		}
-// 	}
-// 	return nil
-// }
 
 // File struct (SplitFilePath)
 type Filepath struct {

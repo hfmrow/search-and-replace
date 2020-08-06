@@ -1,23 +1,32 @@
 // main.go
 
-// Source file auto-generated on Sun, 15 Sep 2019 08:30:03 using Gotk3ObjHandler v1.3.8 ©2018-19 H.F.M
-
 /*
+	Source file auto-generated on Thu, 06 Aug 2020 20:25:48 using Gotk3ObjHandler v1.5 ©2018-20 H.F.M
+	This software use gotk3 that is licensed under the ISC License:
+	https://github.com/gotk3/gotk3/blob/master/LICENSE
+
+	Copyright ©2018-20 H.F.M - Search And Replace v1.8 github.com/hfmrow/sAndReplace
 	This program comes with absolutely no warranty. See the The MIT License (MIT) for details:
 	https://opensource.org/licenses/mit-license.php
 */
 
 package main
 
+/*
+	This software use Chroma:
+	- Chroma — A general purpose syntax highlighter in pure Go, under the MIT License:
+	  https://github.com/alecthomas/chroma/LICENSE
+*/
+
 import (
 	"errors"
 	"fmt"
-	"log"
 	"os"
 
 	"github.com/gotk3/gotk3/gtk"
 
-	gidg "github.com/hfmrow/gtk3Import/dialog"
+	glfsft "github.com/hfmrow/genLib/files/fileText"
+
 	gimc "github.com/hfmrow/gtk3Import/misc"
 	gitv "github.com/hfmrow/gtk3Import/textView"
 	gitw "github.com/hfmrow/gtk3Import/treeview"
@@ -32,10 +41,6 @@ func main() {
 	/* Build directory for tempDir */
 	doTempDir = false
 
-	/* Naming widgets as Gtk objects names to use in css.
-	   Set to false if they already named in Glade.*/
-	namingWidget = true
-
 	/* Set to true when you choose using embedded assets functionality */
 	assetsDeclarationsUseEmbedded(!devMode)
 
@@ -47,29 +52,16 @@ func main() {
 	err = mainOptions.Read()
 	if err != nil {
 		fmt.Printf("%s\n%v\n", "Reading options error.", err)
-	}
 
-	/* Init AboutBox */
-	mainOptions.AboutOptions.InitFillInfos(
-		"About "+Name,
-		Name,
-		Vers,
-		Creat,
-		YearCreat,
-		LicenseAbrv,
-		LicenseShort,
-		Repository,
-		Descr,
-		sanderSearchAndReplace400x27,
-		signSelect20)
+	}
 
 	/* Init gtk display */
 	mainWindowTitle = fmt.Sprintf("%s %s  %s %s %s",
-		mainOptions.AboutOptions.AppName,
-		mainOptions.AboutOptions.AppVers,
-		mainOptions.AboutOptions.YearCreat,
-		mainOptions.AboutOptions.AppCreats,
-		mainOptions.AboutOptions.LicenseAbrv)
+		Name,
+		Vers,
+		YearCreat,
+		Creat,
+		LicenseAbrv)
 
 	mainStartGtk(mainWindowTitle,
 		mainOptions.MainWinWidth,
@@ -80,87 +72,84 @@ func mainApplication() {
 	var err error
 	var tmpErr string
 
+	/* Init AboutBox */
+	mainOptions.AboutOptions.InitFillInfos(
+		mainObjects.mainWin,
+		"About "+Name,
+		Name,
+		Vers,
+		Creat,
+		YearCreat,
+		LicenseAbrv,
+		LicenseShort,
+		Repository,
+		Descr,
+		"",
+		tickIcon48)
+
 	/* Specific UI tuning */
-	mainObjects.btnScan.SetVisible(mainOptions.ScanButtonEnabled)
-	mainObjects.switchFileChooserButton.SetVisible(mainOptions.ScanButtonEnabled)
 	chkCharacterClassToggled()
 
-	/* Init Windows title fo easy updating */
-	title, _ := mainObjects.mainWin.GetTitle()
-	mainWinTitle = gimc.TitleBarNew(mainObjects.mainWin, title)
-	findWinTitle = gimc.TitleBarNew(mainObjects.findWin, sts["titleSearchResults"])
-	textWinTitle = gimc.TitleBarNew(mainObjects.textWin, sts["titlePreviewText"])
+	/* Init Windows title for easy updating */
+	mainWinTitle = gimc.TitleBarStructureNew(mainObjects.mainWin)
+	findWinTitle = gimc.TitleBarStructureNew(mainObjects.findWin, sts["titleSearchResults"])
+	textWinTitle = gimc.TitleBarStructureNew(mainObjects.textWin, sts["titlePreviewText"])
 
 	/* Translate init. */
 	translate = MainTranslateNew(absoluteRealPath+mainOptions.LanguageFilename, devMode)
 
 	/*	Init Statusbar	*/
-
-	statusbar = new(gimc.StatusBar)
-	statusbar.StructureSetup(mainObjects.statusbar, []string{
+	statusbar = gimc.StatusBarStructureNew(mainObjects.statusbar, []string{
 		sts["sbFiles"], sts["sbFilesSel"], sts["scanTime"],
 		sts["searchTime"], sts["dispTime"], sts["status"]})
 
 	/* Init ListStore */
 	if tvsList, err = gitw.TreeViewStructureNew(mainObjects.listViewFiles, true, false); err == nil {
-		for _, col := range mainOptions.listStoreColumns {
-			tvsList.AddColumn(col[0], col[1], false, true, true, true, false, true)
-		}
+
+		tvsList.AddColumns(mainOptions.listStoreColumns, false, true, true, true, false, true)
+
 		// Define selection changed function .
 		tvsList.SelectionChangedFunc = func() {
 			if tvsList.Selection.CountSelectedRows() > 0 {
-				// glibList =  tvsList.Selection.GetSelectedRows(mainOptions.currentTreeview.ListStore)
-				// data := glibList.Data()
-				// path := data.(*gtk.TreePath)
-				// rowNb, _ := strconv.Atoi(path.String())
 				updateStatusBar()
 			}
 		}
 
 		if err = tvsList.StoreSetup(new(gtk.ListStore)); err == nil {
-			/* Init TreeStore */
+			// Assign sorted column
+			tvsList.Columns[1].Column.SetSortColumnID(4) // (col 1 will be sorted using values of col 4)
+			tvsList.Columns[2].Column.SetSortColumnID(5) // (col 2 will be sorted using values of col 5)
+
+			/* Init treeView popup menu */
+			initTreeViewPopupMenu()
+
+			/* Init TreeStore (found results) */
 			if tvsTree, err = gitw.TreeViewStructureNew(mainObjects.findWinTreeView, true, false); err == nil {
-				for _, col := range mainOptions.treeStoreColumns {
-					tvsTree.AddColumn(col[0], col[1], false, true, false, false, false, true)
-				}
+				tvsTree.AddColumns(mainOptions.treeStoreColumns, false, true, false, false, false, true)
 				err = tvsTree.StoreSetup(new(gtk.TreeStore))
 			}
 		}
 	}
-
 	if err != nil {
-		gidg.DialogMessage(mainObjects.mainWin, "error", sts["alert"], "\n\n"+err.Error(), "", "Ok")
+		DlgErr("mainApplication:TreeViewStructureNew", err)
 		return
 	}
 
 	/* Init Drag and drop */
 	dnd = gimc.DragNDropNew(mainObjects.listViewFiles, &currentInFilesList,
-		func() { // Callaback function on Drag and drop operations
-
+		func() {
+			// Callaback function on Drag and drop operations
 			fromDnD = true
 			mainObjects.switchFileChooserButton.SetActive(false)
 			mainObjects.fileChooserBtn.SetFilename("None")
 			updateTreeViewFilesDisplay()
-
-			// TODO /* DEBUG */
-			// for idx, file := range currentInFilesList {
-			// 	fmt.Printf("%d - %s\n", idx, file)
-			// }
-			/* DEBUG */
-
-			// if err != nil {
-			// 	gidg.DialogMessage(mainObjects.mainWin, "error", sts["alert"], "\n\n"+err.Error(), "", "Ok")
-			// }
 		})
 
 	/* Init Clipboard */
 	clipboardInit()
 
 	/* Retreive command line arguments */
-	switch {
-	case len(os.Args) == 1:
-		// entryExtMaskFocusOut()
-	case len(os.Args) > 1:
+	if len(os.Args) > 1 {
 		var countedError int
 		var flagError = true
 		for _, file := range os.Args[1:] {
@@ -184,44 +173,40 @@ func mainApplication() {
 			if len(tmpErr) != 0 {
 				err = errors.New(tmpErr)
 			}
-			gidg.DialogMessage(mainObjects.mainWin, "error", sts["alert"], "\n\n"+err.Error(), "", "Ok")
+			DlgErr("Retreive command line arguments", err)
 			return
 		}
 	}
 
-	// TextView with line number init.
-	if mainOptions.textViewRowNumber, err = gitv.TextViewRowNumberNew(mainObjects.textWinTextviewNumbers, mainObjects.textWinTextview,
-		mainObjects.textWinScrolledwindowNumbers, mainObjects.textWinScrolledwindow, false); err != nil {
-		log.Fatalf("Could not initialize preview display TextView: %s", err.Error())
-	}
+	/* TextView with line number init.*/
+	textViewRowNumber, err = gitv.TextViewNumberedNew(mainObjects.BoxTextViewPreview.Container)
+	DlgErr("mainApplication:TextViewNumberedNew", err)
+	textViewRowNumber.Editable = false
 
-	/* Css Init */
-	cssStyle := ` #textWinTextview * {
-	color: shade (#332211, 1.06);
-	background-color: #fefefe;	
-	opacity: 0.99;
-}
+	/* Handling "populate-popup" signal to add some personal entries */
+	textViewRowNumber.TextView.Connect("populate-popup", popupTextViewPopulateMenu)
 
- #textWinTextview text selection {
-	background-color: #aaddff;
-	color:shade (#332211, 1.06);
-}
-
- #textWinTextviewNumbers * {
-	color: shade (#0033ff, 1.06);
-	background-color: #eeeeee;	
-	opacity: 0.99;
-}
-
- #textWinTextviewNumbers text {
-	color: shade (#0022ff, 1.06);
-	background-color: #eeeeee;	
-	opacity: 0.99;
-}
-`
-	/* Applying cssStyle */
-	gimc.CssWdgScnLoad(cssStyle)
+	/* Hide ProgressBar */
+	displayProgressBar(false)
 
 	/* Display files list */
 	updateTreeViewFilesDisplay()
+
+	/* Initialize syntax highlighter to get list of languages and styles */
+	highlighter, _ = ChromaHighlightNew(nil)
+
+	/*Init single found structure */
+	fileFoundSingle = glfsft.SearchAndReplaceNew([]byte{}, "", "")
+
+	/* Initialize comboboxEntry */
+	ComboBoxTextFill(mainObjects.textWinComboBoxTextStyleChooser, highlighter.Styles)
+	ComboBoxTextFill(mainObjects.textWinComboBoxLanguage, highlighter.Lexers)
+	ComboBoxTextAddSetEntry(mainObjects.textWinComboBoxTextStyleChooser, mainOptions.SyntaxHighlightType)
+	ComboBoxTextAddSetEntry(mainObjects.textWinComboBoxLanguage, mainOptions.SyntaxHighlightLanguage)
+
+	/* Focus search entry */
+	mainObjects.entrySearch.GrabFocus()
+
+	// mainObjects.entrySearch.SetText(`(\b)(func|return|exit\(\)|if|else|then|switch|case)`)
+	// mainObjects.chkRegex.SetActive(true)
 }

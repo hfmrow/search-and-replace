@@ -1,25 +1,33 @@
 // miscFunctions.go
 
 /*
-*	©2019 H.F.M. MIT license
- */
+	Source file auto-generated using Gotk3ObjHandler v1.3.9 ©2018-19 H.F.M
+
+	This software use:
+	- gotk3 that is licensed under the ISC License:
+	  https://github.com/gotk3/gotk3/blob/master/LICENSE
+
+	- Chroma — A general purpose syntax highlighter in pure Go, under the MIT License:
+	  https://github.com/alecthomas/chroma/LICENSE
+
+	Copyright ©2018-19 H.F.M - Search And Replace
+	This program comes with absolutely no warranty. See the The MIT License (MIT) for details:
+	https://opensource.org/licenses/mit-license.php
+*/
 
 package main
 
 import (
-	"bytes"
-	"errors"
 	"fmt"
+	"html"
+	"log"
 	"os"
 	"path/filepath"
-	"regexp"
-	"runtime"
-	"runtime/debug"
+	"reflect"
 	"strings"
 
 	humanize "github.com/dustin/go-humanize"
 	"github.com/gotk3/gotk3/gdk"
-	"github.com/gotk3/gotk3/glib"
 	"github.com/gotk3/gotk3/gtk"
 
 	glfsft "github.com/hfmrow/genLib/files/fileText"
@@ -27,120 +35,30 @@ import (
 	gltsbh "github.com/hfmrow/genLib/tools/bench"
 
 	gidg "github.com/hfmrow/gtk3Import/dialog"
-	gimc "github.com/hfmrow/gtk3Import/misc"
 	gipo "github.com/hfmrow/gtk3Import/pango"
+	gipops "github.com/hfmrow/gtk3Import/pango/pangoSimple"
+	gitvtt "github.com/hfmrow/gtk3Import/textView/textTag"
+	gitl "github.com/hfmrow/gtk3Import/tools"
 )
 
-/*****************************/
-/* Scan directory functions */
-/***************************/
-// isSymlinkDir: File is a symlinked directory ?
-func isSymlinkDir(slRoot string, slStat os.FileInfo, followSymlinkDir bool) (slIsDir bool, err error) {
-	var fName string
-	if slStat.Mode()&os.ModeSymlink != 0 && followSymlinkDir {
-		if fName, err = os.Readlink(filepath.Join(slRoot, slStat.Name())); err == nil {
-			if slStat, err = os.Stat(fName); err == nil {
-				if slStat.IsDir() {
-					return true, nil
-				}
-			}
-		}
-	}
-	return false, err
-}
+// displayProgressBar: Hide or show some controls during a long search process.
+func displayProgressBar(toggle bool) {
+	// Finally i prefere blocking whole boxes except the bottom (exit button)
+	// since aplying modifications depend on actual selected files and entries
+	// when proceeded from found window
+	// if this solution becomes unfriendly to use
 
-// checkUnrecoverableErr: Error come from file not exist or file permission ?
-func checkUnrecoverableErr(err error) error {
-	if err != nil {
-		if !(os.IsPermission(err) || os.IsNotExist(err)) {
-			return errors.New(fmt.Sprintf("Got error: %s\n", err.Error()))
-		}
-	}
-	return nil
-}
+	// TODO Keep previous selected files and entries, options ... to avoid this.
 
-// ScanDirDepth: retrieve files in a specific directory and his sub-directory depending on depth argument.
-// depth = -1 mean infinite, depth = 0 mean no sub-dir. optParams: showDir, followSymlinks as bool.
-func ScanDirDepth(root string, depth int, optParam ...bool) (files []string, err error) {
-	var showDirs, followSl, isDir bool
-	switch len(optParam) {
-	case 1:
-		showDirs = optParam[0]
-	case 2:
-		showDirs = optParam[0]
-		followSl = optParam[1]
-	}
-	var depthRecurse int
-	var tmpFiles []string
-	var newFi []os.FileInfo
-	var fRoot *os.File
-	// Starting scannig directory
-	if fRoot, err = os.Open(root); err == nil {
-		defer fRoot.Close()
-		if newFi, err = fRoot.Readdir(-1); err == nil {
-			for _, file := range newFi {
-				depthRecurse = depth
-				if isDir, err = isSymlinkDir(root, file, followSl); err != nil {
-					return files, checkUnrecoverableErr(err)
-				}
-				if isDir || file.IsDir() { // It's a Dir
-					if showDirs {
-						files = append(files, filepath.Join(root, file.Name()))
-					}
-					if depth != 0 {
-						depthRecurse--
-						if tmpFiles, err = ScanDirDepth(filepath.Join(root, file.Name()), depthRecurse, showDirs, followSl); err == nil {
-							files = append(files, tmpFiles...)
-						} else {
-							return files, checkUnrecoverableErr(err)
-						}
-					}
-				} else { // Not a Dir
-					files = append(files, filepath.Join(root, file.Name()))
-				}
-			}
-		} else {
-			return files, checkUnrecoverableErr(err)
-		}
-	} else {
-		return files, checkUnrecoverableErr(err)
-	}
-	return files, err
-}
-
-// scanForSubDir: In case where a display refresh is requiered from an existing files/dirs list.
-func scanForSubDir(inFilesList []string) (err error) {
-	var stat os.FileInfo
-	var filesList []string
-	var isDir bool
-
-	toDispFileList = []string{}
-	for idx := len(inFilesList) - 1; idx > -1; idx-- {
-		file := inFilesList[idx]
-		if len(file) != 0 {
-
-			if stat, err = os.Stat(file); /*!(os.IsPermission(err) || os.IsNotExist(err)) &&*/ err != nil {
-				return err
-			} else if isDir, err = isSymlinkDir(file, stat,
-				mainObjects.chkFollowSymlinkDir.GetActive()); !(os.IsPermission(err) || os.IsNotExist(err)) && err != nil {
-				return err
-			}
-
-			if isDir || stat.IsDir() {
-				if filesList, err = ScanDirDepth(file, mainObjects.spinButtonDepth.GetValueAsInt(),
-					false, mainObjects.chkFollowSymlinkDir.GetActive()); os.IsPermission(err) || os.IsNotExist(err) || err == nil {
-					// false, mainObjects.chkFollowSymlinkDir.GetActive()); !(os.IsPermission(err) || os.IsNotExist(err)) && err != nil {
-					toDispFileList = append(toDispFileList, filesList...)
-					// try remove symdir entry
-				} else {
-					return err
-				}
-			} else {
-				toDispFileList = append(toDispFileList, file)
-			}
-		}
-	}
-	return err
+	mainObjects.MainGrid.SetSensitive(!toggle)
+	mainObjects.MainTopGrig.SetSensitive(!toggle)
+	mainObjects.listViewFiles.SetSensitive(!toggle)
+	// mainObjects.btnFind.SetSensitive(!toggle)
+	// mainObjects.fileChooserBtn.SetSensitive(!toggle)
+	// mainObjects.btnScan.SetSensitive(!toggle)
+	// mainObjects.spinButtonDepth.SetSensitive(!toggle)
+	// mainObjects.btnReplaceInClipboard.SetSensitive(!toggle)
+	// mainObjects.btnShowClipboard.SetSensitive(!toggle)
 }
 
 // updateTreeViewFilesDisplay: Display files to treeView
@@ -148,12 +66,8 @@ func updateTreeViewFilesDisplay() {
 	var err error
 	var stat os.FileInfo
 
-	//	signalsIntercept(true)
-
-	// TODO /* BENCH Update Display*/
-	bench := new(gltsbh.Bench)
-	bench.Lapse("Start")
-	/* BENCH */
+	bench := gltsbh.BenchNew(false)
+	bench.Lapse()
 
 	if !fromDnD {
 		currentInFilesList = currentInFilesList[:0]
@@ -163,7 +77,6 @@ func updateTreeViewFilesDisplay() {
 			if stat, err = os.Stat(currentInFilesList[0]); err == nil {
 				if stat.IsDir() {
 					mainObjects.fileChooserBtn.SetFilename(currentInFilesList[0])
-					mainObjects.switchFileChooserButton.SetActive(true)
 					fromDnD = false
 				}
 			}
@@ -174,149 +87,116 @@ func updateTreeViewFilesDisplay() {
 	} else {
 		err = scanForSubDir(currentInFilesList)
 		bench.Stop()
-		scanTime = fmt.Sprintf("%dm %ds %dms", bench.NumTime[0].Min, bench.NumTime[0].Sec, bench.NumTime[0].Ms)
+		scanTime = bench.Lapses[0].StringShort
 		displayFiles()
-	}
-	//	signalsIntercept(false)
-}
-
-func signalsIntercept(intercept bool) {
-	if intercept {
-		mainObjects.fileChooserBtn.HandlerBlock(fileChooserSigHandlerSelChanged)
-		mainObjects.spinButtonDepth.HandlerBlock(spinButtonDepthSigHandlerChanged)
-	} else {
-		mainObjects.fileChooserBtn.HandlerUnblock(fileChooserSigHandlerSelChanged)
-		mainObjects.spinButtonDepth.HandlerUnblock(spinButtonDepthSigHandlerChanged)
 	}
 }
 
 // displayFiles: display formatted files to treeview.
 func displayFiles() {
 	mainOptions.UpdateOptions()
+
 	if tvsList != nil {
+		bench := gltsbh.BenchNew(false)
+		bench.Lapse()
 
-		// TODO /* BENCH Display ListView*/
-		bench := new(gltsbh.Bench)
-		bench.Lapse("Start")
-		/* BENCH */
-
-		// Detach listStore & clean before fill
+		// Detach listStore & clean before fill it
 		tvsList.StoreDetach()
-		tvsList.ListStore.Clear()
+		tvsList.Clear()
 
-		formattedFilesToDisp := formatFilesToDisp(toDispFileList)
-		filesCount = len(formattedFilesToDisp)
+		var ok bool
+		var err error
 
-		for idx := 0; idx < filesCount; idx++ {
-			tvsList.AddRow(nil, tvsList.ColValuesStringSliceToIfaceSlice(formattedFilesToDisp[idx]...))
+		for _, rowFile := range toDispFileList {
+			for _, msk := range mainOptions.ExtMask { // Check for ext matching well.
+				if ok, err = filepath.Match(msk, rowFile.FileInfo.Name()); err == nil {
+					if ok {
+						tvsList.AddRow(nil,
+							html.EscapeString(rowFile.FileInfo.Name()),
+							humanize.Bytes(uint64(rowFile.FileInfo.Size())),
+							humanize.Time(rowFile.FileInfo.ModTime()),
+							html.EscapeString(rowFile.Filename),
+							rowFile.FileInfo.Size(),
+							rowFile.FileInfo.ModTime().Unix())
+					}
+				} else {
+					DlgErr("_MatchExt", err)
+				}
+			}
 		}
 
 		// Attach listStore
 		tvsList.StoreAttach()
 
-		// TODO /* DEBUG */
-		// fmt.Printf("From ListStore: %d, From scandir: %d\n", tvsList.CountRows(), filesCount)
-		// g.WriteFile("/home/syndicate/Downloads/filesS&Replace.txt", []byte(strings.Join(toDispFileList, "\n")))
-		/* DEBUG */
 		bench.Stop()
-		dispTime = fmt.Sprintf("%dm %ds %dms", bench.NumTime[0].Min, bench.NumTime[0].Sec, bench.NumTime[0].Ms)
+
+		dispTime = bench.Lapses[0].StringShort
 
 		updateStatusBar()
 	}
 }
 
-// formatFilesToDisp: convert filenames to be displayed into TreeView
-func formatFilesToDisp(inFiles []string) (outFiles [][]string) {
-	var err error
-	var file os.FileInfo
-	var ok bool
-	var size, time string
-	ExtSliceToOpt()
-	for _, rowFile := range inFiles {
-		if file, err = os.Stat(rowFile); err != nil {
-			markedup := "<span strikethrough=\"true\" strikethrough_color=\"#FF0000\">" + strings.ReplaceAll(rowFile, "&", "&amp;") + "</span>"
-			if os.IsNotExist(err) {
-				outFiles = append(outFiles, []string{filepath.Base(rowFile), "Err", "", strings.Replace(sts["file-LinkNotExist"], "(s)", "", -1) + " " + markedup})
-			} else if os.IsPermission(err) {
-				outFiles = append(outFiles, []string{filepath.Base(rowFile), "Err", "", sts["file-perm"] + " " + markedup})
-			} else {
-				gidg.DialogMessage(mainObjects.mainWin, "error", sts["alert"]+"_Disp", "\n\n"+err.Error(), "", "Ok")
-			}
-		} else {
-			// get information to be displayed.
-			size = fmt.Sprintf("%s", humanize.Bytes(uint64(file.Size())))
-			time = fmt.Sprintf("%s", humanize.Time(file.ModTime()))
-			// Check for ext matching well.
-			for _, msk := range mainOptions.ExtMask {
-				if ok, err = filepath.Match(msk, file.Name()); err == nil {
-					if ok {
-						outFiles = append(outFiles, []string{file.Name(), size, time, rowFile})
-					}
-				} else {
-					gidg.DialogMessage(mainObjects.mainWin, "error", sts["alert"]+"_MatchExt", "\n\n"+err.Error(), "", "Ok")
-				}
-			}
-		}
-	}
-	return outFiles
-}
-
 // showResults: Get results and fill (treestore)
-func showResults(mainFound *[]glfsft.Find_s) (countFiles int) {
+func showResults(mainFound *[]glfsft.SearchAndReplaceFiles) (countFiles int) {
 	var err error
-	var lineNbr int
+	var lineNbr, prevLineNbr int
 	var iter *gtk.TreeIter
 	var total, binary, text int
 
+	pc := gipops.PangoColorNew()
+
 	// Detach & clear treeStore
 	tvsTree.StoreDetach()
-	tvsTree.TreeStore.Clear()
+	tvsTree.Clear()
 
 	for _, result := range *mainFound {
+		prevLineNbr = -1
 		total++
 		if result.Occurrences > 0 {
-			// if len(result.Positions.WordsPos) != 0 {
 			text++
 			/* Add parent */
-			if iter, err = tvsTree.AddRow(nil, tvsTree.ColValuesStringSliceToIfaceSlice(result.FileName)); err == nil {
+			if iter, err = tvsTree.AddRow(nil, result.FileName); err == nil {
 
 				// Make markup
 				pm := gipo.PangoMarkup{}
-				pm.Init(string(result.TextBytes)) // Text
-				pm.AddPosition(result.Positions.WordsPos...)
-				pm.AddTypes([][]string{{"bgc", pm.Colors.Lightgreen}}...)
+				pm.Init(string(result.SearchAndRepl.TextBytes)) // Text
+				pm.AddPosition(result.SearchAndRepl.Pos.WordsPosIdx...)
+				pm.AddTypes([][]string{{"bgc", "#AAFFAA"}}...) // Light green
 				text := pm.MarkupAtPos()
 
 				/* Add Childs */
-				linesStr := strings.Split(text, result.LineEnd)
-				for idxLine := len(result.Positions.Line) - 1; idxLine >= 0; idxLine-- {
-					lineNbr = result.Positions.Line[idxLine]
-					pm.Init(fmt.Sprintf(" %v ", lineNbr+1)) // Line number
-					pm.AddTypes([][]string{{"bgc", pm.Colors.Lightgray}}...)
-					lineNbStr := pm.Markup()
+				linesStr := strings.Split(text, result.SearchAndRepl.Pos.Eol)
+				for idxLine := 0; idxLine < len(result.SearchAndRepl.Pos.FoundLinesIdx); idxLine++ {
 
-					tvsTree.AddRow(iter, tvsTree.ColValuesStringSliceToIfaceSlice(lineNbStr+"\t"+string(linesStr[lineNbr])))
+					lineNbr = result.SearchAndRepl.Pos.FoundLinesIdx[idxLine].Number
+					if prevLineNbr != lineNbr { // Avoid displaying duplicated rows
+						pm.Init(fmt.Sprintf(" %v ", lineNbr+1))        // Line number
+						pm.AddTypes([][]string{{"bgc", "#E4DDDD"}}...) // Light grey
+						lineNbStr := pm.Markup()
+
+						tvsTree.AddRow(iter, lineNbStr+"\t"+string(linesStr[lineNbr]))
+					}
+					prevLineNbr = lineNbr
 				}
 				countFiles++
-
 			}
 		} else if mainObjects.findWinChkDispForbFiles.GetActive() && result.NotTextFile {
 			binary++
-			// Markup bad file: File size too short, Binary files warning ...
+			// Markup bad file: File size too short or Binary files warning ...
 			pm := gipo.PangoMarkup{}
 			pm.Init(string(result.FileName)) // Filename
-			pm.AddPosition(result.Positions.WordsPos...)
-			pm.AddTypes([][]string{{"stc", pm.Colors.Red}}...)
+			pm.AddPosition(result.SearchAndRepl.Pos.WordsPosIdx...)
+			pm.AddTypes([][]string{{"stc", pc.Red}}...)
 			filename := pm.Markup()
 
 			/* Add parent */
-			if iter, err = tvsTree.AddRow(nil, tvsTree.ColValuesStringSliceToIfaceSlice(filename)); err == nil {
-				pm.Init(string(result.TextBytes)) // text with reason why it's not displayed
-				pm.AddTypes([][]string{{"fgc", pm.Colors.Red}}...)
+			if iter, err = tvsTree.AddRow(nil, filename); err == nil {
+				pm.Init(string(result.SearchAndRepl.TextBytes)) // text with reason why it's not displayed
+				pm.AddTypes([][]string{{"fgc", pc.Red}}...)
 				desciption := pm.Markup()
 
 				/* Add Child */
-				tvsTree.AddRow(iter, tvsTree.ColValuesStringSliceToIfaceSlice(desciption))
+				tvsTree.AddRow(iter, desciption)
 			}
 		}
 	}
@@ -325,185 +205,135 @@ func showResults(mainFound *[]glfsft.Find_s) (countFiles int) {
 	return countFiles
 }
 
+// BringToFront: Set window position to be over all others windows
+// without staying on top whether another window come to be selected.
+func BringToFront(win *gtk.Window) {
+	win.Deiconify()
+	win.ShowAll()
+	win.GrabFocus()
+}
+
 // Show text edit window with colored text (preview)
 func showTextWin(text string, filename string, line int) {
 	var occurrences int
-	var buff *gtk.TextBuffer
 	var err error
 
-	mainObjects.findWin.SetModal(false)
-	mainObjects.textWin.SetKeepAbove(false)
-	mainObjects.textWinTextview.SetEditable(true)
-	x, y := mainObjects.mainWin.GetPosition()
-	mainObjects.textWin.Move(x+(mainOptions.CascadeDepth*2), y+(mainOptions.CascadeDepth*2))
-	mainObjects.textWin.Resize(mainObjects.mainWin.GetSize())
+	if !alreadyPlacedPrevWin {
+		mainObjects.findWin.SetModal(false)
+		mainObjects.textWin.SetKeepAbove(false)
+		x, y := mainObjects.mainWin.GetPosition()
+		mainObjects.textWin.Move(x+(mainOptions.CascadeDepth*2), y+(mainOptions.CascadeDepth*2))
+		mainObjects.textWin.Resize(mainObjects.mainWin.GetSize())
+		alreadyPlacedPrevWin = true
+	}
+	// Set text
+	if occurrences, err = highlightText(text, line, mainObjects.textWinChkShowModifications.GetActive()); err == nil {
+		textWinTitle.MainTitle = glsg.TruncatePath(filename, mainOptions.FilePathLength)
+		textWinTitle.Update([]string{fmt.Sprintf("%s %d", sts["totalOccurrences"], occurrences)})
+		BringToFront(mainObjects.textWin)
+	}
 
-	// Get buffer from textview
-	if buff, err = mainObjects.textWinTextview.GetBuffer(); err == nil {
-		// Set text
-		if occurrences, err = highlightText(buff, text, line); err == nil {
-			textWinTitle.MainTitle = truncatePath(filename, mainOptions.FilePathLength)
-			textWinTitle.Update([]string{fmt.Sprintf("%s %d", sts["totalOccurrences"], occurrences)})
-			mainObjects.textWin.Show()
-		}
-	}
-	if err != nil {
-		gidg.DialogMessage(mainObjects.mainWin, "error", sts["alert"], "\n\n"+err.Error(), "", "Ok")
-	}
+	DlgErr("showTextWin:highlightText", err)
 }
 
-// Find ...
-func Find(entrySearchText, entryReplaceText string, removeEmptyResult bool) (mainFound []glfsft.Find_s, occurrences int, err error) {
-	if tvsList.Selection.CountSelectedRows() == 0 {
-		return mainFound, occurrences, errors.New("\n\n" + sts["noFileSel"] + "\n")
+// highlightText: Highlight (found) and syntax highlight operations.
+func highlightText(txtStr string, line int, doReplace bool) (occurrences int, err error) {
+
+	// Set colors for TextView
+	textViewRowNumber.TxtBgCol = mainOptions.TxtBgCol
+	textViewRowNumber.TxtFgCol = mainOptions.TxtFgCol
+	textViewRowNumber.NumFgCol = mainOptions.NumFgCol
+
+	// store current text
+	if currentText != txtStr {
+		currentText = txtStr
 	}
-	gimc.Notify("Information", "Please wait while processing ...")
+	if len(currentText) != 0 {
 
-	// Retrieving filenames
-	var value *glib.Value
-	var str string
-	var iters []*gtk.TreeIter
-	var treeviewSelectedRows []string
+		var outTextBytes []byte
 
-	if iters, err = tvsList.GetSelectedIters(); err == nil {
-		for _, iter := range iters {
-			if value, err = tvsList.ListStore.GetValue(iter, 3); err == nil { // Field 3: get full path
-				if str, err = value.GetString(); err == nil {
-					treeviewSelectedRows = append(treeviewSelectedRows, str)
-				} else {
-					break
+		if outTextBytes, err = onTheFlySearch([]byte(currentText), doReplace); err != nil {
+			return
+		}
+
+		// Only compute new display if not already done.
+		if /*true*/ !fileFoundSingle.HasBeenDisplayed() {
+
+			// Remove found_background_color_lightgreen tag
+			gitvtt.TagRemoveIfExists(textViewRowNumber.BuffTxt, found_background_color_lightgreen)
+
+			textViewRowNumber.WaitForEventPending()
+
+			if mainObjects.textWinChkSyntxHighlight.GetActive() {
+
+				// Chroma syntax highlighting initialisation
+				if !highlighter.Initialised() {
+					if highlighter, err = ChromaHighlightNew(textViewRowNumber.BuffTxt, 1); err != nil {
+						return
+					}
+					fileFoundSingle.HasBeenDisplayed(true)
+				}
+				textViewRowNumber.BufferDetach()
+
+				// Let there be more light ... as a pig on the wings
+				err = highlighter.Highlight(string(outTextBytes),
+					mainObjects.textWinComboBoxLanguage.GetActiveText(),
+					mainObjects.textWinComboBoxTextStyleChooser.GetActiveText())
+				DlgErr("Highlight:gtkDirectToTextBuffer", err)
+
+				switch highlighter.Formatter {
+				case 1, 2:
+					err = highlighter.ToTextBuff()
+					DlgErr("Highlight:gtkTextBuffer/pango", err)
+				default:
+					err = highlighter.ToFile("out.php")
+					DlgErr("Highlight:ToFile", err)
+				}
+
+				textViewRowNumber.BufferAttach()
+
+			} else {
+				textViewRowNumber.BufferDetach()
+				highlighter.RemoveTags()
+				textViewRowNumber.BuffTxt.SetText(string(outTextBytes))
+				textViewRowNumber.BufferAttach()
+			}
+		}
+
+		if !reflect.DeepEqual(fileFoundSingle.Pos.WordsPosIdx, previsouWordsPos) || doReplace {
+
+			occurrences = fileFoundSingle.Occurrences
+			if !doReplace {
+
+				prop := map[string]interface{}{"background": "#AAFFAA"}
+				tag := gitvtt.TagCreateIfNotExists(textViewRowNumber.BuffTxt, found_background_color_lightgreen, prop)
+				DlgErr("highlightText:CreateTag", err)
+
+				for _, line := range fileFoundSingle.Pos.FoundLinesIdx {
+					for pIdx := 0; pIdx < len(line.FoundIdx); pIdx = pIdx + 2 {
+						// Using line Index instead the Offsets to avoid issue where characters lenght > 1 byte (unicode)
+						s := textViewRowNumber.BuffTxt.GetIterAtLineIndex(line.Number, line.FoundIdx[pIdx])
+						e := textViewRowNumber.BuffTxt.GetIterAtLineIndex(line.Number, line.FoundIdx[pIdx+1])
+
+						textViewRowNumber.BuffTxt.ApplyTag(tag, s, e)
+					}
 				}
 			}
 		}
+
+		textViewRowNumber.ScrollToLine(line)
+		textViewRowNumber.ColorBgRange(line, line+1)
 	}
 
-	if err != nil {
-		return mainFound, occurrences, errors.New("\n" + sts["alert"] + "\n\n" + err.Error())
-	}
+	currentText = txtStr
 
-	// g.TmpCount = 0
+	// All errors have been handled previously
+	err = nil
 
-	mainFound, occurrences, err = glfsft.SearchAndReplaceInMultipleFiles(
-		treeviewSelectedRows,
-		entrySearchText,
-		entryReplaceText,
-		mainOptions.LineEndThreshold,   //thresholdLineEnd
-		mainOptions.OverCharsThreshold, // thresholdOverChars
-		mainOptions.FileSizeLimit,      // Size limit
-		mainObjects.chkCaseSensitive.GetActive(),
-		mainObjects.chkCharacterClass.GetActive(),
-		mainObjects.chkCharacterClassStrictMode.GetActive(),
-		mainObjects.chkRegex.GetActive(),
-		mainObjects.chkWildcard.GetActive(),
-		mainObjects.chkUseEscapeChar.GetActive(),
-		mainObjects.chkWoleWord.GetActive(),
-		applyChanges, // DoReplace
-		applyChanges, // DoSave
-		mainOptions.MakeBackup,
-		acceptBinary,
-		removeEmptyResult)
-
-	// Errors handling ...
-	if os.IsNotExist(err) {
-		return mainFound, occurrences, errors.New("\n\n" + sts["removed"] + "\n" + err.Error())
-	}
-	if err != nil {
-		return mainFound, occurrences, err
-	}
-	return mainFound, occurrences, nil // all is ok, lets return ...
+	return
 }
 
-// onTheFlyReplace: Simply replace
-func onTheFlyReplace(inTextBytes []byte, outText *[]byte, entrySearchText string) (err error) {
-	if len(inTextBytes) != 0 {
-		entryReplaceText := getEntryText(mainObjects.entryReplace)
-		mainFound := glfsft.Find_s{}
-		mainFound.FileName = "From clipboard"
-		mainFound.TextBytes = inTextBytes
-		mainFound.ReplaceWith = entryReplaceText
-		mainFound.ToSearch = entrySearchText
-		mainFound.DoReplace = true
-		mainFound.CaseSensitive = mainObjects.chkCaseSensitive.GetActive()
-		mainFound.LineEnd = getTextEOL(mainFound.TextBytes)
-		mainFound.POSIXcharClass = mainObjects.chkCharacterClass.GetActive()
-		mainFound.POSIXstrictMode = mainObjects.chkCharacterClassStrictMode.GetActive()
-		mainFound.Regex = mainObjects.chkRegex.GetActive()
-		mainFound.Wildcard = mainObjects.chkWildcard.GetActive()
-		mainFound.UseEscapeChar = mainObjects.chkUseEscapeChar.GetActive()
-		mainFound.WholeWord = mainObjects.chkWoleWord.GetActive()
-
-		gimc.Notify("Information", "Please wait while processing ...")
-		err = mainFound.SearchAndReplace()
-		*outText = mainFound.TextBytes
-	}
-	return err
-}
-
-/*
-* Highlight preview with pango markup
- */
-var pangoEscapeChar = [][]string{{"<", "&lt;", string([]byte{0x15})}, {"&", "&amp;", string([]byte{0x16})}}
-
-// Prepare string with special characters to be marked ("<", "&")
-func PreparePango(inString string) string {
-	inString = strings.Replace(inString, pangoEscapeChar[1][0], pangoEscapeChar[1][2], -1)
-	return strings.Replace(inString, pangoEscapeChar[0][0], pangoEscapeChar[0][2], -1)
-}
-
-// Escape special characters after marking ("<", "&")
-func FinalizePango(inString string) string {
-	inString = strings.Replace(inString, pangoEscapeChar[1][2], pangoEscapeChar[1][1], -1)
-	return strings.Replace(inString, pangoEscapeChar[0][2], pangoEscapeChar[0][1], -1)
-}
-
-// Highlight
-func highlightText(buffer *gtk.TextBuffer, txtStr string, line int) (occurrences int, err error) {
-	if len(txtStr) != 0 {
-		pangoBfr := []byte(`<span background="#87FF87">`) // foreground Lightgreen color
-		pangoAfr := []byte(`</span>`)
-		byteTxt := []byte(PreparePango(txtStr))
-
-		mainFound := glfsft.Find_s{}
-		mainFound.FileName = "From clipboard"
-		mainFound.TextBytes = byteTxt
-		mainFound.ReplaceWith = getEntryText(mainObjects.entryReplace)
-		mainFound.ToSearch = getEntryText(mainObjects.entrySearch)
-		mainFound.DoReplace = false
-		mainFound.CaseSensitive = mainObjects.chkCaseSensitive.GetActive()
-		mainFound.LineEnd = glsg.GetTextEOL(mainFound.TextBytes)
-		mainFound.POSIXcharClass = mainObjects.chkCharacterClass.GetActive()
-		mainFound.POSIXstrictMode = mainObjects.chkCharacterClassStrictMode.GetActive()
-		mainFound.Regex = mainObjects.chkRegex.GetActive()
-		mainFound.Wildcard = mainObjects.chkWildcard.GetActive()
-		mainFound.UseEscapeChar = mainObjects.chkUseEscapeChar.GetActive()
-		mainFound.WholeWord = mainObjects.chkWoleWord.GetActive()
-
-		gimc.Notify("Information", "Please wait while processing ...")
-		if err = mainFound.SearchAndReplace(); err == nil {
-			occurrences = mainFound.Occurrences
-			for posIdx := len(mainFound.Positions.WordsPos) - 1; posIdx >= 0; posIdx-- {
-				pos := mainFound.Positions.WordsPos[posIdx]
-				byteTxt = append(byteTxt[:pos[1]], append(pangoAfr, byteTxt[pos[1]:]...)...)
-				byteTxt = append(byteTxt[:pos[0]], append(pangoBfr, byteTxt[pos[0]:]...)...)
-			}
-			buffer.Delete(buffer.GetStartIter(), buffer.GetEndIter())
-			buffer.InsertMarkup(buffer.GetStartIter(), FinalizePango(string(byteTxt)))
-
-			if !mainObjects.textWinChkWrap.GetActive() {
-				mainObjects.textWinTextview.SetProperty("left-margin", 2)
-
-				mainOptions.textViewRowNumber.UpdateTextViewNumbers()
-			}
-			// Scroll textview at desired line.
-			mainOptions.textViewRowNumber.ScrollToLine(line)
-		}
-	}
-	return occurrences, err
-}
-
-/*
-* StatusBar function ...
- */
+// updateStatusBar:
 func updateStatusBar() {
 	wordFile := sts["sbFile"]
 	wordSel := sts["sbFileSel"]
@@ -525,46 +355,30 @@ func updateStatusBar() {
 	statusbar.Set(fmt.Sprint(dispTime), 4)
 }
 
-func displayStatusBar(str ...string) {
-	var outText []string
-	if len(str) != 0 {
-		for _, toDisp := range str {
-			outText = append(outText, toDisp)
-		}
-		contextId1 := mainObjects.statusbar.GetContextId("part1")
-		mainObjects.statusbar.Push(contextId1, strings.Join(outText, " | "))
-	}
-}
-
 /*
 * Clipboard handling ...
  */
+
 func clipboardInit() {
 	var err error
-	mainObjects.clipboard, err = gtk.ClipboardGet(gdk.SELECTION_CLIPBOARD)
-	Check(err, "clipboardInit")
+	if mainObjects.clipboard, err = gtk.ClipboardGet(gdk.SELECTION_CLIPBOARD); err != nil {
+		log.Fatalf("clipboardInit: %s\n", err.Error())
+	}
 }
 
 func clipboardCopyFromTextWin() {
-	txtBuffer, err := mainObjects.textWinTextview.GetBuffer()
-	Check(err, "clipboardCopyFromTextWin")
-	iterStart := txtBuffer.GetStartIter()
-	iterEnd := txtBuffer.GetEndIter()
-	text, err := txtBuffer.GetText(iterStart, iterEnd, true)
-	Check(err, "clipboardCopyFromTextWin")
-
-	mainObjects.clipboard.SetText(text)
+	mainObjects.clipboard.SetText(textViewRowNumber.GetText())
 }
 
 func clipboardPastToTextWin() {
-	txtBuffer, err := mainObjects.textWinTextview.GetBuffer()
-	Check(err, "clipboardPastToTextWin")
-	txtBuffer.SetText(clipboardGet())
+	textViewRowNumber.SetText(clipboardGet())
 }
 
 func clipboardGet() (clipboardContent string) {
-	clipboardContent, err := mainObjects.clipboard.WaitForText()
-	Check(err, "clipboardGet")
+	var err error
+	if clipboardContent, err = mainObjects.clipboard.WaitForText(); err != nil {
+		log.Fatalf("clipboardGet: %s\n", err.Error())
+	}
 	return clipboardContent
 }
 
@@ -572,23 +386,11 @@ func clipboardSet(clipboardContent string) {
 	mainObjects.clipboard.SetText(clipboardContent)
 }
 
-// getEntryText: retrieve value of an entry control.
-func getEntryText(e *gtk.Entry) (outTxt string) {
-	var err error
-
-	outTxt, err = e.GetText()
-	Check(err, "getEntryText")
-	return outTxt
-}
-
-/*
-* Text functions
- */
 // Convert Entry to list of extensions.
 func ExtSliceToOpt() {
 	mainOptions.ExtMask = []string{}
 
-	tmpSliceStrings := strings.Split(getEntryText(mainObjects.entryExtMask), mainOptions.ExtSep)
+	tmpSliceStrings := strings.Split(gitl.GetEntryText(mainObjects.entryExtMask), mainOptions.ExtSep)
 	for _, str := range tmpSliceStrings {
 		str = strings.TrimSpace(str)
 		if len(str) != 0 {
@@ -600,62 +402,4 @@ func ExtSliceToOpt() {
 
 func OptToExtSlice() {
 	mainObjects.entryExtMask.SetText(strings.Join(mainOptions.ExtMask, mainOptions.ExtSep+" "))
-}
-
-// ReducePath: Reduce path length by preserving count element from the end
-func truncatePath(fullpath string, count ...int) (reduced string) {
-	elemCnt := 2
-	if len(count) != 0 {
-		elemCnt = count[0]
-	}
-	splited := strings.Split(fullpath, string(os.PathSeparator))
-	if len(splited) > elemCnt+1 {
-		return "..." + string(os.PathSeparator) + filepath.Join(splited[len(splited)-elemCnt:]...)
-	}
-	return fullpath
-}
-
-// getTextEOL: Get EOL from text bytes (CR, LF, CRLF)
-func getTextEOL(inTextBytes []byte) (outString string) {
-	bCR := []byte{0x0D}
-	bLF := []byte{0x0A}
-	bCRLF := []byte{0x0D, 0x0A}
-	switch {
-	case bytes.Contains(inTextBytes, bCRLF):
-		outString = string(bCRLF)
-	case bytes.Contains(inTextBytes, bCR):
-		outString = string(bCR)
-	default:
-		outString = string(bLF)
-	}
-	return
-}
-
-// Check: Display error messages in HR version with onClickJump enabled in
-// my favourite Golang IDE editor. Return true if error exist.
-func Check(err error, message ...string) (state bool) {
-	remInside := regexp.MustCompile(`[\s\p{Zs}]{2,}`) //	to match 2 or more whitespace symbols inside a string
-	var msgs string
-	if err != nil {
-		state = true
-		if len(message) != 0 { // Make string with messages if exists
-			for _, mess := range message {
-				msgs += `[` + mess + `]`
-			}
-		}
-		pc, file, line, ok := runtime.Caller(1) //	(pc uintptr, file string, line int, ok bool)
-		if ok == false {                        // Remove "== false" if needed
-			fName := runtime.FuncForPC(pc).Name()
-			fmt.Printf("[%s][%s][File: %s][Func: %s][Line: %d]\n", msgs, err.Error(), file, fName, line)
-		} else {
-			stack := strings.Split(fmt.Sprintf("%s", debug.Stack()), "\n")
-			for idx := 5; idx < len(stack)-1; idx = idx + 2 {
-				//	To match 2 or more whitespace leading/ending/inside a string (include \t, \n)
-				mess1 := strings.Join(strings.Fields(stack[idx]), " ")
-				mess2 := strings.TrimSpace(remInside.ReplaceAllString(stack[idx+1], " "))
-				fmt.Printf("%s[%s][%s]\n", msgs, err.Error(), strings.Join([]string{mess1, mess2}, "]["))
-			}
-		}
-	}
-	return state
 }

@@ -1,6 +1,6 @@
 // translate.go
 
-// File generated on Wed, 02 Oct 2019 00:15:27 using Gotk3ObjectsTranslate v1.3 2019 H.F.M
+// File generated on Tue, 19 Nov 2019 21:53:02 using Gotk3ObjectsTranslate v1.3 2019 H.F.M
 
 /*
 * 	This program comes with absolutely no warranty.
@@ -15,7 +15,6 @@ import (
 	"encoding/json"
 	"fmt"
 	"io/ioutil"
-	"os"
 	"strings"
 
 	"github.com/gotk3/gotk3/gtk"
@@ -33,8 +32,8 @@ func (trans *MainTranslate) initGtkObjectsText() {
 	trans.setTextToGtkObjects(&mainObjects.chkFollowSymlinkDir.Widget, "chkFollowSymlinkDir")
 	trans.setTextToGtkObjects(&mainObjects.chkRegex.Widget, "chkRegex")
 	trans.setTextToGtkObjects(&mainObjects.chkUseEscapeChar.Widget, "chkUseEscapeChar")
+	trans.setTextToGtkObjects(&mainObjects.chkWholeWord.Widget, "chkWholeWord")
 	trans.setTextToGtkObjects(&mainObjects.chkWildcard.Widget, "chkWildcard")
-	trans.setTextToGtkObjects(&mainObjects.chkWoleWord.Widget, "chkWoleWord")
 	trans.setTextToGtkObjects(&mainObjects.entryExtMask.Widget, "entryExtMask")
 	trans.setTextToGtkObjects(&mainObjects.entryReplace.Widget, "entryReplace")
 	trans.setTextToGtkObjects(&mainObjects.entrySearch.Widget, "entrySearch")
@@ -49,14 +48,24 @@ func (trans *MainTranslate) initGtkObjectsText() {
 	trans.setTextToGtkObjects(&mainObjects.lblReplace.Widget, "lblReplace")
 	trans.setTextToGtkObjects(&mainObjects.lblSearch.Widget, "lblSearch")
 	trans.setTextToGtkObjects(&mainObjects.listViewFiles.Widget, "listViewFiles")
+	trans.setTextToGtkObjects(&mainObjects.MainButtonOptions.Widget, "MainButtonOptions")
 	trans.setTextToGtkObjects(&mainObjects.mainWinBtnClose.Widget, "mainWinBtnClose")
+	trans.setTextToGtkObjects(&mainObjects.OptionButtonDone.Widget, "OptionButtonDone")
+	trans.setTextToGtkObjects(&mainObjects.OptionsEntryMaxFileSize.Widget, "OptionsEntryMaxFileSize")
+	trans.setTextToGtkObjects(&mainObjects.OptionsEntryMinFileSize.Widget, "OptionsEntryMinFileSize")
+	trans.setTextToGtkObjects(&mainObjects.OptionsImageTop.Widget, "OptionsImageTop")
+	trans.setTextToGtkObjects(&mainObjects.OptionsLabelChooseDepth.Widget, "OptionsLabelChooseDepth")
+	trans.setTextToGtkObjects(&mainObjects.OptionsLabelEnableDirChooser.Widget, "OptionsLabelEnableDirChooser")
+	trans.setTextToGtkObjects(&mainObjects.OptionsLabelMaxFileSize.Widget, "OptionsLabelMaxFileSize")
+	trans.setTextToGtkObjects(&mainObjects.OptionsLabelMinFileSize.Widget, "OptionsLabelMinFileSize")
 	trans.setTextToGtkObjects(&mainObjects.spinButtonDepth.Widget, "spinButtonDepth")
 	trans.setTextToGtkObjects(&mainObjects.switchFileChooserButton.Widget, "switchFileChooserButton")
 	trans.setTextToGtkObjects(&mainObjects.textWinBtnDone.Widget, "textWinBtnDone")
 	trans.setTextToGtkObjects(&mainObjects.textWinChkShowModifications.Widget, "textWinChkShowModifications")
+	trans.setTextToGtkObjects(&mainObjects.textWinChkSyntxHighlight.Widget, "textWinChkSyntxHighlight")
 	trans.setTextToGtkObjects(&mainObjects.textWinChkWrap.Widget, "textWinChkWrap")
-	trans.setTextToGtkObjects(&mainObjects.textWinTextview.Widget, "textWinTextview")
-	trans.setTextToGtkObjects(&mainObjects.textWinTextviewNumbers.Widget, "textWinTextviewNumbers")
+	trans.setTextToGtkObjects(&mainObjects.textWinComboBoxLanguage.Widget, "textWinComboBoxLanguage")
+	trans.setTextToGtkObjects(&mainObjects.textWinComboBoxTextStyleChooser.Widget, "textWinComboBoxTextStyleChooser")
 }
 // Translations structure declaration. To be used in main application.
 var translate = new(MainTranslate)
@@ -66,43 +75,48 @@ var translate = new(MainTranslate)
 // They'll be added to language file each time application started
 // when "devMode" is set at true.
 var sts = map[string]string{
-	`totalOccurrences`: `Occurrence(s) found:`,
-	`sbFilesSel`: `Files selected:`,
-	`savef`: `Save file`,
-	`ok`: `Ok`,
-	`titlePreviewText`: `Preview window`,
-	`file-LinkNotExist`: `File does not exist, or symlink endpoint not found.`,
-	`file-perm`: `File permissions error.`,
-	`yes`: `Yes`,
-	`sbFileSel`: `File selected:`,
-	`retry`: `Retry`,
-	`sbFiles`: `Files:`,
+	`regexpErr`: `Regex mistake ...`,
+	`done`: `Operation done.`,
 	`sbFile`: `File`,
-	`searchTime`: `Search time:`,
-	`removed`: `File has been removed before processing.`,
-	`status`: `Status:`,
-	`in`: `in`,
-	`nothingToSearch`: `Nothing to search ...`,
-	`allow`: `Allow`,
-	`scanTime`: `Scan files time:`,
-	`file`: `file(s)`,
-	`noFileSel`: `No selected file(s) to search in ...`,
-	`clpbrdPreview`: `Clipboard content preview.`,
-	`deny`: `Deny`,
+	`savef`: `Save file`,
 	`dir-rem`: `Directory does not exist. The current application directory will be used.`,
 	`no`: `No`,
-	`openf`: `Open file`,
-	`alert`: `Alert ...`,
-	`regexpErr`: `Regex mistake ...`,
-	`cancel`: `Cancel`,
+	`proceed`: `Are you sure you want to replace pattern in files ?`,
+	`sbFiles`: `Files:`,
+	`file-LinkNotExist`: `File does not exist, or symlink endpoint not found.`,
 	`file-rem`: `File(s) does not exist.`,
+	`status`: `Status:`,
+	`dispTime`: `Display time:`,
+	`file-perm`: `File permissions error.`,
+	`in`: `in`,
+	`allow`: `Allow`,
+	`unexpected`: `An unexpected error occurred`,
+	`totalModified`: `Occurrence(s) modified`,
+	`titleSearchResults`: `Search results`,
+	`removed`: `File has been removed before processing.`,
+	`alert`: `Alert ...`,
+	`openf`: `Open file`,
+	`clpbrdPreview`: `Clipboard content preview.`,
+	`totalOccurrences`: `Occurrence(s) found:`,
+	`searchTime`: `Search time:`,
+	`confirm`: `Confirmation`,
+	`missing`: `Something missing`,
+	`emptyCB`: `Nothing to do with an empty clipboard ...`,
+	`yes`: `Yes`,
+	`sbFilesSel`: `Files selected:`,
+	`sbFileSel`: `File selected:`,
+	`cancel`: `Cancel`,
+	`nothingToSearch`: `Nothing to search ...`,
+	`file`: `file(s)`,
+	`ok`: `Ok`,
+	`titlePreviewText`: `Preview window`,
 	`forbiddenFiles`: `Some files could not be accessed ...
 Unchecking "Follow symlink" may be useful.`,
+	`deny`: `Deny`,
+	`noFileSel`: `No selected file(s) to search in ...`,
 	`notFound`: `Nothing was found ...`,
-	`emptyCB`: `Nothing to do with an empty clipboard ...`,
-	`titleSearchResults`: `Search results`,
-	`missing`: `Something missing`,
-	`dispTime`: `Display time:`,
+	`scanTime`: `Scan files time:`,
+	`retry`: `Retry`,
 }
 
 
@@ -122,9 +136,9 @@ type MainTranslate struct {
 // MainTranslateNew: Initialise new translation structure and assign language file content to GtkObjects.
 // devModeActive, indicate that the new sentences must be added to previous language file.
 func MainTranslateNew(filename string, devModeActive ...bool) (mt *MainTranslate) {
+	var err error
 	mt = new(MainTranslate)
-	if _, err := os.Stat(filename); err == nil {
-		mt.read(filename)
+	if err = mt.read(filename); err == nil {
 		mt.initGtkObjectsText()
 		if len(devModeActive) != 0 {
 			if devModeActive[0] {
@@ -136,9 +150,9 @@ func MainTranslateNew(filename string, devModeActive ...bool) (mt *MainTranslate
 			}
 		}
 	} else {
-		fmt.Printf("%s\n%s\n", "Error loading language file !\nNot an error when is just creating from glade Xml or GOH project file.", err.Error())
+		fmt.Printf("%s\n%s\n", "Error loading language file !\nNot an error when you just creating from glade Xml or GOH project file.", err.Error())
 	}
-	return mt
+	return
 }
 
 // readFile: language file.
@@ -149,7 +163,7 @@ func (trans *MainTranslate) read(filename string) (err error) {
 			trans.objectsLoaded = true
 		}
 	}
-	return err
+	return
 }
 
 // Write json datas to file
@@ -161,7 +175,7 @@ func (trans *MainTranslate) write(filename string) (err error) {
 			err = ioutil.WriteFile(filename, out.Bytes(), 0644)
 		}
 	}
-	return err
+	return
 }
 
 type parsingFlags struct {

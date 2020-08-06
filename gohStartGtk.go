@@ -1,8 +1,11 @@
 // gohStartGtk.go
 
-// Source file auto-generated on Sun, 15 Sep 2019 08:30:03 using Gotk3ObjHandler v1.3.8 ©2018-19 H.F.M
-
 /*
+	Source file auto-generated on Thu, 06 Aug 2020 20:25:48 using Gotk3ObjHandler v1.5 ©2018-20 H.F.M
+	This software use gotk3 that is licensed under the ISC License:
+	https://github.com/gotk3/gotk3/blob/master/LICENSE
+
+	Copyright ©2018-20 H.F.M - Search And Replace v1.8 github.com/hfmrow/sAndReplace
 	This program comes with absolutely no warranty. See the The MIT License (MIT) for details:
 	https://opensource.org/licenses/mit-license.php
 */
@@ -10,7 +13,6 @@
 package main
 
 import (
-	"fmt"
 	"log"
 	"os"
 
@@ -31,10 +33,6 @@ func mainStartGtk(winTitle string, width, height int, center bool) {
 		}
 		// Parse Gtk objects
 		gladeObjParser()
-		// Naming widgets as Gtk objects
-		if namingWidget {
-			widgetNaming()
-		}
 		/* Update gtk conctrols with stored values into mainOptions */
 		mainOptions.UpdateObjects()
 		/* Fill control with images */
@@ -47,9 +45,6 @@ func mainStartGtk(winTitle string, width, height int, center bool) {
 		mainObjects.mainWin.SetDefaultSize(width, height)
 		mainObjects.mainWin.Connect("delete-event", windowDestroy)
 		mainObjects.mainWin.ShowAll()
-		if devMode {
-			fmt.Printf("** %s %s **\n", "Development mode activated ...", "Assets used directly from the sources files.")
-		}
 		// Start main application ...
 		mainApplication()
 		// Objects Signals initialisations

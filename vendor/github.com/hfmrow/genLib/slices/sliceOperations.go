@@ -11,9 +11,9 @@ import (
 
 // GetStrIndex: Get index of a string in a slice, Return -1 if no entry found ...
 func GetStrIndex(slice []string, item string) int {
-	for i, _ := range slice {
-		if slice[i] == item {
-			return i
+	for idx, row := range slice {
+		if row == item {
+			return idx
 		}
 	}
 	return -1
@@ -31,8 +31,8 @@ func IsExistSl(slice []string, item string) bool {
 
 // GetStrIndex2dCol: Search in 2d string slice if a column's value exist and return row number.
 func GetStrIndex2dCol(slice [][]string, value string, col int) int {
-	for idx, mainRow := range slice {
-		if mainRow[col] == value {
+	for idx, row := range slice {
+		if row[col] == value {
 			return idx
 		}
 	}
@@ -43,6 +43,16 @@ func GetStrIndex2dCol(slice [][]string, value string, col int) int {
 func IsExist2dCol(slice [][]string, value string, col int) bool {
 	for _, mainRow := range slice {
 		if mainRow[col] == value {
+			return true
+		}
+	}
+	return false
+}
+
+// IsExist2d Search in 2d string slice if a row exist (deepequal row).
+func IsExist2d(slice [][]string, cmpRow []string) bool {
+	for _, mainRow := range slice {
+		if reflect.DeepEqual(mainRow, cmpRow) {
 			return true
 		}
 	}
@@ -66,16 +76,6 @@ func CmpRemSl2d(sl1, sl2 [][]string) (outSlice [][]string) {
 		skip = false
 	}
 	return outSlice
-}
-
-// IsExist2d Search in 2d string slice if a row exist.
-func IsExist2d(slice [][]string, cmpRow []string) bool {
-	for _, mainRow := range slice {
-		if reflect.DeepEqual(mainRow, cmpRow) {
-			return true
-		}
-	}
-	return false
 }
 
 // CheckForDupSl2d: Return true if duplicated row is found

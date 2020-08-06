@@ -25,7 +25,7 @@ import (
 type DragNDropStruct struct {
 	Object    interface{} // gtkObject that receive DND
 	FilesList *[]string   // Contain the files list received
-	CallBack  func()      // Function called after receiving datas
+	CallBack  func()      // Function called after data was received
 }
 
 // initDropSets: configure controls to receive dndcontent.
@@ -38,6 +38,7 @@ func DragNDropNew(objects interface{}, filesList *[]string, callBack func()) *Dr
 	return ds
 }
 
+// Dispatching reciever object type (TreeView, Button ...)
 func (ds *DragNDropStruct) init() {
 	var targets []gtk.TargetEntry // Build dnd context
 	te, err := gtk.TargetEntryNew("text/uri-list", gtk.TARGET_OTHER_APP, 0)
@@ -63,9 +64,9 @@ func (ds *DragNDropStruct) init() {
 }
 
 // ButtonInFilesReceived: Store in files list
-func (ds *DragNDropStruct) dndFilesReceived(object interface{}, context *gdk.DragContext, x, y int, data_ptr uintptr, info, time uint) {
+func (ds *DragNDropStruct) dndFilesReceived(object interface{}, context *gdk.DragContext, x, y int, selData *gtk.SelectionData, info, time uint) {
 	*ds.FilesList = (*ds.FilesList)[:0]
-	data := gtk.GetData(data_ptr)
+	data := selData.GetData()
 	list := strings.Split(string(data), getTextEOL(data))
 	for _, file := range list {
 		if len(file) != 0 {

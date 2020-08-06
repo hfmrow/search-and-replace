@@ -12,7 +12,7 @@
 		"LangNameShrt": "eng",
 		"Author": "H.F.M",
 		"Date": "Mon, 11 Mar 2019 04:04:21",
-		"Updated": "Wed, 02 Oct 2019 00:15:31",
+		"Updated": "Tue, 19 Nov 2019 21:58:01",
 		"Contributors": [
 			""
 		]
@@ -23,7 +23,7 @@
 		"SkipEmptyName": true,
 		"DoBackup": true
 	},
-	"ObjectsCount": 34,
+	"ObjectsCount": 44,
 	"Objects": [
 		{
 			"Class": "GtkButton",
@@ -119,11 +119,11 @@
 		{
 			"Class": "GtkCheckButton",
 			"Id": "chkFollowSymlinkDir",
-			"Label": "Follow symlink dir.",
+			"Label": "Follow symlink directory",
 			"LabelMarkup": false,
 			"LabelWrap": false,
-			"Tooltip": "If directory is a symbolic link, follow it.",
-			"TooltipMarkup": false,
+			"Tooltip": "If directory is a symbolic link, follow it.\n\n\u003cspan background=\"#FCE94FFF\"\u003e\u003cb\u003e\u003cspan foreground=\"#6D0000FF\"\u003eMust be used with care to avoid file loop search.\u003c/span\u003e\u003c/b\u003e\u003c/span\u003e",
+			"TooltipMarkup": true,
 			"Text": "",
 			"Uri": "",
 			"Comment": "",
@@ -135,8 +135,8 @@
 			"Label": "Regex",
 			"LabelMarkup": false,
 			"LabelWrap": false,
-			"Tooltip": "Consider the search entry as\na regular expression.",
-			"TooltipMarkup": false,
+			"Tooltip": "Consider the search entry as a regular expression.\n\ni.e:\n\t\u003cspan background=\"#FCE94FFF\"\u003e- Search all patterns \"|\" mean \"or\", \"(\\b)\" mean whole word.\u003c/span\u003e\n\t\u003cspan background=\"#FCE94FFF\"\u003e- \"\\(\\)\" mean escaping \"()\" to specify that is not a part of expression\u003c/span\u003e\n\t\u003cspan foreground=\"#3465A4FF\"\u003e(\\b)(require|exit\\(\\)|if|else|function|global|php)\u003c/span\u003e\n\n\t\u003cspan background=\"#FCE94FFF\"\u003e- Search all patterns \"image\", \"(?i)\" mean case insensitive.\u003c/span\u003e\n\t\u003cspan foreground=\"#3465A4FF\"\u003e(?i)image\u003c/span\u003e",
+			"TooltipMarkup": true,
 			"Text": "",
 			"Uri": "",
 			"Comment": "",
@@ -157,11 +157,11 @@
 		},
 		{
 			"Class": "GtkCheckButton",
-			"Id": "chkWildcard",
-			"Label": "Use wildcard",
+			"Id": "chkWholeWord",
+			"Label": "Whole word",
 			"LabelMarkup": false,
 			"LabelWrap": false,
-			"Tooltip": "Allow use of wildcard like \"*\" or \"?\"\nin search statement.",
+			"Tooltip": "Search only for the whole word\n(does not be a part of another word).",
 			"TooltipMarkup": false,
 			"Text": "",
 			"Uri": "",
@@ -170,11 +170,11 @@
 		},
 		{
 			"Class": "GtkCheckButton",
-			"Id": "chkWoleWord",
-			"Label": "Whole word",
+			"Id": "chkWildcard",
+			"Label": "Use wildcard",
 			"LabelMarkup": false,
 			"LabelWrap": false,
-			"Tooltip": "Search only for the whole word\n(does not be a part of another word).",
+			"Tooltip": "Allow use of wildcard like \"*\" or \"?\"\nin search statement.",
 			"TooltipMarkup": false,
 			"Text": "",
 			"Uri": "",
@@ -236,7 +236,7 @@
 		{
 			"Class": "GtkButton",
 			"Id": "findWinCancelBtn",
-			"Label": "Cancel",
+			"Label": "Close",
 			"LabelMarkup": false,
 			"LabelWrap": false,
 			"Tooltip": "Close window.",
@@ -365,6 +365,19 @@
 		},
 		{
 			"Class": "GtkButton",
+			"Id": "MainButtonOptions",
+			"Label": "",
+			"LabelMarkup": false,
+			"LabelWrap": false,
+			"Tooltip": "Options",
+			"TooltipMarkup": false,
+			"Text": "",
+			"Uri": "",
+			"Comment": "No label needed",
+			"Idx": 26
+		},
+		{
+			"Class": "GtkButton",
 			"Id": "mainWinBtnClose",
 			"Label": "Close",
 			"LabelMarkup": false,
@@ -374,7 +387,111 @@
 			"Text": "",
 			"Uri": "",
 			"Comment": "",
-			"Idx": 26
+			"Idx": 27
+		},
+		{
+			"Class": "GtkButton",
+			"Id": "OptionButtonDone",
+			"Label": "Done",
+			"LabelMarkup": false,
+			"LabelWrap": false,
+			"Tooltip": "",
+			"TooltipMarkup": false,
+			"Text": "",
+			"Uri": "",
+			"Comment": "",
+			"Idx": 28
+		},
+		{
+			"Class": "GtkEntry",
+			"Id": "OptionsEntryMaxFileSize",
+			"Label": "",
+			"LabelMarkup": false,
+			"LabelWrap": false,
+			"Tooltip": "Choose the \u003cb\u003emaximum\u003c/b\u003e size in bytes of files to scan.\n\n\u003cspan background=\"#FCE94FFF\"\u003e\u003cspan foreground=\"#6D0000FF\"\u003e1024\t\t1Ko\t\t\n5120\t\t5Ko\t\t\n524288\t\t512Ko\t\n1048576\t1Mo\t\u003c/span\u003e\u003c/span\u003e",
+			"TooltipMarkup": true,
+			"Text": "",
+			"Uri": "",
+			"Comment": "",
+			"Idx": 29
+		},
+		{
+			"Class": "GtkEntry",
+			"Id": "OptionsEntryMinFileSize",
+			"Label": "",
+			"LabelMarkup": false,
+			"LabelWrap": false,
+			"Tooltip": "Choose the \u003cb\u003eminimum\u003c/b\u003e size in bytes of files to scan.\n\n\u003cspan background=\"#FCE94FFF\"\u003e\u003cspan foreground=\"#6D0000FF\"\u003e1024\t\t1Ko\t\t\n5120\t\t5Ko\t\t\n524288\t\t512Ko\t\n1048576\t1Mo\t\u003c/span\u003e\u003c/span\u003e",
+			"TooltipMarkup": true,
+			"Text": "",
+			"Uri": "",
+			"Comment": "",
+			"Idx": 30
+		},
+		{
+			"Class": "GtkImage",
+			"Id": "OptionsImageTop",
+			"Label": "",
+			"LabelMarkup": false,
+			"LabelWrap": false,
+			"Tooltip": "",
+			"TooltipMarkup": false,
+			"Text": "",
+			"Uri": "",
+			"Comment": "",
+			"Idx": 31
+		},
+		{
+			"Class": "GtkLabel",
+			"Id": "OptionsLabelChooseDepth",
+			"Label": "Choose depth dir scanning :",
+			"LabelMarkup": false,
+			"LabelWrap": false,
+			"Tooltip": "",
+			"TooltipMarkup": false,
+			"Text": "",
+			"Uri": "",
+			"Comment": "",
+			"Idx": 32
+		},
+		{
+			"Class": "GtkLabel",
+			"Id": "OptionsLabelEnableDirChooser",
+			"Label": "Directory chooser auto scan :",
+			"LabelMarkup": false,
+			"LabelWrap": false,
+			"Tooltip": "",
+			"TooltipMarkup": false,
+			"Text": "",
+			"Uri": "",
+			"Comment": "",
+			"Idx": 33
+		},
+		{
+			"Class": "GtkLabel",
+			"Id": "OptionsLabelMaxFileSize",
+			"Label": "\u003cb\u003eMax\u003c/b\u003eimum file size to be scanned :",
+			"LabelMarkup": true,
+			"LabelWrap": false,
+			"Tooltip": "\u003cspan background=\"#FCE94FFF\"\u003ePay attention to these values, otherwise no file will be analyzed !\u003c/span\u003e",
+			"TooltipMarkup": true,
+			"Text": "",
+			"Uri": "",
+			"Comment": "",
+			"Idx": 34
+		},
+		{
+			"Class": "GtkLabel",
+			"Id": "OptionsLabelMinFileSize",
+			"Label": "\u003cb\u003eMin\u003c/b\u003eimum file size to be scanned :",
+			"LabelMarkup": true,
+			"LabelWrap": false,
+			"Tooltip": "\u003cspan background=\"#FCE94FFF\"\u003ePay attention to these values, otherwise no file will be analyzed !\u003c/span\u003e",
+			"TooltipMarkup": true,
+			"Text": "",
+			"Uri": "",
+			"Comment": "",
+			"Idx": 35
 		},
 		{
 			"Class": "GtkSpinButton",
@@ -387,7 +504,7 @@
 			"Text": "",
 			"Uri": "",
 			"Comment": "",
-			"Idx": 27
+			"Idx": 36
 		},
 		{
 			"Class": "GtkSwitch",
@@ -400,12 +517,12 @@
 			"Text": "",
 			"Uri": "",
 			"Comment": "",
-			"Idx": 28
+			"Idx": 37
 		},
 		{
 			"Class": "GtkButton",
 			"Id": "textWinBtnDone",
-			"Label": "Done",
+			"Label": "Close",
 			"LabelMarkup": false,
 			"LabelWrap": false,
 			"Tooltip": "Close window.",
@@ -413,7 +530,7 @@
 			"Text": "",
 			"Uri": "",
 			"Comment": "",
-			"Idx": 29
+			"Idx": 38
 		},
 		{
 			"Class": "GtkCheckButton",
@@ -426,7 +543,20 @@
 			"Text": "",
 			"Uri": "",
 			"Comment": "",
-			"Idx": 30
+			"Idx": 39
+		},
+		{
+			"Class": "GtkCheckButton",
+			"Id": "textWinChkSyntxHighlight",
+			"Label": "Syntax highlighter",
+			"LabelMarkup": false,
+			"LabelWrap": false,
+			"Tooltip": "Activate the highlighting function.\n\n\u003cspan background=\"#FCE94FFF\"\u003eCan be very useful sometimes, but on large files\nhigher than 25 KB, the display takes a long time.\u003c/span\u003e",
+			"TooltipMarkup": true,
+			"Text": "",
+			"Uri": "",
+			"Comment": "",
+			"Idx": 40
 		},
 		{
 			"Class": "GtkCheckButton",
@@ -439,33 +569,33 @@
 			"Text": "",
 			"Uri": "",
 			"Comment": "",
-			"Idx": 31
+			"Idx": 41
 		},
 		{
-			"Class": "GtkTextView",
-			"Id": "textWinTextview",
+			"Class": "GtkComboBoxText",
+			"Id": "textWinComboBoxLanguage",
 			"Label": "",
 			"LabelMarkup": false,
 			"LabelWrap": false,
-			"Tooltip": "",
+			"Tooltip": "Choose the language handled by the\nsyntax highlighting function.",
 			"TooltipMarkup": false,
 			"Text": "",
 			"Uri": "",
 			"Comment": "",
-			"Idx": 32
+			"Idx": 42
 		},
 		{
-			"Class": "GtkTextView",
-			"Id": "textWinTextviewNumbers",
+			"Class": "GtkComboBoxText",
+			"Id": "textWinComboBoxTextStyleChooser",
 			"Label": "",
 			"LabelMarkup": false,
 			"LabelWrap": false,
-			"Tooltip": "",
+			"Tooltip": "Choose the style used by the\nsyntax highlighting function.",
 			"TooltipMarkup": false,
 			"Text": "",
 			"Uri": "",
 			"Comment": "",
-			"Idx": 33
+			"Idx": 43
 		}
 	],
 	"Sentences": {
@@ -473,9 +603,11 @@
 		"allow": "Allow",
 		"cancel": "Cancel",
 		"clpbrdPreview": "Clipboard content preview.",
+		"confirm": "Confirmation",
 		"deny": "Deny",
 		"dir-rem": "Directory does not exist. The current application directory will be used.",
 		"dispTime": "Display time:",
+		"done": "Operation done.",
 		"emptyCB": "Nothing to do with an empty clipboard ...",
 		"file": "file(s)",
 		"file-LinkNotExist": "File does not exist, or symlink endpoint not found.",
@@ -490,6 +622,7 @@
 		"nothingToSearch": "Nothing to search ...",
 		"ok": "Ok",
 		"openf": "Open file",
+		"proceed": "Are you sure you want to replace pattern in files ?",
 		"regexpErr": "Regex mistake ...",
 		"removed": "File has been removed before processing.",
 		"retry": "Retry",
@@ -503,7 +636,9 @@
 		"status": "Status:",
 		"titlePreviewText": "Preview window",
 		"titleSearchResults": "Search results",
+		"totalModified": "Occurrence(s) modified",
 		"totalOccurrences": "Occurrence(s) found:",
+		"unexpected": "An unexpected error occurred",
 		"yes": "Yes"
 	}
 }

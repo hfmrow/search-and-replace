@@ -27,9 +27,6 @@ func FormatTextParagraphFormatting(str string, max int, truncateWordOverMaxSize 
 	var tmpParag, tmpFinal, indent string
 	eol := GetTextEOL([]byte(str))
 	var addLine = func() {
-		// if indent != "" {
-		// 	tmpFinal += indent
-		// }
 		tmpFinal += FormatText(tmpParag, max, truncateWordOverMaxSize, indent)
 	}
 	if len(indentFirstLinetr) != 0 {
@@ -49,8 +46,8 @@ func FormatTextParagraphFormatting(str string, max int, truncateWordOverMaxSize 
 	return strings.TrimSuffix(tmpFinal, eol)
 }
 
-// FormatText: Format words text to fit (column/windows with limited width) "max" chars.
-// An unwanted behavior may occur on string where word's length > max...
+// FormatText: Format words text to fit (column/windows with limited width) "max"
+// chars. An unwanted behavior may occur on string where word's length > max...
 func FormatText(str string, max int, truncateWordOverMaxSize bool, indenT ...string) string {
 	var indent string
 	if len(indenT) != 0 {
@@ -106,9 +103,10 @@ func FormatText(str string, max int, truncateWordOverMaxSize bool, indenT ...str
 	return ""
 }
 
-// TruncateString: Reduce string length for display (prefix is separator like: "...", option=0 -> put separator at the begening
-// of output string. Option=1 -> center, is where separation is placed. option=2 -> line feed, trunc the whole string using LF
-// without shorting it. Max, is max char length of the output string.
+// TruncateString: Reduce string length for display (prefix is separator like: "...",
+// option=0 -> put separator at the begining of output string. Option=1 -> center,
+// is where separation is placed. option=2 -> line feed, trunc the whole string
+// using LF without shorting it. Max, is max char length of the output string.
 func TruncateString(inString, prefix string, max, option int) string {
 	var center, cutAt bool
 	var outText string
