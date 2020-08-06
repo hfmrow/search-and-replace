@@ -31,7 +31,7 @@
 
 # Personal unwanted files and folders
 gohBackup/*
-*artWork/*
+assets/artWork/*
 *.opt
 *~
 *~~
@@ -40,4 +40,5 @@ gohBackup/*
 *.7z
 *.SUM
 *.desktop
+*.proj
 
