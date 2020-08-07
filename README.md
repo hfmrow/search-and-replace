@@ -100,4 +100,4 @@ This operation indicate that externals datas (Image/Icons) must be embedded into
 
 ## Website
 
-- [H.F.M Linux softwares](https://hfmrow.yo.fr/) Free linux software on Github. Sharing knowledge.
+- [H.F.M Linux softwares](https://hfmrow.go.yo.fr/) Free linux software on Github. Sharing knowledge.
