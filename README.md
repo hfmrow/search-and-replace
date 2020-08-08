@@ -39,7 +39,7 @@ Take a look at [H.F.M repositories](https://github.com/hfmrow/) for others usefu
 
 *This is the main screen, and children*
 
-![wholejpg](file:///media/syndicate/storage/Documents/dev/go/src/github.com/hfmrow/sAndReplace/assets/readme/whole.jpg)
+![wholejpg](assets/readme/whole.jpg)
 
 ### How to compile
 
