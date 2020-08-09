@@ -66,7 +66,7 @@ var popupMenu *gimc.PopupMenu
 
 // Error handling
 var DlgErr = func(dsc string, err error) (yes bool) {
-	yes = gidg.DialogError(mainObjects.mainWin, sts["issue"], dsc, err, devMode, true)
+	yes = gidg.DialogError(mainObjects.mainWin, sts["issue"], dsc, err, devMode, devMode)
 	return
 }
 

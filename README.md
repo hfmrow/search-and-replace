@@ -9,13 +9,12 @@ You can use it to search multiple files to find definitions of specific function
 Take a look at [H.F.M repositories](https://github.com/hfmrow/) for others useful Linux software.
 
 - If you just want **to use it**, simply **download** the **compiled version** under the [Releases](https://github.com/hfmrow/sAndReplace/releases) tab. You can check at [the Right way to install H.F.M's softwares](https://github.com/hfmrow/instHFMsofts) page to integrate this software in your Debian environment.
-  
+
 - **Notice**, ".desktop" file is made to work into the "/opt" directory, if you want to put main folder in an other place, please adjust the ".desktop" file to match the desired directory. Remember, all resources used are embedded in the executable. An ".opt" file is made at the first launch it's used to store used options.
-  
+
 - Otherwise, if you plan to play inside the source code, see below "How to compile" section.
-  
+
 - All suggestions, contributions and ideas to improve software usability will be greatly appreciated.
-  
 
 ### How it's made
 
@@ -39,22 +38,21 @@ Take a look at [H.F.M repositories](https://github.com/hfmrow/) for others usefu
 
 *This is the main screen, and children*
 
-![wholejpg](assets/readme/whole.jpg)
+![whole.jpg](assets/readme/whole.jpg)
 
 ### How to compile
 
 - Be sure you have golang installed in right way. [Go installation](https://golang.org/doc/install).
-  
+
 - Open terminal window and at command prompt, type: `go get github.com/hfmrow/sAndReplace`
-  
+
 - See [Gotk3 Installation instructions](https://github.com/gotk3/gotk3/wiki#installation) for gui installation instruction.
-  
+
 - To change gtk3 interface you need to use the ```devMode = true``` to disable embedding assets. see below ...
-  
+
 - To change language file you need to use another home made software, (not published actually). So don't change language file ...
-  
+
 - To Produce a stand-alone executable, you must change inside "main.go" file:
-  
 
 ```go
     func main() {
@@ -74,19 +72,19 @@ This operation indicate that externals data (Image/Icons) must be embedded into 
 
 ### Os information (build using)
 
-| Name | Version / Info / Name |
-| --- | --- |
-| GOLANG | V1.14.6 -> GO111MODULE="off", GOPROXY="direct" |
-| DISTRIB | LinuxMint Xfce |
-| VERSION | 20  |
-| CODENAME | CODENAME=ulyana |
-| RELEASE | #46-Ubuntu SMP Fri Jul 10 00:24:02 UTC 2020 |
-| UBUNTU_CODENAME | focal |
-| KERNEL | 5.4.0-42-generic |
-| HDWPLATFORM | x86_64 |
-| GTK+ 3 | 3.24.20 |
-| GLIB 2 | 2.64.3 |
-| CAIRO | 1.16.0 |
+| Name            | Version / Info / Name                          |
+| --------------- | ---------------------------------------------- |
+| GOLANG          | V1.14.6 -> GO111MODULE="off", GOPROXY="direct" |
+| DISTRIB         | LinuxMint Xfce                                 |
+| VERSION         | 20                                             |
+| CODENAME        | CODENAME=ulyana                                |
+| RELEASE         | #46-Ubuntu SMP Fri Jul 10 00:24:02 UTC 2020    |
+| UBUNTU_CODENAME | focal                                          |
+| KERNEL          | 5.4.0-42-generic                               |
+| HDWPLATFORM     | x86_64                                         |
+| GTK+ 3          | 3.24.20                                        |
+| GLIB 2          | 2.64.3                                         |
+| CAIRO           | 1.16.0                                         |
 
 - The compilation have not been tested under Windows or Mac OS, but all file access functions, line-end manipulations or charset implementation are made with OS portability in mind.
 

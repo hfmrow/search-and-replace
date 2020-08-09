@@ -5,4 +5,3 @@
 package empty
 
 func empty() {}
-
