@@ -1,12 +1,12 @@
 // translate.go
 
-// File generated on Tue, 19 Nov 2019 21:53:02 using Gotk3ObjectsTranslate v1.3 2019 H.F.M
+// File generated on Thu, 13 Aug 2020 14:23:12 using Gotk3ObjectsTranslate v1.3 2019 H.F.M
 
 /*
 * 	This program comes with absolutely no warranty.
 *	See the The MIT License (MIT) for details:
 *	https://opensource.org/licenses/mit-license.php
-*/
+ */
 
 package main
 
@@ -67,6 +67,7 @@ func (trans *MainTranslate) initGtkObjectsText() {
 	trans.setTextToGtkObjects(&mainObjects.textWinComboBoxLanguage.Widget, "textWinComboBoxLanguage")
 	trans.setTextToGtkObjects(&mainObjects.textWinComboBoxTextStyleChooser.Widget, "textWinComboBoxTextStyleChooser")
 }
+
 // Translations structure declaration. To be used in main application.
 var translate = new(MainTranslate)
 
@@ -75,50 +76,49 @@ var translate = new(MainTranslate)
 // They'll be added to language file each time application started
 // when "devMode" is set at true.
 var sts = map[string]string{
-	`regexpErr`: `Regex mistake ...`,
-	`done`: `Operation done.`,
-	`sbFile`: `File`,
-	`savef`: `Save file`,
-	`dir-rem`: `Directory does not exist. The current application directory will be used.`,
-	`no`: `No`,
-	`proceed`: `Are you sure you want to replace pattern in files ?`,
-	`sbFiles`: `Files:`,
-	`file-LinkNotExist`: `File does not exist, or symlink endpoint not found.`,
-	`file-rem`: `File(s) does not exist.`,
-	`status`: `Status:`,
-	`dispTime`: `Display time:`,
-	`file-perm`: `File permissions error.`,
-	`in`: `in`,
-	`allow`: `Allow`,
-	`unexpected`: `An unexpected error occurred`,
-	`totalModified`: `Occurrence(s) modified`,
-	`titleSearchResults`: `Search results`,
-	`removed`: `File has been removed before processing.`,
-	`alert`: `Alert ...`,
-	`openf`: `Open file`,
-	`clpbrdPreview`: `Clipboard content preview.`,
+	`sbFiles`:          `Files:`,
+	`sbFilesSel`:       `Files selected:`,
 	`totalOccurrences`: `Occurrence(s) found:`,
-	`searchTime`: `Search time:`,
-	`confirm`: `Confirmation`,
-	`missing`: `Something missing`,
-	`emptyCB`: `Nothing to do with an empty clipboard ...`,
-	`yes`: `Yes`,
-	`sbFilesSel`: `Files selected:`,
-	`sbFileSel`: `File selected:`,
-	`cancel`: `Cancel`,
-	`nothingToSearch`: `Nothing to search ...`,
-	`file`: `file(s)`,
-	`ok`: `Ok`,
-	`titlePreviewText`: `Preview window`,
+	`allow`:            `Allow`,
+	`removed`:          `File has been removed before processing.`,
+	`retry`:            `Retry`,
+	`savef`:            `Save file`,
+	`sbFile`:           `File`,
+	`alert`:            `Alert ...`,
+	`clpbrdPreview`:    `Clipboard content preview.`,
+	`confirm`:          `Confirmation`,
+	`scanTime`:         `Scan files time:`,
+	`yes`:              `Yes`,
 	`forbiddenFiles`: `Some files could not be accessed ...
 Unchecking "Follow symlink" may be useful.`,
-	`deny`: `Deny`,
-	`noFileSel`: `No selected file(s) to search in ...`,
-	`notFound`: `Nothing was found ...`,
-	`scanTime`: `Scan files time:`,
-	`retry`: `Retry`,
+	`nothingToSearch`:    `Nothing to search ...`,
+	`ok`:                 `Ok`,
+	`regexpErr`:          `Regex mistake ...`,
+	`sbFileSel`:          `File selected:`,
+	`dir-rem`:            `Directory does not exist. The current application directory will be used.`,
+	`titleSearchResults`: `Search results`,
+	`file-perm`:          `File permissions error.`,
+	`searchTime`:         `Search time:`,
+	`in`:                 `in`,
+	`noFileSel`:          `No selected file(s) to search in ...`,
+	`proceed`:            `Are you sure you want to replace pattern in files ?`,
+	`titlePreviewText`:   `Preview window`,
+	`totalModified`:      `Occurrence(s) modified`,
+	`missing`:            `Something missing`,
+	`no`:                 `No`,
+	`notFound`:           `Nothing was found ...`,
+	`deny`:               `Deny`,
+	`dispTime`:           `Display time:`,
+	`done`:               `Operation done.`,
+	`file-LinkNotExist`:  `File does not exist, or symlink endpoint not found.`,
+	`file-rem`:           `File(s) does not exist.`,
+	`unexpected`:         `An unexpected error occurred`,
+	`cancel`:             `Cancel`,
+	`emptyCB`:            `Nothing to do with an empty clipboard ...`,
+	`file`:               `file(s)`,
+	`openf`:              `Open file`,
+	`status`:             `Status:`,
 }
-
 
 // Translations structure with methods
 type MainTranslate struct {
@@ -269,10 +269,12 @@ func (trans *MainTranslate) setTextToGtkObjects(obj *gtk.Widget, objectId string
 						obj.SetProperty("wrap", currObject.LabelWrap)
 					}
 					if props.Tooltip && !currObject.TooltipMarkup {
-						obj.SetProperty("tooltip_text", currObject.Tooltip)
+						obj.SetTooltipText(currObject.Tooltip)
+						// obj.SetProperty("tooltip_text", currObject.Tooltip)
 					}
 					if props.Tooltip && currObject.TooltipMarkup {
-						obj.SetProperty("tooltip_markup", strings.ReplaceAll(currObject.Tooltip, "&", "&amp;"))
+						obj.SetTooltipMarkup(strings.ReplaceAll(currObject.Tooltip, "&", "&amp;"))
+						// obj.SetProperty("tooltip_markup", strings.ReplaceAll(currObject.Tooltip, "&", "&amp;"))
 					}
 					if props.Text {
 						obj.SetProperty("text", currObject.Text)
@@ -280,8 +282,10 @@ func (trans *MainTranslate) setTextToGtkObjects(obj *gtk.Widget, objectId string
 					if props.Uri {
 						obj.SetProperty("uri", currObject.Uri)
 					}
+					break
 				}
 			}
+			break
 		}
 	}
 }

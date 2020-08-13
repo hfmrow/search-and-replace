@@ -46,6 +46,8 @@ All notable changes to this project will be documented in this file.
 
 - Rewriting some others part of code to improve speed while searching in files.
 
+- Code updated to fit actual version of [GitHub - Go bindings for GTK3](https://github.com/gotk3/gotk3)
+
 #### [1.7.6] 2019-10-02
 
 #### Added

@@ -93,7 +93,8 @@ type TreeViewStructure struct {
 	// All columns option are available throught this structure
 	Columns []column
 
-	// When "HasTooltip" is true, this function is launched, the returned
+	// TODO check out this ...
+	// When "HasTooltip" is true, this function is launched,
 	// Case of use: display tooltip according to rows currently hovered.
 	// returned "bool" mean display or not the tooltip.
 	CallbackTooltipFunc func(iter *gtk.TreeIter, path *gtk.TreePath, column *gtk.TreeViewColumn, tooltip *gtk.Tooltip) bool
@@ -163,6 +164,7 @@ func TreeViewStructureNew(treeView *gtk.TreeView, multiselection, activateSingle
 	tvs.MultiSelection = multiselection
 	tvs.TreeView = treeView
 	tvs.ClearAll()
+	tvs.HasTooltip = true
 	if tvs.Selection, err = tvs.TreeView.GetSelection(); err != nil {
 		return nil, fmt.Errorf("Unable to get gtk.TreeSelection: %s\n", err.Error())
 	}
@@ -503,7 +505,7 @@ func (tvs *TreeViewStructure) GetSelectedPaths() (paths []*gtk.TreePath) {
 	return
 }
 
-// ItersSelect:
+// ItersSelect: Select provided Iters.
 func (tvs *TreeViewStructure) ItersSelect(iters ...*gtk.TreeIter) {
 	for _, iter := range iters {
 		if !tvs.Selection.IterIsSelected(iter) {
@@ -512,12 +514,12 @@ func (tvs *TreeViewStructure) ItersSelect(iters ...*gtk.TreeIter) {
 	}
 }
 
-// ItersUnselectAll: Unselect all selected iters
+// ItersUnselectAll: Unselect all selected iters.
 func (tvs *TreeViewStructure) ItersUnselectAll() {
 	tvs.Selection.UnselectAll()
 }
 
-// ItersUnselect:
+// ItersUnselect: Unselect provided Iters.
 func (tvs *TreeViewStructure) ItersUnselect(iters ...*gtk.TreeIter) {
 	for _, iter := range iters {
 		if tvs.Selection.IterIsSelected(iter) {
@@ -526,7 +528,7 @@ func (tvs *TreeViewStructure) ItersUnselect(iters ...*gtk.TreeIter) {
 	}
 }
 
-// ItersSelectRange:
+// ItersSelectRange: Select range between start and end iters.
 func (tvs *TreeViewStructure) ItersSelectRange(startIter, endIter *gtk.TreeIter) (err error) {
 	var startPath, endPath *gtk.TreePath
 
@@ -967,19 +969,42 @@ func (tvs *TreeViewStructure) StoreToIfaceSlice() (outIface [][]interface{}, err
 	return outIface, err
 }
 
+// GetTree: get selected and unselected items.
+// contained by the treestore
+func (tvs *TreeViewStructure) GetTree() (checked, unChecked []string, err error) {
+	var row []interface{}
+
+	tvs.TreeStore.ForEach(func(model *gtk.TreeModel, path *gtk.TreePath, iter *gtk.TreeIter, userData ...interface{}) bool {
+		row, err = tvs.GetRowIface(iter)
+
+		if row[0].(bool) && len(row[2].(string)) > 0 {
+			checked = append(checked, row[2].(string))
+		} else {
+			unChecked = append(unChecked, row[2].(string))
+		}
+		return false
+	})
+	return checked, unChecked, err
+}
+
 // AddTree: This function, add a full tree to a TreeStore, childs will be added to
 // parent' tree if exists. Each treeview entry handle a checkbox and a name only. i.e:
-// "pathSplitted" = "github.com/hfmrow/gtk3Import/pango", will add all nodes for this
-// tree to column "pathCol" and a checkbox with "stateDefault" at column "toggleCol".
-// The returned variable "inIter", point to the iter of the last entry.
-func (tvs *TreeViewStructure) AddTree(toggleCol, pathCol int, stateDefault bool, pathSplitted ...interface{}) (outIter *gtk.TreeIter, err error) {
+// CASE 1: "pathSplitted" = []string{"github.com","hfmrow","gtk3Import","pango"},
+// will add all nodes for this tree to column "pathCol" and a checkbox with
+// "stateDefault" at column nbr "toggleCol".
+// CASE 21: "pathSplitted" = []string{"true","github.com","hfmrow","gtk3Import","pango"},
+// will add all nodes for this tree to column "pathCol" and a checkbox with
+// "true" at column nbr "toggleCol".
+// The returned variable "outIter", point to the iter of the last entry.
+func (tvs *TreeViewStructure) AddTree(toggleCol, pathCol int, stateDefault bool, iFace ...interface{}) (outIter *gtk.TreeIter, err error) {
 	var iterate, childsCount int
 	var tmpIter *gtk.TreeIter
 	var ok bool
 	var value string
+	var pathSplitted []interface{}
 
 	// addItem: delete all entries and erase whole golang environment ... No, just kidding.
-	// It's does that the name say.
+	// It only does what the name says.
 	var addItem = func(toAdd string, iter *gtk.TreeIter) (tmpIter *gtk.TreeIter) {
 		var err error
 		tmpIter = tvs.TreeStore.Append(iter)
@@ -992,6 +1017,18 @@ func (tvs *TreeViewStructure) AddTree(toggleCol, pathCol int, stateDefault bool,
 		}
 		return
 	}
+
+	// Check current entry type and do what we need with values (checked, notChecked or undefined)
+	var getCurrentState = func() /*(outBool bool)*/ {
+		switch iFace[0].(type) {
+		case bool:
+			stateDefault = iFace[0].(bool) // Get bool value for checkbox.
+			pathSplitted = iFace[1:]       // Get full splitted path ingnoring 1st element.
+		default:
+			pathSplitted = iFace // Get full splitted path, checkbox value set as default.
+		}
+	}
+
 	// findCreatFirstParent: Add or find first parent that match "name" and return it's iter.
 	var findCreatFirstParent = func(name string) (tmpIter *gtk.TreeIter, ok bool, err error) {
 		if len(name) > 0 {
@@ -1023,6 +1060,10 @@ func (tvs *TreeViewStructure) AddTree(toggleCol, pathCol int, stateDefault bool,
 		}
 		return
 	}
+
+	// Get toggle state
+	getCurrentState()
+
 	// parse "dirPath" entry into treestore.
 	if outIter, ok, err = findCreatFirstParent(pathSplitted[0].(string)); err == nil {
 		for ok {
@@ -1058,6 +1099,111 @@ func (tvs *TreeViewStructure) AddTree(toggleCol, pathCol int, stateDefault bool,
 	}
 	return
 }
+
+// func (tvs *TreeViewStructure) AddTree(toggleCol, pathCol int, stateDefault bool, pathSplitted ...interface{}) (outIter *gtk.TreeIter, err error) {
+// 	var iterate, childsCount int
+// 	var tmpIter *gtk.TreeIter
+// 	var ok bool
+// 	var value string
+
+// 	// addItem: delete all entries and erase whole golang environment ... No, just kidding.
+// 	// It only does what the name says.
+// 	var addItem = func(toAdd string, iter *gtk.TreeIter) (tmpIter *gtk.TreeIter) {
+// 		var err error
+// 		tmpIter = tvs.TreeStore.Append(iter)
+// 		if err = tvs.TreeStore.SetValue(tmpIter, toggleCol, stateDefault); err == nil {
+// 			err = tvs.TreeStore.SetValue(tmpIter, pathCol, toAdd)
+// 		}
+// 		if err != nil {
+// 			log.Fatalf("Unable to addItem: %s\n", err.Error())
+// 			tmpIter = nil
+// 		}
+// 		return
+// 	}
+
+// 	// Check current entry stat (checked, notChecked or undefined)
+// 	var getCurrentState = func() bool {
+// 		switch pathSplitted[0].(string) {
+// 		case "true":
+// 			pathSplitted = pathSplitted[1:]
+// 			return true
+// 		case "false":
+// 			pathSplitted = pathSplitted[1:]
+// 			return false
+// 		}
+// 		return stateDefault
+// 	}
+
+// 	// findCreatFirstParent: Add or find first parent that match "name" and return it's iter.
+// 	var findCreatFirstParent = func(name string) (tmpIter *gtk.TreeIter, ok bool, err error) {
+// 		stateDefault = getCurrentState()
+// 		name = pathSplitted[0].(string)
+// 		if len(name) > 0 {
+// 			tmpIter, ok = tvs.TreeStore.GetIterFirst()
+// 			for ok {
+// 				value := tvs.GetColValue(tmpIter, pathCol).(string)
+// 				if value == name {
+// 					return
+// 				}
+// 				ok = tvs.TreeStore.IterNext(tmpIter)
+// 			} // Nothing found, then create it
+// 			tmpIter = addItem(pathSplitted[iterate].(string), outIter)
+// 			ok = tmpIter != nil
+// 		} else {
+// 			err = errors.New("Could not proceed with empty parent.")
+// 		}
+// 		return
+// 	}
+// 	// searchMatch: Walk trought iter to retrieve the one matching "toMatch".
+// 	var searchMatch = func(toMatch string, outIter *gtk.TreeIter) (childIter *gtk.TreeIter, ok bool) {
+// 		childIter = new(gtk.TreeIter)
+// 		ok = tvs.TreeStore.IterChildren(outIter, childIter)
+// 		for ok {
+// 			value = tvs.GetColValue(childIter, pathCol).(string)
+// 			if value == toMatch {
+// 				return
+// 			}
+// 			ok = tvs.Model.IterNext(childIter)
+// 		}
+// 		return
+// 	}
+
+// 	// parse "dirPath" entry into treestore.
+// 	if outIter, ok, err = findCreatFirstParent(pathSplitted[0].(string)); err == nil {
+// 		for ok {
+// 			stateDefault = getCurrentState()
+// 			value = tvs.GetColValue(outIter, pathCol).(string)
+// 			if value == pathSplitted[iterate] {
+// 				childsCount = tvs.Model.IterNChildren(outIter)
+// 				if childsCount > 0 {
+// 					iterate++
+// 					if iterate >= len(pathSplitted) {
+// 						break
+// 					}
+// 					if tmpIter, ok = searchMatch(pathSplitted[iterate].(string), outIter); !ok {
+// 						outIter = addItem(pathSplitted[iterate].(string), outIter)
+// 						ok = outIter != nil
+// 					} else {
+// 						outIter = tmpIter
+// 					}
+// 					continue
+// 				} else {
+// 					iterate++
+// 					if iterate >= len(pathSplitted) {
+// 						break
+// 					}
+// 					outIter = addItem(pathSplitted[iterate].(string), outIter)
+// 					ok = outIter != nil
+// 				}
+// 			} else {
+// 				if tmpIter, ok = searchMatch(pathSplitted[iterate].(string), outIter); ok {
+// 					outIter = addItem(pathSplitted[iterate].(string), tmpIter)
+// 				}
+// 			}
+// 		}
+// 	}
+// 	return
+// }
 
 // ColValuesStringSliceToIfaceSlice: Convert string list to []interface, for simplify adding text rows
 func (tvs *TreeViewStructure) ColValuesStringSliceToIfaceSlice(inSlice ...string) (outIface []interface{}) {

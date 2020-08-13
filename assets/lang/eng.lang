@@ -1,7 +1,7 @@
 {
 	"ProgInfos": {
 		"Name": "SearchAndReplace",
-		"Version": "v1.7.4",
+		"Version": "v1.8",
 		"Creat": "H.F.M",
 		"MainObjStructName": "mainObjects",
 		"GladeXmlFilename": "/media/syndicate/storage/Documents/dev/go/src/github.com/hfmrow/sAndReplace/assets/glade/main.glade",
@@ -12,7 +12,7 @@
 		"LangNameShrt": "eng",
 		"Author": "H.F.M",
 		"Date": "Mon, 11 Mar 2019 04:04:21",
-		"Updated": "Tue, 19 Nov 2019 21:58:01",
+		"Updated": "Thu, 13 Aug 2020 14:23:31",
 		"Contributors": [
 			""
 		]
@@ -356,7 +356,7 @@
 			"Label": "",
 			"LabelMarkup": false,
 			"LabelWrap": false,
-			"Tooltip": "",
+			"Tooltip": "Drag and drop files here !",
 			"TooltipMarkup": false,
 			"Text": "",
 			"Uri": "",

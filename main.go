@@ -36,7 +36,7 @@ func main() {
 	var err error
 
 	/* Be or not to be ... in dev mode ... */
-	devMode = true
+	devMode = false
 
 	/* Build directory for tempDir */
 	doTempDir = false

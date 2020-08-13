@@ -91,3 +91,10 @@ func ComboBoxTextAddSetEntry(cbxEntry *gtk.ComboBoxText, newEntry string, prepen
 	}
 	return existAtPos
 }
+
+func ComboBoxTextClearAll(cbxEntry *gtk.ComboBoxText) {
+	cbxEntry.PrependText("")
+	cbxEntry.SetActive(0)
+	cbxEntry.RemoveAll()
+
+}

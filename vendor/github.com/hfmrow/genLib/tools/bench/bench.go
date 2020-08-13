@@ -26,7 +26,8 @@ import (
 
 type Bench struct {
 	Lapses  []lapse
-	Average string
+	Average lapse
+	Total   lapse
 
 	lbl     string
 	display bool
@@ -81,11 +82,12 @@ func (b *Bench) Stop() {
 
 	b.Lapses = b.Lapses[1:]
 	if len(b.Lapses)-1 > 0 { // Average calculation
-		avg := lapse{}
-		avg.toLapse(mean / int64(len(b.Lapses)))
-		avg.Label = "Average"
-		b.Lapses = append(b.Lapses, avg)
-		b.Average = avg.String
+
+		b.Average.toLapse(mean / int64(len(b.Lapses)))
+		b.Average.Label = "Average"
+
+		b.Total.toLapse(mean)
+		b.Total.Label = "Total"
 	}
 
 	if b.display {
