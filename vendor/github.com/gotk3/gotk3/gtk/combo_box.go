@@ -34,6 +34,7 @@ type ComboBox struct {
 
 	// Interfaces
 	CellLayout
+	CellEditable
 }
 
 // native returns a pointer to the underlying GtkComboBox.
@@ -59,8 +60,13 @@ func marshalComboBox(p uintptr) (interface{}, error) {
 }
 
 func wrapComboBox(obj *glib.Object) *ComboBox {
+	if obj == nil {
+		return nil
+	}
+
 	cl := wrapCellLayout(obj)
-	return &ComboBox{Bin{Container{Widget{glib.InitiallyUnowned{obj}}}}, *cl}
+	ce := wrapCellEditable(obj)
+	return &ComboBox{Bin{Container{Widget{glib.InitiallyUnowned{obj}}}}, *cl, *ce}
 }
 
 // ComboBoxNew is a wrapper around gtk_combo_box_new().
@@ -300,6 +306,10 @@ func marshalComboBoxText(p uintptr) (interface{}, error) {
 }
 
 func wrapComboBoxText(obj *glib.Object) *ComboBoxText {
+	if obj == nil {
+		return nil
+	}
+
 	return &ComboBoxText{*wrapComboBox(obj)}
 }
 

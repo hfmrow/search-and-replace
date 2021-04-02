@@ -98,6 +98,11 @@ func StatusBarStructureNew(originStatusbar *gtk.Statusbar, prefix []string, stac
 	return
 }
 
+// Show: display / hide statusbar
+func (bar *StatusBar) Show(state bool) {
+	bar.statusbar.SetVisible(state)
+}
+
 /* Init: Initialise structure to handle elements to be displayed. */
 func (bar *StatusBar) Init(originStatusbar *gtk.Statusbar, prefix []string, stackId ...int) {
 	var stack int
@@ -146,6 +151,7 @@ func (bar *StatusBar) CleanAll() {
 	for idx, _ := range bar.Messages {
 		bar.Messages[idx] = ""
 	}
+	bar.Disp()
 }
 
 /* Disp: display content of stored elements into statusbar */

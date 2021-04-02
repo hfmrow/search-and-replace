@@ -10,7 +10,7 @@ type cClass struct {
 	regex string
 }
 
-// Convert char to char classes. strictMode mean mostly classes is applied, if set to false, matching will be made with less precision.
+// Convert char to char classes. strictMode means mostly classes is applied, if set to false, matching will be made with less precision.
 func charToCharClasses(inpString string, caseSensitive, strictMode bool) string {
 	var charClassesCS []cClass
 	var charClassesCI []cClass
@@ -25,9 +25,9 @@ func charToCharClasses(inpString string, caseSensitive, strictMode bool) string 
 			cClass{regex: `[[:punct:]]`},
 			cClass{regex: `[[:graph:]]`}}
 		charClassesCI = []cClass{
-			cClass{regex: `[[:alnum:]]`},
-			// cClass{regex: `[[:alpha:]]`},
-			// cClass{regex: `[[:digit:]]`},
+			// cClass{regex: `[[:alnum:]]`},
+			cClass{regex: `[[:alpha:]]`},
+			cClass{regex: `[[:digit:]]`},
 			cClass{regex: `[[:blank:]]`},
 			cClass{regex: `[[:space:]]`},
 			cClass{regex: `[[:cntrl:]]`},
@@ -41,9 +41,9 @@ func charToCharClasses(inpString string, caseSensitive, strictMode bool) string 
 			cClass{regex: `[[:space:]]`},
 			cClass{regex: `[[:punct:]]`}}
 		charClassesCI = []cClass{
-			cClass{regex: `[[:alnum:]]`},
-			// cClass{regex: `[[:alpha:]]`},
-			// cClass{regex: `[[:digit:]]`},
+			// cClass{regex: `[[:alnum:]]`},
+			cClass{regex: `[[:alpha:]]`},
+			cClass{regex: `[[:digit:]]`},
 			cClass{regex: `[[:space:]]`},
 			cClass{regex: `[[:punct:]]`}}
 	}

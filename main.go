@@ -1,65 +1,61 @@
 // main.go
 
 /*
-	Source file auto-generated on Thu, 06 Aug 2020 20:25:48 using Gotk3ObjHandler v1.5 ©2018-20 H.F.M
+	Source file auto-generated on Fri, 02 Apr 2021 10:53:33 using Gotk3 Objects Handler v1.7.5 ©2018-21 hfmrow
 	This software use gotk3 that is licensed under the ISC License:
 	https://github.com/gotk3/gotk3/blob/master/LICENSE
 
-	Copyright ©2018-20 H.F.M - Search And Replace v1.8 github.com/hfmrow/sAndReplace
+	Copyright ©2018-21 H.F.M - Search And Replace v1.9 github.com/hfmrow/search-and-replace
 	This program comes with absolutely no warranty. See the The MIT License (MIT) for details:
 	https://opensource.org/licenses/mit-license.php
 */
 
 package main
 
-/*
-	This software use Chroma:
-	- Chroma — A general purpose syntax highlighter in pure Go, under the MIT License:
-	  https://github.com/alecthomas/chroma/LICENSE
-*/
-
 import (
 	"errors"
 	"fmt"
+	"log"
 	"os"
+	"path/filepath"
 
 	"github.com/gotk3/gotk3/gtk"
 
 	glfsft "github.com/hfmrow/genLib/files/fileText"
 
 	gimc "github.com/hfmrow/gtk3Import/misc"
-	gitv "github.com/hfmrow/gtk3Import/textView"
 	gitw "github.com/hfmrow/gtk3Import/treeview"
 )
 
 func main() {
-	var err error
 
-	/* Be or not to be ... in dev mode ... */
-	devMode = false
+	/* Build options */
+	// devMode: is used in some functions to control the behavior of the program
+	// When software is ready to be published, this flag must be set at "false"
+	// that means:
+	// - options file will be stored in $HOME/.config/[Creat]/[softwareName],
+	// - translate function if used, will no more auto-update "sts" map sentences,
+	// - all built-in assets will be used instead of the files themselves.
+	//   Be aware to update assets via "Goh" and translations with "Got" before all.
+	devMode = true
+	absoluteRealPath, optFilename = getAbsRealPath()
 
-	/* Build directory for tempDir */
-	doTempDir = false
-
-	/* Set to true when you choose using embedded assets functionality */
+	// Initialization of assets according to the chosen mode (devMode).
+	// you can set this flag to your liking without reference to devMode.
 	assetsDeclarationsUseEmbedded(!devMode)
 
-	/* Init Options */
-	mainOptions = new(MainOpt)
-	mainOptions.Init()
+	// Create temp directory .. or not
+	doTempDir = false
 
-	/* Read Options */
-	err = mainOptions.Read()
-	if err != nil {
-		fmt.Printf("%s\n%v\n", "Reading options error.", err)
-
-	}
+	/* Init & read options file */
+	mainOptions = new(MainOpt) // Assignate options' structure.
+	mainOptions.Read()         // Read values from options' file if exists.
 
 	/* Init gtk display */
 	mainWindowTitle = fmt.Sprintf("%s %s  %s %s %s",
 		Name,
 		Vers,
-		YearCreat,
+		"©"+YearCreat,
 		Creat,
 		LicenseAbrv)
 
@@ -69,8 +65,11 @@ func main() {
 }
 
 func mainApplication() {
-	var err error
-	var tmpErr string
+
+	var (
+		err    error
+		tmpErr string
+	)
 
 	/* Init AboutBox */
 	mainOptions.AboutOptions.InitFillInfos(
@@ -179,12 +178,15 @@ func mainApplication() {
 	}
 
 	/* TextView with line number init.*/
-	textViewRowNumber, err = gitv.TextViewNumberedNew(mainObjects.BoxTextViewPreview.Container)
-	DlgErr("mainApplication:TextViewNumberedNew", err)
-	textViewRowNumber.Editable = false
+	svs, err = SourceViewStructNew(mainObjects.View, mainObjects.Map, mainObjects.textWin)
+	DlgErr("mainApplication:SourceViewStructNew", err)
+
+	svs.View.SetEditable(false)
+	svs.View.SetHighlightCurrentLine(true)
+	svs.Buffer.SetHighlightMatchingBrackets(true)
 
 	/* Handling "populate-popup" signal to add some personal entries */
-	textViewRowNumber.TextView.Connect("populate-popup", popupTextViewPopulateMenu)
+	svs.View.Connect("populate-popup", popupTextViewPopulateMenu)
 
 	/* Hide ProgressBar */
 	displayProgressBar(false)
@@ -192,21 +194,39 @@ func mainApplication() {
 	/* Display files list */
 	updateTreeViewFilesDisplay()
 
-	/* Initialize syntax highlighter to get list of languages and styles */
-	highlighter, _ = ChromaHighlightNew(nil)
-
 	/*Init single found structure */
 	fileFoundSingle = glfsft.SearchAndReplaceNew([]byte{}, "", "")
 
 	/* Initialize comboboxEntry */
-	ComboBoxTextFill(mainObjects.textWinComboBoxTextStyleChooser, highlighter.Styles)
-	ComboBoxTextFill(mainObjects.textWinComboBoxLanguage, highlighter.Lexers)
-	ComboBoxTextAddSetEntry(mainObjects.textWinComboBoxTextStyleChooser, mainOptions.SyntaxHighlightType)
-	ComboBoxTextAddSetEntry(mainObjects.textWinComboBoxLanguage, mainOptions.SyntaxHighlightLanguage)
+	svs.UserLanguagePath = filepath.Join(absoluteRealPath, mainOptions.HighlightUserDefined)
+	svs.UserStylePath = filepath.Join(absoluteRealPath, mainOptions.HighlightUserDefined)
+	svs.DefaultLanguageId = mainOptions.DefaultSourceLang
+	svs.DefaultStyleShemeId = mainOptions.DefaultSourceStyle
+
+	svs.ComboboxHandling(
+		mainObjects.textWinComboBoxLanguage,
+		mainObjects.textWinComboBoxTextStyleChooser,
+		&mainOptions.DefaultSourceLang,
+		&mainOptions.DefaultSourceStyle)
 
 	/* Focus search entry */
 	mainObjects.entrySearch.GrabFocus()
+}
 
-	// mainObjects.entrySearch.SetText(`(\b)(func|return|exit\(\)|if|else|then|switch|case)`)
-	// mainObjects.chkRegex.SetActive(true)
+/*************************************\
+/* Executed just before closing all. */
+/************************************/
+func onShutdown() bool {
+	var err error
+	// Update mainOptions with GtkObjects and save it
+	if err = mainOptions.Write(); err == nil {
+		// What you want to execute before closing the app.
+		// Return:
+		// true for exit applicaton
+		// false does not exit application
+	}
+	if err != nil {
+		log.Fatalf("Unexpected error on exit: %s", err.Error())
+	}
+	return true
 }

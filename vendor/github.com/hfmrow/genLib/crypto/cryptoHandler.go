@@ -7,14 +7,24 @@ import (
 	"crypto/cipher"
 	"crypto/md5"
 	"crypto/rand"
+	"crypto/sha1"
+	"crypto/sha256"
+	"crypto/sha512"
 	"encoding/base64"
 	"encoding/hex"
+	"fmt"
+	"hash"
 	"io"
 	"io/ioutil"
 	"log"
 	"os"
+
+	"golang.org/x/crypto/blake2b"
+	"golang.org/x/crypto/md4"
+	"golang.org/x/crypto/sha3"
 )
 
+// Base64: Structure that handle 'Encode' & 'Decode' method to/from 'Base64'.
 type Base64 struct {
 }
 
@@ -30,8 +40,95 @@ func (b *Base64) Decode(encoded string) (decoded []byte) {
 	return
 }
 
+// HashMe: This function handle a 'file' or '[]byte' as arguments.
+// Returns the value Hash for the 'in'. The 'hashType' argument
+// represents the targeted type: 'md5', 'sha256', 'sha512'.
+func HashMe(in interface{}, hashType string) string {
+
+	var (
+		err    error
+		hasher hash.Hash
+		file   *os.File
+	)
+	/*
+	   "md2", "MD2 hash, 128-bit (MD2)", md2.New
+	   "md4", "MD4 hash, 128-bit (MD4)", md4.New
+	   "md5", "MD5 hash, 128-bit (MD5)", md5.New
+	   "sha1", "SHA-1 hash, 160-bit (SHA-1)", sha1.New
+	   "sha2-224", "SHA-2 hash, 224-bit (SHA-224)", sha256.New224
+	   "sha2-256", "SHA-2 hash, 256-bit (SHA-256)", sha256.New
+	   "sha2-384", "SHA-2 hash, 384-bit (SHA-384)", sha512.New384
+	   "sha2-512", "SHA-2 hash, 512-bit (SHA-512)", sha512.New
+	   "sha2-512/224", "SHA-2 hash, 224-bit (SHA-512/224)", sha512.New512_224
+	   "sha2-512/256", "SHA-2 hash, 256-bit (SHA-512/256)", sha512.New512_256
+	   "sha3-224", "SHA-3 hash, 224-bit (SHA3-224)", sha3.New224
+	   "sha3-256", "SHA-3 hash, 256-bit (SHA3-256)", sha3.New256
+	   "sha3-384", "SHA-3 hash, 384-bit (SHA3-384)", sha3.New384
+	   "sha3-512", "SHA-3 hash, 512-bit (SHA3-512)", sha3.New512
+	   "sha3-512", "SHA-3 hash, 512-bit (SHA3-512)", sha3.New512
+	   "shake-128", "SHA-3 hash, n-byte (SHAKE-128)", sha3.ShakeSum128, 32
+	   "shake-256", "SHA-3 hash, n-byte (SHAKE-256)", sha3.ShakeSum256, 64
+	   "ripemd-160", "RIPEMD hash, 160-bit (RIPEMD-160)", ripemd160.New
+	*/
+	switch hashType {
+	case "md4":
+		hasher = md4.New()
+	case "md5":
+		hasher = md5.New()
+	case "sha1":
+		hasher = sha1.New()
+	case "sha256":
+		hasher = sha256.New()
+	case "sha384":
+		hasher = sha512.New384()
+	case "sha512":
+		hasher = sha512.New()
+	case "sha3-256":
+		hasher = sha3.New256()
+	case "sha3-384":
+		hasher = sha3.New384()
+	case "sha3-512":
+		hasher = sha3.New512()
+	case "blake2b256":
+		hasher, _ = blake2b.New256(nil)
+	case "blake2b384":
+		hasher, _ = blake2b.New384(nil)
+	case "blake2b512":
+		hasher, _ = blake2b.New512(nil)
+	default:
+		return fmt.Sprintf("HashMe: hash type '%s' is not handled", hashType)
+	}
+
+	switch data := in.(type) {
+
+	case string:
+		if file, err = os.Open(data); err == nil {
+			defer file.Close()
+
+			if _, err = io.Copy(hasher, file); err == nil {
+				return hex.EncodeToString(hasher.Sum(nil))
+			}
+		}
+
+	case []byte:
+
+		if _, err = hasher.Write(in.([]byte)); err == nil {
+			return hex.EncodeToString(hasher.Sum(nil))
+		}
+
+	default:
+		err = fmt.Errorf("argument is not []byte or string")
+
+	}
+
+	log.Printf("HashMe: '%s': %v\n", hashType, err)
+
+	return fmt.Sprintf("HashMe: '%s': %v", hashType, err)
+}
+
 // Md5String: Get MD5 checksum from string.
 func Md5String(inString string) (outMd5 string) {
+
 	var err error
 	hasher := md5.New()
 	if _, err = hasher.Write([]byte(inString)); err == nil {
@@ -42,11 +139,11 @@ func Md5String(inString string) (outMd5 string) {
 	return
 }
 
-// Md5File: Get MD5 checksum from file.
-func Md5File(filename string, noError ...bool) (outMd5 string) {
-	var devMode bool
-	if len(noError) > 0 {
-		devMode = noError[0]
+// Md5File: Get MD5 checksum from file, 'devMode' means break on error.
+func Md5File(filename string, devMode ...bool) (outMd5 string) {
+	var dMode bool
+	if len(devMode) > 0 {
+		dMode = devMode[0]
 	}
 	var err error
 	var file *os.File
@@ -57,7 +154,7 @@ func Md5File(filename string, noError ...bool) (outMd5 string) {
 			outMd5 = hex.EncodeToString(hasher.Sum(nil))
 		}
 	}
-	if err != nil && devMode {
+	if err != nil && dMode {
 		log.Fatalln(err.Error())
 	}
 	return

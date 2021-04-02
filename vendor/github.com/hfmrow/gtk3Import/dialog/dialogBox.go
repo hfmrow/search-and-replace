@@ -34,43 +34,59 @@ import (
 // DialogBoxStructure: Wrap a Dialog with desired count of
 // buttons and widgets. The structure have defaults parameters
 type DialogBoxStructure struct {
-	BoxHAlign      gtk.Align
-	BoxVAlign      gtk.Align
+	BoxHAlign,
+	BoxVAlign gtk.Align
+
 	BoxOrientation gtk.Orientation
-	BoxHExpand     bool
-	BoxVExpand     bool
-	WidgetExpend   bool
-	WidgetFill     bool
-	width, height,
-	posX, posY int
-	SkipTaskbarHint   bool
-	KeepAbove         bool
-	Flag              gtk.DialogFlags
-	Resizable         bool
-	ScrolledArea      bool
+
+	BoxHExpand,
+	BoxVExpand,
+	WidgetExpend,
+	SkipTaskbarHint,
+	KeepAbove,
+	Resizable,
+	ScrolledArea,
+	WidgetFill,
+	MarkupLabel,
+	LabelLineWrap bool
+	Padding uint
+
+	width,
+	height,
+	posX,
+	posY,
+	Response,
+	IconsSize int
+
+	Title,
+	Text,
+	CssName string
+
 	Buttons           []string
 	ButtonsImages     []interface{} // image representation from file or []byte, depending on type
 	Dialog            *gtk.Dialog
 	ButtonReliefStyle gtk.ReliefStyle
-	IconsSize         int
 	Widgets           []gtk.IWidget
 	WidgetsProps      gitsws.WidgetProperties // each property applyed to each object
-	Title, Text       string
-	MarkupLabel       bool
-	LabelLineWrap     bool
-	Padding           uint
-	Response          int
+	// Widgets below will be added after scrolled window without any property,
+	// they must be applyed mlanually on creation by the caller (useful to add
+	// some checkboxes or others after a TreeView).
+	WidgetsOutOfScrolledArea []gtk.IWidget
+
 	// Function used when a button is clicked or window is closed
 	// This public function is wrapped with "internalResponseCallBack"
 	ResponseCallBack func(dlg *gtk.Dialog, response int)
 
-	dialogFlag               gtk.DialogFlags
-	modal                    bool
-	buttonsWithImages        bool
-	label                    *gtk.Label
-	box                      *gtk.Box
-	scrolledWindow           *gtk.ScrolledWindow
-	window                   *gtk.Window
+	dialogFlag gtk.DialogFlags
+
+	modal,
+	buttonsWithImages bool
+
+	label          *gtk.Label
+	box            *gtk.Box
+	scrolledWindow *gtk.ScrolledWindow
+	window         *gtk.Window
+
 	internalResponseCallBack func(dlg *gtk.Dialog, response int)
 }
 
@@ -102,6 +118,7 @@ func (dbs *DialogBoxStructure) DialogBoxInit(window *gtk.Window, widget gtk.IWid
 	dbs.Title = title
 	dbs.LabelLineWrap = true
 	dbs.Padding = 0
+	dbs.CssName = "CustomDialog"
 	dbs.ResponseCallBack = func(dlg *gtk.Dialog, response int) { // Init default callback
 	}
 	dbs.internalResponseCallBack = func(dlg *gtk.Dialog, response int) { // Init internal and wrap default callback
@@ -176,7 +193,7 @@ func (dbs *DialogBoxStructure) BringToFront() {
 	dbs.Dialog.GrabFocus()
 }
 
-// buildDialog: Crerate the dialog window with defined parameters.
+// buildDialog: Create the dialog window with defined parameters.
 func (dbs *DialogBoxStructure) buildDialog() (err error) {
 	var btnObj *gtk.Button
 
@@ -192,6 +209,7 @@ func (dbs *DialogBoxStructure) buildDialog() (err error) {
 			dbs.Dialog.Move(dbs.posX, dbs.posY)
 		}
 
+		dbs.Dialog.SetName(dbs.CssName)
 		dbs.Dialog.SetSkipTaskbarHint(dbs.SkipTaskbarHint)
 		dbs.Dialog.SetKeepAbove(dbs.KeepAbove)
 		dbs.Dialog.SetResizable(dbs.Resizable)
@@ -253,6 +271,7 @@ func (dbs *DialogBoxStructure) buildDialog() (err error) {
 				return
 			}
 		}
+
 		for _, wdg := range dbs.Widgets {
 			if wdg != nil {
 				dbs.WidgetsProps.PropsToWidget(wdg) // Set properties to widget
@@ -262,6 +281,11 @@ func (dbs *DialogBoxStructure) buildDialog() (err error) {
 				} else {
 					dbs.box.PackStart(wdg, dbs.WidgetExpend, dbs.WidgetFill, dbs.Padding) // Add objects to box
 				}
+			}
+		}
+		if len(dbs.WidgetsOutOfScrolledArea) > 0 {
+			for _, wdg := range dbs.WidgetsOutOfScrolledArea {
+				dbs.box.PackEnd(wdg, false, false, dbs.Padding) // Add objects to box
 			}
 		}
 	}

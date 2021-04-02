@@ -11,11 +11,13 @@ package gtk
 // #include "gtk_since_3_10.go.h"
 import "C"
 import (
-	"sync"
+	"errors"
 	"unsafe"
 
+	"github.com/gotk3/gotk3/cairo"
 	"github.com/gotk3/gotk3/gdk"
 	"github.com/gotk3/gotk3/glib"
+	"github.com/gotk3/gotk3/internal/callback"
 	"github.com/gotk3/gotk3/pango"
 )
 
@@ -55,6 +57,11 @@ func init() {
 
 const (
 	ALIGN_BASELINE Align = C.GTK_ALIGN_BASELINE
+)
+
+// ImageType
+const (
+	IMAGE_SURFACE ImageType = C.GTK_IMAGE_SURFACE
 )
 
 // RevealerTransitionType is a representation of GTK's GtkRevealerTransitionType.
@@ -104,9 +111,39 @@ func marshalStackTransitionType(p uintptr) (interface{}, error) {
  * GtkImage
  */
 
-// TODO:
-// gtk_image_new_from_surface().
-// gtk_image_set_from_surface().
+// ImageNewFromSurface is a wrapper around gtk_image_new_from_surface().
+func ImageNewFromSurface(surface *cairo.Surface) (*Image, error) {
+	c := C.gtk_image_new_from_surface((*C.cairo_surface_t)(surface.GetCSurface()))
+	if c == nil {
+		return nil, nilPtrErr
+	}
+	obj := glib.Take(unsafe.Pointer(c))
+	return wrapImage(obj), nil
+}
+
+// SetFromSurface is a wrapper around gtk_image_set_from_surface().
+func (v *Image) SetFromSurface(surface *cairo.Surface) {
+	csurface := (*C.cairo_surface_t)(surface.GetCSurface())
+	C.gtk_image_set_from_surface(v.native(), csurface)
+}
+
+/*
+ * GtkIconTheme
+ */
+
+// HasIcon is a wrapper around gtk_icon_theme_load_icon_for_scale().
+func (v *IconTheme) LoadIconForScale(iconName string, size, scale int, flags IconLookupFlags) (*gdk.Pixbuf, error) {
+	cstr := C.CString(iconName)
+	defer C.free(unsafe.Pointer(cstr))
+
+	var err *C.GError = nil
+	c := C.gtk_icon_theme_load_icon_for_scale(v.Theme, (*C.gchar)(cstr), C.gint(size), C.gint(scale), C.GtkIconLookupFlags(flags), &err)
+	if c == nil {
+		defer C.g_error_free(err)
+		return nil, errors.New(goString(err.message))
+	}
+	return &gdk.Pixbuf{glib.Take(unsafe.Pointer(c))}, nil
+}
 
 /*
  * GtkEntry
@@ -174,7 +211,7 @@ func (v *Grid) RemoveColumn(position int) {
  * GtkHeaderBar
  */
 
- // HeaderBar is a representation of GtkHeaderBar
+// HeaderBar is a representation of GtkHeaderBar
 type HeaderBar struct {
 	Container
 }
@@ -195,6 +232,10 @@ func marshalHeaderBar(p uintptr) (interface{}, error) {
 }
 
 func wrapHeaderBar(obj *glib.Object) *HeaderBar {
+	if obj == nil {
+		return nil
+	}
+
 	return &HeaderBar{Container{Widget{glib.InitiallyUnowned{obj}}}}
 }
 
@@ -308,6 +349,10 @@ func marshalListBox(p uintptr) (interface{}, error) {
 }
 
 func wrapListBox(obj *glib.Object) *ListBox {
+	if obj == nil {
+		return nil
+	}
+
 	return &ListBox{Container{Widget{glib.InitiallyUnowned{obj}}}}
 }
 
@@ -417,96 +462,27 @@ func (v *ListBox) InvalidateSort() {
 }
 
 // ListBoxFilterFunc is a representation of GtkListBoxFilterFunc
-type ListBoxFilterFunc func(row *ListBoxRow, userData ...interface{}) bool
-
-type listBoxFilterFuncData struct {
-	fn       ListBoxFilterFunc
-	userData []interface{}
-}
-
-var (
-	listBoxFilterFuncRegistry = struct {
-		sync.RWMutex
-		next int
-		m    map[int]listBoxFilterFuncData
-	}{
-		next: 1,
-		m:    make(map[int]listBoxFilterFuncData),
-	}
-)
+type ListBoxFilterFunc func(row *ListBoxRow) bool
 
 // SetFilterFunc is a wrapper around gtk_list_box_set_filter_func
-func (v *ListBox) SetFilterFunc(fn ListBoxFilterFunc, userData ...interface{}) {
-	// TODO: figure out a way to determine when we can clean up
-	listBoxFilterFuncRegistry.Lock()
-	id := listBoxFilterFuncRegistry.next
-	listBoxFilterFuncRegistry.next++
-	listBoxFilterFuncRegistry.m[id] = listBoxFilterFuncData{fn: fn, userData: userData}
-	listBoxFilterFuncRegistry.Unlock()
-
-	C._gtk_list_box_set_filter_func(v.native(), C.gpointer(uintptr(id)))
+func (v *ListBox) SetFilterFunc(fn ListBoxFilterFunc) {
+	C._gtk_list_box_set_filter_func(v.native(), C.gpointer(callback.Assign(fn)))
 }
 
 // ListBoxHeaderFunc is a representation of GtkListBoxUpdateHeaderFunc
-type ListBoxHeaderFunc func(row *ListBoxRow, before *ListBoxRow, userData ...interface{})
-
-type listBoxHeaderFuncData struct {
-	fn       ListBoxHeaderFunc
-	userData []interface{}
-}
-
-var (
-	listBoxHeaderFuncRegistry = struct {
-		sync.RWMutex
-		next int
-		m    map[int]listBoxHeaderFuncData
-	}{
-		next: 1,
-		m:    make(map[int]listBoxHeaderFuncData),
-	}
-)
+type ListBoxHeaderFunc func(row *ListBoxRow, before *ListBoxRow)
 
 // SetHeaderFunc is a wrapper around gtk_list_box_set_header_func
-func (v *ListBox) SetHeaderFunc(fn ListBoxHeaderFunc, userData ...interface{}) {
-	// TODO: figure out a way to determine when we can clean up
-	listBoxHeaderFuncRegistry.Lock()
-	id := listBoxHeaderFuncRegistry.next
-	listBoxHeaderFuncRegistry.next++
-	listBoxHeaderFuncRegistry.m[id] = listBoxHeaderFuncData{fn: fn, userData: userData}
-	listBoxHeaderFuncRegistry.Unlock()
-
-	C._gtk_list_box_set_header_func(v.native(), C.gpointer(uintptr(id)))
+func (v *ListBox) SetHeaderFunc(fn ListBoxHeaderFunc) {
+	C._gtk_list_box_set_header_func(v.native(), C.gpointer(callback.Assign(fn)))
 }
 
 // ListBoxSortFunc is a representation of GtkListBoxSortFunc
-type ListBoxSortFunc func(row1 *ListBoxRow, row2 *ListBoxRow, userData ...interface{}) int
-
-type listBoxSortFuncData struct {
-	fn       ListBoxSortFunc
-	userData []interface{}
-}
-
-var (
-	listBoxSortFuncRegistry = struct {
-		sync.RWMutex
-		next int
-		m    map[int]listBoxSortFuncData
-	}{
-		next: 1,
-		m:    make(map[int]listBoxSortFuncData),
-	}
-)
+type ListBoxSortFunc func(row1 *ListBoxRow, row2 *ListBoxRow) int
 
 // SetSortFunc is a wrapper around gtk_list_box_set_sort_func
-func (v *ListBox) SetSortFunc(fn ListBoxSortFunc, userData ...interface{}) {
-	// TODO: figure out a way to determine when we can clean up
-	listBoxSortFuncRegistry.Lock()
-	id := listBoxSortFuncRegistry.next
-	listBoxSortFuncRegistry.next++
-	listBoxSortFuncRegistry.m[id] = listBoxSortFuncData{fn: fn, userData: userData}
-	listBoxSortFuncRegistry.Unlock()
-
-	C._gtk_list_box_set_sort_func(v.native(), C.gpointer(uintptr(id)))
+func (v *ListBox) SetSortFunc(fn ListBoxSortFunc) {
+	C._gtk_list_box_set_sort_func(v.native(), C.gpointer(callback.Assign(fn)))
 }
 
 // DragHighlightRow is a wrapper around gtk_list_box_drag_highlight_row()
@@ -544,6 +520,10 @@ func marshalListBoxRow(p uintptr) (interface{}, error) {
 }
 
 func wrapListBoxRow(obj *glib.Object) *ListBoxRow {
+	if obj == nil {
+		return nil
+	}
+
 	return &ListBoxRow{Bin{Container{Widget{glib.InitiallyUnowned{obj}}}}}
 }
 
@@ -572,6 +552,10 @@ func (v *ListBoxRow) GetHeader() (IWidget, error) {
 
 // SetHeader is a wrapper around gtk_list_box_row_set_header().
 func (v *ListBoxRow) SetHeader(header IWidget) {
+	if header == nil {
+		C.gtk_list_box_row_set_header(v.native(), nil)
+		return
+	}
 	C.gtk_list_box_row_set_header(v.native(), header.toWidget())
 }
 
@@ -624,6 +608,10 @@ func marshalRevealer(p uintptr) (interface{}, error) {
 }
 
 func wrapRevealer(obj *glib.Object) *Revealer {
+	if obj == nil {
+		return nil
+	}
+
 	return &Revealer{Bin{Container{Widget{glib.InitiallyUnowned{obj}}}}}
 }
 
@@ -701,6 +689,10 @@ func marshalSearchBar(p uintptr) (interface{}, error) {
 }
 
 func wrapSearchBar(obj *glib.Object) *SearchBar {
+	if obj == nil {
+		return nil
+	}
+
 	return &SearchBar{Bin{Container{Widget{glib.InitiallyUnowned{obj}}}}}
 }
 
@@ -771,6 +763,10 @@ func marshalStack(p uintptr) (interface{}, error) {
 }
 
 func wrapStack(obj *glib.Object) *Stack {
+	if obj == nil {
+		return nil
+	}
+
 	return &Stack{Container{Widget{glib.InitiallyUnowned{obj}}}}
 }
 

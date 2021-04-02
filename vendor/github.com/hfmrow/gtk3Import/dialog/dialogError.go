@@ -12,25 +12,45 @@ import (
 )
 
 // DialogError: Display error messaged dialog returning true in error case.
-// options: devMode, forceExit bool
+// options: devMode, forceExit, markupEnabled bool
 // NOTICE: exit option must not be used if a "defer" function is initiated !
 func DialogError(window *gtk.Window, title, text string, err error, options ...bool) bool {
-	var devMode, forceExit = true, false
+
+	var (
+		devMode,
+		forceExit,
+		markupEnabled = true, false, false
+	)
+
 	switch {
 	case len(options) == 1:
 		devMode = options[0]
+
 	case len(options) == 2:
 		devMode = options[0]
 		forceExit = options[1]
-	case len(options) > 2:
-		fmt.Printf("DialogError: Wrong , arguments number, %v\n", options)
+
+	case len(options) == 3:
+		devMode = options[0]
+		forceExit = options[1]
+		markupEnabled = options[2]
+
+	case len(options) > 3:
+		fmt.Printf("DialogError: Bad, number of arguments, %v\n", options)
 		os.Exit(1)
+
 	}
+
+	dialogType := "error"
+	if markupEnabled {
+		dialogType = "errorWithMarkup"
+	}
+
 	if gler.Check(err) {
 		if devMode {
 			if DialogMessage(
 				window,
-				"error",
+				dialogType,
 				title,
 				fmt.Sprintf("\n\n"+text+":\n\n%s", err.Error()),
 				"",
@@ -41,7 +61,7 @@ func DialogError(window *gtk.Window, title, text string, err error, options ...b
 		} else {
 			DialogMessage(
 				window,
-				"error",
+				dialogType,
 				title,
 				fmt.Sprintf("\n\n"+text+":\n\n%s", err.Error()),
 				"",

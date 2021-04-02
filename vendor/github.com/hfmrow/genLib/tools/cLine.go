@@ -1,28 +1,117 @@
 package tools
 
 import (
+	"bufio"
 	"bytes"
-	"errors"
 	"fmt"
 	"io"
 	"os"
 	"os/exec"
-	"os/user"
+	"strings"
 )
+
+// ExecCommand: execute shell command and return stdout on
+// success or stderr with non nil error on fail.
+func ExecCommand(cmd []string) (string, error) {
+	var stdout, stderr bytes.Buffer
+	var err error
+	execCmd := exec.Command(cmd[0], cmd[1:]...)
+	execCmd.Stdout = &stdout
+	execCmd.Stderr = &stderr
+	err = execCmd.Run()
+	if err != nil {
+		if strings.Contains(stderr.String(), "already exists. Exiting.") {
+			err = os.ErrExist
+		}
+		return fmt.Sprintf(
+			"stdout:\n%s\nstderr:\n%s\n",
+			stdout.String(),
+			stderr.String()), err
+	}
+	return stdout.String(), nil
+}
+
+// ExecCommandProgress: execute command and retrieve in realtime
+// the last 'lineCount' lines from the stdout.
+// NOTE: the 'progress' function must contain waiting operation.
+func ExecCommandProgress(cmd []string, lineCount int, progress func(lines []string)) error {
+	var err, errLoop error
+	var stdout io.ReadCloser
+	var stderr bytes.Buffer
+	// build command
+	execCmd := exec.Command(cmd[0], cmd[1:]...)
+	execCmd.Stderr = &stderr
+	// stdout redirection
+	if stdout, err = execCmd.StdoutPipe(); err == nil {
+		// Assignate to a reader
+		buf := bufio.NewReader(stdout)
+		if err = execCmd.Start(); err != nil {
+			return err
+		}
+		// main loop that retrieve 'lineCount' lines on each
+		// occurrence. Reader position is kept to continue reading
+		// at next line on the next call until EOF or error occurs.
+		lines := make([]string, lineCount)
+		var lineBytes []byte
+		for {
+			for i := 0; i < lineCount; i++ {
+				lineBytes, _, errLoop = buf.ReadLine()
+				lines[i] = string(lineBytes)
+			}
+			if errLoop != nil {
+				break
+			}
+			progress(lines)
+		}
+	}
+	err = execCmd.Wait()
+	if err != nil {
+		return fmt.Errorf("%s", stderr.String())
+	}
+	return nil
+}
+
+// GetTerminalOut: retrieve terminal output via 'f' func.
+func GetTerminalOut(f func(item string), cmd ...string) error {
+	out, err := ExecCommand(cmd)
+	tmpOut := strings.Split(string(out), "\n")
+	for _, val := range tmpOut {
+		if len(val) > 0 {
+			f(val)
+		}
+	}
+	return err
+}
 
 // ExecCommand: launch commandline application with arguments
 // return terminal output and error.
-func ExecCommand(commands string, args ...string) (output []byte, err error) {
-	output, err = exec.Command(commands, args...).CombinedOutput()
-	if len(output) > 0 {
-		if err != nil {
-			err = errors.New(fmt.Sprintf("Issue:\n%s\nTerminal:\n%s\n", err.Error(), string(output)))
-		} else {
-			err = errors.New(fmt.Sprintf("Terminal:\n%s\n", string(output)))
-		}
-	}
-	return
-}
+// func ExecCommand(infos string, cmds ...string) (outTerm []byte, err error) {
+// 	execCmd := exec.Command(cmds[0], cmds[1:]...)
+// 	execCmd.SysProcAttr = &syscall.SysProcAttr{Setpgid: true}
+// 	outTerm, err = execCmd.CombinedOutput()
+// 	if err != nil {
+// 		err = errors.New(
+// 			fmt.Sprintf("[%s][%s]\nCommand failed: %v\nTerminal:\n%v",
+// 				infos,
+// 				strings.Join(cmds, " "),
+// 				err,
+// 				string(outTerm)))
+// 		return
+// 	}
+// 	return
+// }
+
+// // GetTerminalOut: retrieve terminal output via 'f' func.
+// func GetTerminalOut(f func(item string), cmd ...string) error {
+// 	out, err := ExecCommand(cmd[0], cmd...)
+// 	tmpOut := strings.Split(string(out), "\n")
+// 	for _, val := range tmpOut {
+// 		if len(val) > 0 {
+// 			f(val)
+// 		}
+// 	}
+// 	return err
+// }
 
 // CheckCmd: Check for command if exist
 func CheckCmd(cmd string) bool {
@@ -56,14 +145,14 @@ func PrintColored(col int, inStr ...interface{}) {
 }
 
 // GetEnvVar: retrieve an environment variable value.
-func GetEnvVar(envVar string) string {
-	return os.Getenv(envVar)
-}
+// func GetEnvVar(envVar string) string {
+// 	return os.Getenv(envVar)
+// }
 
 // GetUser: retrieve realUser and currentUser.
-func GetUser() (realUser, currentUser *user.User, err error) {
-	if currentUser, err = user.Current(); err == nil {
-		realUser, err = user.Lookup(os.Getenv("SUDO_USER"))
-	}
-	return realUser, currentUser, err
-}
+// func GetUser() (realUser, currentUser *user.User, err error) {
+// 	if currentUser, err = user.Current(); err == nil {
+// 		realUser, err = user.Lookup(os.Getenv("SUDO_USER"))
+// 	}
+// 	return realUser, currentUser, err
+// }

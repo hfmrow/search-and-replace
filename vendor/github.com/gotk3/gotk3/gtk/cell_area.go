@@ -64,6 +64,10 @@ func marshalCellArea(p uintptr) (interface{}, error) {
 }
 
 func wrapCellArea(obj *glib.Object) *CellArea {
+	if obj == nil {
+		return nil
+	}
+
 	return &CellArea{glib.InitiallyUnowned{obj}}
 }
 
@@ -352,8 +356,11 @@ func (v *CellArea) GetEditedCell() (ICellRenderer, error) {
 	return castCellRenderer(c)
 }
 
-// TODO:
-// gtk_cell_area_get_edit_widget // depends on GtkCellEditable
+// GetEditWidget is a wrapper around gtk_cell_area_get_edit_widget().
+func (v *CellArea) GetEditWidget() (ICellEditable, error) {
+	c := C.gtk_cell_area_get_edit_widget(v.native())
+	return castCellEditable(c)
+}
 
 // ActivateCell is a wrapper around gtk_cell_area_activate_cell().
 func (v *CellArea) ActivateCell(widget IWidget, renderer ICellRenderer,
@@ -423,6 +430,10 @@ func marshalCellAreaContext(p uintptr) (interface{}, error) {
 }
 
 func wrapCellAreaContext(obj *glib.Object) *CellAreaContext {
+	if obj == nil {
+		return nil
+	}
+
 	return &CellAreaContext{obj}
 }
 
@@ -530,6 +541,10 @@ func marshalCellAreaBox(p uintptr) (interface{}, error) {
 }
 
 func wrapCellAreaBox(obj *glib.Object) *CellAreaBox {
+	if obj == nil {
+		return nil
+	}
+
 	cellArea := wrapCellArea(obj)
 	o := wrapOrientable(obj)
 	return &CellAreaBox{*cellArea, *o}

@@ -1,12 +1,12 @@
 // translate.go
 
-// File generated on Thu, 13 Aug 2020 14:23:12 using Gotk3ObjectsTranslate v1.3 2019 H.F.M
+// File generated on Thu, 03 Dec 2020 02:40:03 using Gotk3 Objects Translate v1.5 2019-20 H.F.M
 
 /*
 * 	This program comes with absolutely no warranty.
 *	See the The MIT License (MIT) for details:
 *	https://opensource.org/licenses/mit-license.php
- */
+*/
 
 package main
 
@@ -32,6 +32,7 @@ func (trans *MainTranslate) initGtkObjectsText() {
 	trans.setTextToGtkObjects(&mainObjects.chkFollowSymlinkDir.Widget, "chkFollowSymlinkDir")
 	trans.setTextToGtkObjects(&mainObjects.chkRegex.Widget, "chkRegex")
 	trans.setTextToGtkObjects(&mainObjects.chkUseEscapeChar.Widget, "chkUseEscapeChar")
+	trans.setTextToGtkObjects(&mainObjects.chkUseEscapeCharToReplace.Widget, "chkUseEscapeCharToReplace")
 	trans.setTextToGtkObjects(&mainObjects.chkWholeWord.Widget, "chkWholeWord")
 	trans.setTextToGtkObjects(&mainObjects.chkWildcard.Widget, "chkWildcard")
 	trans.setTextToGtkObjects(&mainObjects.entryExtMask.Widget, "entryExtMask")
@@ -42,6 +43,7 @@ func (trans *MainTranslate) initGtkObjectsText() {
 	trans.setTextToGtkObjects(&mainObjects.findWinChkBackUp.Widget, "findWinChkBackUp")
 	trans.setTextToGtkObjects(&mainObjects.findWinChkDispForbFiles.Widget, "findWinChkDispForbFiles")
 	trans.setTextToGtkObjects(&mainObjects.findWinReplaceBtn.Widget, "findWinReplaceBtn")
+	trans.setTextToGtkObjects(&mainObjects.findWinScrollWin.Widget, "findWinScrollWin")
 	trans.setTextToGtkObjects(&mainObjects.findWinTreeView.Widget, "findWinTreeView")
 	trans.setTextToGtkObjects(&mainObjects.imgTop.Widget, "imgTop")
 	trans.setTextToGtkObjects(&mainObjects.lblExtMask.Widget, "lblExtMask")
@@ -58,7 +60,10 @@ func (trans *MainTranslate) initGtkObjectsText() {
 	trans.setTextToGtkObjects(&mainObjects.OptionsLabelEnableDirChooser.Widget, "OptionsLabelEnableDirChooser")
 	trans.setTextToGtkObjects(&mainObjects.OptionsLabelMaxFileSize.Widget, "OptionsLabelMaxFileSize")
 	trans.setTextToGtkObjects(&mainObjects.OptionsLabelMinFileSize.Widget, "OptionsLabelMinFileSize")
+	trans.setTextToGtkObjects(&mainObjects.scrolledWindowTreeView.Widget, "scrolledWindowTreeView")
+	trans.setTextToGtkObjects(&mainObjects.SourceToggleButtonMapWidth.Widget, "SourceToggleButtonMapWidth")
 	trans.setTextToGtkObjects(&mainObjects.spinButtonDepth.Widget, "spinButtonDepth")
+	trans.setTextToGtkObjects(&mainObjects.statusbar.Widget, "statusbar")
 	trans.setTextToGtkObjects(&mainObjects.switchFileChooserButton.Widget, "switchFileChooserButton")
 	trans.setTextToGtkObjects(&mainObjects.textWinBtnDone.Widget, "textWinBtnDone")
 	trans.setTextToGtkObjects(&mainObjects.textWinChkShowModifications.Widget, "textWinChkShowModifications")
@@ -66,8 +71,8 @@ func (trans *MainTranslate) initGtkObjectsText() {
 	trans.setTextToGtkObjects(&mainObjects.textWinChkWrap.Widget, "textWinChkWrap")
 	trans.setTextToGtkObjects(&mainObjects.textWinComboBoxLanguage.Widget, "textWinComboBoxLanguage")
 	trans.setTextToGtkObjects(&mainObjects.textWinComboBoxTextStyleChooser.Widget, "textWinComboBoxTextStyleChooser")
+	trans.setTextToGtkObjects(&mainObjects.View.Widget, "View")
 }
-
 // Translations structure declaration. To be used in main application.
 var translate = new(MainTranslate)
 
@@ -76,49 +81,50 @@ var translate = new(MainTranslate)
 // They'll be added to language file each time application started
 // when "devMode" is set at true.
 var sts = map[string]string{
-	`sbFiles`:          `Files:`,
-	`sbFilesSel`:       `Files selected:`,
+	`proceed`: `Are you sure you want to replace pattern in files ?`,
+	`allow`: `Allow`,
+	`dispTime`: `Display time:`,
+	`no`: `No`,
+	`savef`: `Save file`,
+	`titlePreviewText`: `Preview window`,
+	`done`: `Operation done.`,
+	`missing`: `Something missing`,
+	`sbFileSel`: `File selected:`,
+	`removed`: `File has been removed before processing.`,
+	`in`: `in`,
+	`deny`: `Deny`,
+	`ok`: `Ok`,
+	`file-perm`: `File permissions error.`,
+	`searchTime`: `Search time:`,
+	`openf`: `Open file`,
+	`scanTime`: `Scan files time:`,
+	`status`: `Status:`,
+	`file`: `file(s)`,
 	`totalOccurrences`: `Occurrence(s) found:`,
-	`allow`:            `Allow`,
-	`removed`:          `File has been removed before processing.`,
-	`retry`:            `Retry`,
-	`savef`:            `Save file`,
-	`sbFile`:           `File`,
-	`alert`:            `Alert ...`,
-	`clpbrdPreview`:    `Clipboard content preview.`,
-	`confirm`:          `Confirmation`,
-	`scanTime`:         `Scan files time:`,
-	`yes`:              `Yes`,
+	`noFileSel`: `No selected file(s) to search in ...`,
+	`sbFiles`: `Files:`,
+	`dir-rem`: `Directory does not exist. The current application directory will be used.`,
+	`file-rem`: `File(s) does not exist.`,
+	`regexpErr`: `Regex mistake ...`,
+	`notFound`: `Nothing was found ...`,
+	`confirm`: `Confirmation`,
+	`retry`: `Retry`,
+	`sbFilesSel`: `Files selected:`,
+	`cancel`: `Cancel`,
+	`titleSearchResults`: `Search results`,
 	`forbiddenFiles`: `Some files could not be accessed ...
 Unchecking "Follow symlink" may be useful.`,
-	`nothingToSearch`:    `Nothing to search ...`,
-	`ok`:                 `Ok`,
-	`regexpErr`:          `Regex mistake ...`,
-	`sbFileSel`:          `File selected:`,
-	`dir-rem`:            `Directory does not exist. The current application directory will be used.`,
-	`titleSearchResults`: `Search results`,
-	`file-perm`:          `File permissions error.`,
-	`searchTime`:         `Search time:`,
-	`in`:                 `in`,
-	`noFileSel`:          `No selected file(s) to search in ...`,
-	`proceed`:            `Are you sure you want to replace pattern in files ?`,
-	`titlePreviewText`:   `Preview window`,
-	`totalModified`:      `Occurrence(s) modified`,
-	`missing`:            `Something missing`,
-	`no`:                 `No`,
-	`notFound`:           `Nothing was found ...`,
-	`deny`:               `Deny`,
-	`dispTime`:           `Display time:`,
-	`done`:               `Operation done.`,
-	`file-LinkNotExist`:  `File does not exist, or symlink endpoint not found.`,
-	`file-rem`:           `File(s) does not exist.`,
-	`unexpected`:         `An unexpected error occurred`,
-	`cancel`:             `Cancel`,
-	`emptyCB`:            `Nothing to do with an empty clipboard ...`,
-	`file`:               `file(s)`,
-	`openf`:              `Open file`,
-	`status`:             `Status:`,
+	`yes`: `Yes`,
+	`emptyCB`: `Nothing to do with an empty clipboard ...`,
+	`clpbrdPreview`: `Clipboard content preview.`,
+	`file-LinkNotExist`: `File does not exist, or symlink endpoint not found.`,
+	`sbFile`: `File`,
+	`unexpected`: `An unexpected error occurred`,
+	`nothingToSearch`: `Nothing to search ...`,
+	`alert`: `Alert ...`,
+	`totalModified`: `Occurrence(s) modified`,
 }
+
 
 // Translations structure with methods
 type MainTranslate struct {
@@ -179,60 +185,70 @@ func (trans *MainTranslate) write(filename string) (err error) {
 }
 
 type parsingFlags struct {
-	SkipLowerCase  bool
-	SkipEmptyLabel bool
-	SkipEmptyName  bool
-	DoBackup       bool
+	SkipLowerCase,
+	SkipEmptyLabel,
+	SkipEmptyName,
+	DoBackup bool
 }
 
 type progInfo struct {
-	Name              string
-	Version           string
-	Creat             string
-	MainObjStructName string
-	GladeXmlFilename  string
-	TranslateFilename string
+	Name,
+	Version,
+	Creat,
+	MainObjStructName,
+	GladeXmlFilename,
+	TranslateFilename,
+	ProjectRootDir,
+	GohProjFile string
 }
 
 type language struct {
-	LangNameLong string
-	LangNameShrt string
-	Author       string
-	Date         string
-	Updated      string
+	LangNameLong,
+	LangNameShrt,
+	Author,
+	Date,
+	Updated string
 	Contributors []string
 }
 
 type object struct {
-	Class         string
-	Id            string
-	Label         string
-	LabelMarkup   bool
-	LabelWrap     bool
-	Tooltip       string
+	Class,
+	Id,
+	Label,
+	Tooltip,
+	Text,
+	Uri,
+	Comment string
+	LabelMarkup,
+	LabelWrap,
 	TooltipMarkup bool
-	Text          string
-	Uri           string
-	Comment       string
-	Idx           int
+	Idx int
 }
 
 // Define available property within objects
 type propObject struct {
-	Class         string
-	Label         bool
-	LabelMarkup   bool
-	LabelWrap     bool
-	Tooltip       bool
-	TooltipMarkup bool
-	Text          bool
-	Uri           bool
+	Class string
+	Label,
+	LabelMarkup,
+	LabelWrap,
+	Tooltip,
+	TooltipMarkup,
+	Text,
+	Uri bool
 }
 
 // Property that exists for Gtk3 Object ...	(Used for Class capability)
 var propPerObjects = []propObject{
 	{Class: "GtkButton", Label: true, Tooltip: true, TooltipMarkup: true},
-	{Class: "GtkToolButton", Label: true, Tooltip: true, TooltipMarkup: true},
+	{Class: "GtkMenuButton", Label: true, Tooltip: true, TooltipMarkup: true},
+
+	// {Class: "GtkToolButton", Label: true, Tooltip: true, TooltipMarkup: true},    // Deprecated since 3.10
+	// {Class: "GtkImageMenuItem", Label: true, Tooltip: true, TooltipMarkup: true}, // Deprecated since 3.10
+
+	{Class: "GtkMenuItem", Label: true, Tooltip: true, TooltipMarkup: true},
+	{Class: "GtkCheckMenuItem", Label: true, Tooltip: true, TooltipMarkup: true},
+	{Class: "GtkRadioMenuItem", Label: true, Tooltip: true, TooltipMarkup: true},
+
 	{Class: "GtkToggleButton", Label: true, Tooltip: true, TooltipMarkup: true},
 	{Class: "GtkLabel", Label: true, LabelMarkup: true, Tooltip: true, TooltipMarkup: true, LabelWrap: true},
 	{Class: "GtkSpinButton", Tooltip: true, TooltipMarkup: true},
@@ -249,6 +265,9 @@ var propPerObjects = []propObject{
 	{Class: "GtkTreeView", Tooltip: true, TooltipMarkup: true},
 	{Class: "GtkFileChooserButton", Tooltip: true, TooltipMarkup: true},
 	{Class: "GtkTextView", Tooltip: true, TooltipMarkup: true},
+	{Class: "GtkSourceView", Tooltip: true, TooltipMarkup: true},
+	{Class: "GtkStatusbar", Tooltip: true, TooltipMarkup: true},
+	{Class: "GtkScrolledWindow", Tooltip: true, TooltipMarkup: true},
 }
 
 // setTextToGtkObjects: read translations from structure and set them to object.
@@ -269,12 +288,10 @@ func (trans *MainTranslate) setTextToGtkObjects(obj *gtk.Widget, objectId string
 						obj.SetProperty("wrap", currObject.LabelWrap)
 					}
 					if props.Tooltip && !currObject.TooltipMarkup {
-						obj.SetTooltipText(currObject.Tooltip)
-						// obj.SetProperty("tooltip_text", currObject.Tooltip)
+						obj.SetProperty("tooltip_text", currObject.Tooltip)
 					}
 					if props.Tooltip && currObject.TooltipMarkup {
-						obj.SetTooltipMarkup(strings.ReplaceAll(currObject.Tooltip, "&", "&amp;"))
-						// obj.SetProperty("tooltip_markup", strings.ReplaceAll(currObject.Tooltip, "&", "&amp;"))
+						obj.SetProperty("tooltip_markup", strings.ReplaceAll(currObject.Tooltip, "&", "&amp;"))
 					}
 					if props.Text {
 						obj.SetProperty("text", currObject.Text)

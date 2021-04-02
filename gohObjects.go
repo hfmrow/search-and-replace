@@ -1,11 +1,11 @@
 // gohObjects.go
 
 /*
-	Source file auto-generated on Thu, 13 Aug 2020 04:08:31 using Gotk3ObjHandler v1.5 ©2018-20 H.F.M
+	Source file auto-generated on Fri, 02 Apr 2021 10:53:33 using Gotk3 Objects Handler v1.7.5 ©2018-21 hfmrow
 	This software use gotk3 that is licensed under the ISC License:
 	https://github.com/gotk3/gotk3/blob/master/LICENSE
 
-	Copyright ©2018-20 H.F.M - Search And Replace v1.8 github.com/hfmrow/sAndReplace
+	Copyright ©2018-21 H.F.M - Search And Replace v1.9 github.com/hfmrow/search-and-replace
 	This program comes with absolutely no warranty. See the The MIT License (MIT) for details:
 	https://opensource.org/licenses/mit-license.php
 */
@@ -14,6 +14,8 @@ package main
 
 import (
 	"github.com/gotk3/gotk3/gtk"
+
+	"github.com/hfmrow/gotk3_gtksource/source"
 )
 
 // Control over all used objects from glade.
@@ -23,7 +25,6 @@ var mainObjects *MainControlsObj
 /* Main structure Declaration */
 /******************************/
 type MainControlsObj struct {
-	BoxTextViewPreview              *gtk.Grid
 	btnFind                         *gtk.Button
 	btnReplaceInClipboard           *gtk.Button
 	btnScan                         *gtk.Button
@@ -34,6 +35,7 @@ type MainControlsObj struct {
 	chkFollowSymlinkDir             *gtk.CheckButton
 	chkRegex                        *gtk.CheckButton
 	chkUseEscapeChar                *gtk.CheckButton
+	chkUseEscapeCharToReplace       *gtk.CheckButton
 	chkWholeWord                    *gtk.CheckButton
 	chkWildcard                     *gtk.CheckButton
 	clipboard                       *gtk.Clipboard /*MANUAL*/
@@ -63,6 +65,7 @@ type MainControlsObj struct {
 	mainUiBuilder                   *gtk.Builder
 	mainWin                         *gtk.Window
 	mainWinBtnClose                 *gtk.Button
+	Map                             *source.SourceMap
 	OptionButtonDone                *gtk.Button
 	OptionsEntryMaxFileSize         *gtk.Entry
 	OptionsEntryMinFileSize         *gtk.Entry
@@ -72,8 +75,10 @@ type MainControlsObj struct {
 	OptionsLabelMaxFileSize         *gtk.Label
 	OptionsLabelMinFileSize         *gtk.Label
 	OptionsWindow                   *gtk.Window
+	Paned                           *gtk.Paned
 	replaceGrid                     *gtk.Grid
 	scrolledWindowTreeView          *gtk.ScrolledWindow
+	SourceToggleButtonMapWidth      *gtk.ToggleButton
 	spinButtonDepth                 *gtk.SpinButton
 	statusbar                       *gtk.Statusbar
 	switchFileChooserButton         *gtk.Switch
@@ -87,6 +92,7 @@ type MainControlsObj struct {
 	textWinComboBoxTextStyleChooser *gtk.ComboBoxText
 	textWinGridTop                  *gtk.Grid
 	treeviewSelection               *gtk.TreeSelection
+	View                            *source.SourceView
 }
 
 /******************************/
@@ -94,7 +100,6 @@ type MainControlsObj struct {
 /******************************/
 // gladeObjParser: Initialise Gtk3 Objects into mainObjects structure.
 func gladeObjParser() {
-	mainObjects.BoxTextViewPreview = loadObject("BoxTextViewPreview").(*gtk.Grid)
 	mainObjects.btnFind = loadObject("btnFind").(*gtk.Button)
 	mainObjects.btnReplaceInClipboard = loadObject("btnReplaceInClipboard").(*gtk.Button)
 	mainObjects.btnScan = loadObject("btnScan").(*gtk.Button)
@@ -105,6 +110,7 @@ func gladeObjParser() {
 	mainObjects.chkFollowSymlinkDir = loadObject("chkFollowSymlinkDir").(*gtk.CheckButton)
 	mainObjects.chkRegex = loadObject("chkRegex").(*gtk.CheckButton)
 	mainObjects.chkUseEscapeChar = loadObject("chkUseEscapeChar").(*gtk.CheckButton)
+	mainObjects.chkUseEscapeCharToReplace = loadObject("chkUseEscapeCharToReplace").(*gtk.CheckButton)
 	mainObjects.chkWholeWord = loadObject("chkWholeWord").(*gtk.CheckButton)
 	mainObjects.chkWildcard = loadObject("chkWildcard").(*gtk.CheckButton)
 	mainObjects.entryExtMask = loadObject("entryExtMask").(*gtk.Entry)
@@ -132,6 +138,7 @@ func gladeObjParser() {
 	mainObjects.MainTopGrig = loadObject("MainTopGrig").(*gtk.Grid)
 	mainObjects.mainWin = loadObject("mainWin").(*gtk.Window)
 	mainObjects.mainWinBtnClose = loadObject("mainWinBtnClose").(*gtk.Button)
+	mainObjects.Map = loadObject("Map").(*source.SourceMap)
 	mainObjects.OptionButtonDone = loadObject("OptionButtonDone").(*gtk.Button)
 	mainObjects.OptionsEntryMaxFileSize = loadObject("OptionsEntryMaxFileSize").(*gtk.Entry)
 	mainObjects.OptionsEntryMinFileSize = loadObject("OptionsEntryMinFileSize").(*gtk.Entry)
@@ -141,8 +148,10 @@ func gladeObjParser() {
 	mainObjects.OptionsLabelMaxFileSize = loadObject("OptionsLabelMaxFileSize").(*gtk.Label)
 	mainObjects.OptionsLabelMinFileSize = loadObject("OptionsLabelMinFileSize").(*gtk.Label)
 	mainObjects.OptionsWindow = loadObject("OptionsWindow").(*gtk.Window)
+	mainObjects.Paned = loadObject("Paned").(*gtk.Paned)
 	mainObjects.replaceGrid = loadObject("replaceGrid").(*gtk.Grid)
 	mainObjects.scrolledWindowTreeView = loadObject("scrolledWindowTreeView").(*gtk.ScrolledWindow)
+	mainObjects.SourceToggleButtonMapWidth = loadObject("SourceToggleButtonMapWidth").(*gtk.ToggleButton)
 	mainObjects.spinButtonDepth = loadObject("spinButtonDepth").(*gtk.SpinButton)
 	mainObjects.statusbar = loadObject("statusbar").(*gtk.Statusbar)
 	mainObjects.switchFileChooserButton = loadObject("switchFileChooserButton").(*gtk.Switch)
@@ -156,4 +165,5 @@ func gladeObjParser() {
 	mainObjects.textWinComboBoxTextStyleChooser = loadObject("textWinComboBoxTextStyleChooser").(*gtk.ComboBoxText)
 	mainObjects.textWinGridTop = loadObject("textWinGridTop").(*gtk.Grid)
 	mainObjects.treeviewSelection = loadObject("treeviewSelection").(*gtk.TreeSelection)
+	mainObjects.View = loadObject("View").(*source.SourceView)
 }

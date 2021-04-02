@@ -21,6 +21,9 @@ import (
 	"strconv"
 	"strings"
 
+	"github.com/gotk3/gotk3/gdk"
+	"github.com/hfmrow/gotk3_gtksource/source"
+
 	"github.com/gotk3/gotk3/glib"
 	"github.com/gotk3/gotk3/gtk"
 
@@ -36,15 +39,14 @@ import (
 
 // Signal handler dblClick ... doudble click on found result to display text preview
 func findTreeViewDblClick(tw *gtk.TreeView) {
-	var parentContent string
-	var text []byte
-	var line int
-	var err error
-	// var value *glib.Value
-	var selContent string
-	var iters []*gtk.TreeIter
-	// var iter *gtk.TreeIter
-	var path *gtk.TreePath
+	var (
+		parentContent string
+		text          []byte
+		err           error
+		selContent    string
+		iters         []*gtk.TreeIter
+		path          *gtk.TreePath
+	)
 
 	mainObjects.textWinChkShowModifications.SetActive(false)
 	mainObjects.textWinChkWrap.SetActive(false)
@@ -54,11 +56,11 @@ func findTreeViewDblClick(tw *gtk.TreeView) {
 
 		if path, err = tvsTree.TreeStore.GetPath(iters[0]); err == nil {
 			var regLine = regexp.MustCompile(`[><]`)
-			currentLine := regLine.Split(selContent, -1)
+			newCurrentLine := regLine.Split(selContent, -1)
 
 			// Retrieve line number if xist ...
-			if len(currentLine) > 1 {
-				line, _ = strconv.Atoi(strings.TrimSpace(currentLine[2]))
+			if len(newCurrentLine) > 1 {
+				currentLine, _ = strconv.Atoi(strings.TrimSpace(newCurrentLine[2]))
 			}
 			// Get the parent node of the current node or itself if it already is
 			path.Up()
@@ -73,7 +75,7 @@ func findTreeViewDblClick(tw *gtk.TreeView) {
 				currFilename = parentContent // Filename passed to popup menu of the TextView
 
 				showTextWin(string(text), glsg.TruncatePath(parentContent,
-					mainOptions.FilePathLength), line-1)
+					mainOptions.FilePathLength))
 			} else if os.IsNotExist(err) { // Skip error if not exist
 				err = nil
 			}
@@ -106,7 +108,7 @@ func listViewFilesRowActivated(tw *gtk.TreeView) {
 
 					currFilename = filename // Filename passed to popup menu of the TextView
 
-					showTextWin(string(textWinTextToShowBytes), glsg.TruncatePath(filename, mainOptions.FilePathLength), 0)
+					showTextWin(string(textWinTextToShowBytes), glsg.TruncatePath(filename, mainOptions.FilePathLength))
 				}
 			}
 		}
@@ -182,25 +184,13 @@ func btnFindClicked() {
 	btnFindInUse = false
 }
 
-// textWinComboBoxTextStyleChooserChanged:
-func textWinComboBoxTextStyleChooserChanged() {
-	fileFoundSingle.HasBeenDisplayed(false)
-	_, err := highlightText(currentText,
-		textViewRowNumber.GetCurrentLineNb(),
-		mainObjects.textWinChkShowModifications.GetActive())
-
-	DlgErr("textWinComboBoxTextStyleChooserChanged:highlightText", err)
-}
-
 // Signal handler toggled ...
 func textWinChkShowModificationsToggled() {
-	var occurrences int
+
 	var err error
 
-	lastLine = textViewRowNumber.GetCurrentLineNb()
-
 	if mainObjects.textWinChkShowModifications.GetActive() {
-		textWinTextToShowBytes = []byte(textViewRowNumber.GetText())
+		textWinTextToShowBytes = []byte(svs.GetText())
 
 		if len(gitl.GetEntryText(mainObjects.entrySearch)) == 0 {
 
@@ -210,9 +200,9 @@ func textWinChkShowModificationsToggled() {
 			return
 		}
 	}
-	if occurrences, err = highlightText(string(textWinTextToShowBytes), lastLine, mainObjects.textWinChkShowModifications.GetActive()); err == nil {
-		textWinTitle.Update([]string{fmt.Sprintf("%s %d", sts["totalOccurrences"], occurrences)})
-	}
+
+	_, err = highlightText(string(textWinTextToShowBytes), mainObjects.textWinChkShowModifications.GetActive())
+
 	if DlgErr("textWinChkShowModificationsToggled:highlightText", err) {
 		mainObjects.textWinChkShowModifications.SetActive(false)
 	}
@@ -262,32 +252,26 @@ func chkFollowSymlinkDirToggled() {
 	updateTreeViewFilesDisplay()
 }
 
-// // Signal handler changed ... FocusOut
-// func entrySearchFocusOut(e *gtk.Entry) {
-// 	genericEntryFocusOut(e)
-// 	// return false // GDK_EVENT_PROPAGATE signal
-// }
-
-// // Signal handler changed ... FocusOut
-// func entryReplaceFocusOut(e *gtk.Entry) {
-// 	genericEntryFocusOut(e)
-// 	// return false // GDK_EVENT_PROPAGATE signal
-// }
-
 // entryExtMaskEnterKeyPressed: Update data and disp on enter pressed
 func entryExtMaskEnterKeyPressed(e *gtk.Entry) {
 	ExtSliceToOpt()
 	updateTreeViewFilesDisplay()
 }
 
-// Signal handler toggled ... (Wrap text)
-func textWinChkWrapToggled() {
-	if mainObjects.textWinChkWrap.GetActive() {
-		textViewRowNumber.TextView.SetWrapMode(gtk.WRAP_WORD)
-	} else {
-		textViewRowNumber.TextView.SetWrapMode(gtk.WRAP_NONE)
+// textWinChkWrapToggled:  (Wrap text)
+func textWinChkWrapToggled(chk *gtk.CheckButton) {
+
+	if svs != nil {
+		if chk.GetActive() {
+			svs.View.SetWrapMode(gtk.WRAP_WORD_CHAR)
+		} else {
+			svs.View.SetWrapMode(gtk.WRAP_NONE)
+		}
 	}
-	textViewRowNumber.Update()
+}
+
+func textWinChkSyntxHighlightToggled(chk *gtk.CheckButton) {
+	svs.Buffer.SetHighlightSyntax(chk.GetActive())
 }
 
 // Signal handler toggled ...
@@ -378,9 +362,11 @@ func findWinReplaceBtnClicked() {
 
 // btnShowClipboardClicked:
 func btnShowClipboardClicked() {
+
 	if mainObjects.entrySearch.GetTextLength() != 0 {
+
 		textWinTextToShowBytes = []byte(clipboardGet())
-		showTextWin(string(textWinTextToShowBytes), sts["clpbrdPreview"], 0)
+		showTextWin(string(textWinTextToShowBytes), sts["clpbrdPreview"])
 	}
 }
 
@@ -388,6 +374,7 @@ func btnShowClipboardClicked() {
 func btnReplaceInClipboardClicked() {
 
 	if len(gitl.GetEntryText(mainObjects.entrySearch)) == 0 {
+
 		gidg.DialogMessage(mainObjects.mainWin,
 			"warning", sts["missing"],
 			"\n\n"+sts["nothingToSearch"], "", "Ok")
@@ -411,7 +398,37 @@ func findWinCancelBtnClicked() {
 // Signal handler clicked ...
 func textWinBtnDoneClicked() {
 	mainObjects.textWinChkShowModifications.SetActive(false)
+
+	mainOptions.SourceWinWidth, mainOptions.SourceWinHeight = mainObjects.textWin.GetSize()
+	mainOptions.SourceWinPosX, mainOptions.SourceWinPosY = mainObjects.textWin.GetPosition()
+	mainOptions.PanedWidth = mainOptions.SourceWinWidth - mainObjects.Paned.GetPosition()
+
 	genericHideWindow(mainObjects.textWin)
+
+	currentText = ""
+	currentLine = -1
+}
+
+// ViewButtonPressEvent:
+func ViewButtonPressEvent(sv *source.SourceView, event *gdk.Event) {
+	bEvent := gdk.EventButtonNewFromEvent(event)
+	if bEvent.Button() == gdk.BUTTON_PRIMARY {
+		currentLine = svs.GetCurrentLineNb()
+	}
+}
+
+// SourceToggleButtonMapWidthToggled:
+func SourceToggleButtonMapWidthToggled() {
+	mainOptions.PanedWidth = mainOptions.SourceWinWidth - mainObjects.Paned.GetPosition()
+}
+
+// WindowSourceCheckResize:
+func WindowSourceCheckResize(w *gtk.Window) {
+
+	if mainObjects.SourceToggleButtonMapWidth.GetActive() {
+		mainOptions.SourceWinWidth, mainOptions.SourceWinHeight = w.GetSize()
+		mainObjects.Paned.SetPosition(mainOptions.SourceWinWidth - mainOptions.PanedWidth)
+	}
 }
 
 // Signal handler delete_event (hidding window)
@@ -426,8 +443,11 @@ func genericHideWindow(w *gtk.Window) bool {
 // Used with gtk.Entry objects.
 func genericEntryFocusOut(e *gtk.Entry) {
 	if entry, err := e.GetText(); !DlgErr(sts["alert"], err) {
+
 		// Sanitize entry
+
 		entry = strings.Replace(fmt.Sprintf("%q", entry), `"`, ``, -1)
+
 		e.SetText(entry)
 		if mainObjects.textWin.GetVisible() {
 			listViewFilesRowActivated(mainObjects.listViewFiles)

@@ -17,8 +17,7 @@ import (
 	"strings"
 
 	glco "github.com/hfmrow/genLib/crypto"
-	glfs "github.com/hfmrow/genLib/files"
-
+	glfsfs "github.com/hfmrow/genLib/files/files-operations"
 	glsg "github.com/hfmrow/genLib/strings"
 	glsscc "github.com/hfmrow/genLib/strings/cClass"
 )
@@ -38,11 +37,17 @@ type SearchAndReplaceFiles struct {
 // return a slice type []SearchAndReplaceInFiles that contain all
 // informations about found patterns, indexes, lines position, file
 // type, size and occurances count.
-func SearchAndReplaceInFiles(filenames []string, toSearch, replaceWith string, /*thresholdLineEnd, thresholdOverChars float64,*/
-	minSizeLimit, maxSizeLimit int64, caseSensitive, posixCharClass, posixStrictMode, regex, wildcard, useEscapeChar, wholeWord,
-	doReplace, doSave, doBackup, acceptBinary, removeEmptyResult bool) (founds []SearchAndReplaceFiles, occurFound int, err error) {
+func SearchAndReplaceInFiles(filenames []string, toSearch, replaceWith string, minSizeLimit, maxSizeLimit int64, caseSensitive,
+	posixCharClass, posixStrictMode, regex, wildcard, useEscapeChar, useEscapeCharToRepl, wholeWord, doReplace, doSave, doBackup, acceptBinary,
+	removeEmptyResult bool) (founds []SearchAndReplaceFiles, occurFound int, err error) {
 
 	var stat os.FileInfo
+
+	fos, err := glfsfs.FilesOpStructNew()
+	if err != nil {
+		return founds, occurFound, err
+	}
+
 	founds = make([]SearchAndReplaceFiles, len(filenames))
 
 	for idxFile, file := range filenames {
@@ -55,9 +60,7 @@ func SearchAndReplaceInFiles(filenames []string, toSearch, replaceWith string, /
 			isTxt, gtSizeLimit, err := IsTextFile(
 				file,
 				minSizeLimit,
-				maxSizeLimit, /*
-					thresholdLineEnd,
-					thresholdOverChars*/)
+				maxSizeLimit)
 
 			if (!gtSizeLimit || (!acceptBinary && !isTxt)) && err == nil {
 				// If it's a binary file & not allowed or size is lower than requested
@@ -86,6 +89,7 @@ func SearchAndReplaceInFiles(filenames []string, toSearch, replaceWith string, /
 					regex,
 					wildcard,
 					useEscapeChar,
+					useEscapeCharToRepl,
 					wholeWord,
 					doReplace)
 
@@ -95,8 +99,10 @@ func SearchAndReplaceInFiles(filenames []string, toSearch, replaceWith string, /
 				founds[idxFile].Occurrences = founds[idxFile].SearchAndRepl.Occurrences
 				occurFound += founds[idxFile].Occurrences
 				// Saving file if one or more modifications was done
-				if doSave && doReplace && founds[idxFile].Occurrences > 0 /*&& founds[idxFile].SearchAndRepl.ReadyToReplace()*/ {
-					err = glfs.WriteFile(founds[idxFile].FileName, founds[idxFile].SearchAndRepl.TextBytes, doBackup)
+				if doSave && doReplace && founds[idxFile].Occurrences > 0 {
+
+					fos.Backup = doBackup
+					fos.WriteFile(founds[idxFile].FileName, founds[idxFile].SearchAndRepl.TextBytes, fos.Perms.File)
 					if err != nil {
 						return founds, occurFound, err
 					}
@@ -120,30 +126,34 @@ func SearchAndReplaceInFiles(filenames []string, toSearch, replaceWith string, /
 // in text. There is a lot of options to perform personalized
 // research.
 type SearchAndReplace struct {
-	TextBytes       []byte
-	ToSearch        string
-	ToSearchRegexp  *regexp.Regexp
-	ReplaceWith     string
-	CaseSensitive   bool
-	UseEscapeChar   bool
-	PosixCharClass  bool
-	PosixStrictMode bool
-	Regex           bool
-	Wildcard        bool
-	WholeWord       bool
-	DoReplace       bool
-	TextBytesMd5    string
-	Pos             LinesInfos
-	Occurrences     int
-	OnEachLine      func(idx, lineStart, lineEnd int)
+	TextBytes []byte
 
-	// Used to define if something has been changed in the
-	// parameters, that permit to avoid useless computation
-	readyToReplace bool // Access via method, read only ...
+	ToSearch,
+	TextBytesMd5,
+	ReplaceWith string
 
-	// I use this variable to now whether a display have
-	// been done in the parent application.
-	hasBeenDisplayed bool // Access via method, read/write ...
+	ToSearchRegexp *regexp.Regexp
+
+	CaseSensitive,
+	UseEscapeChar,
+	UseEscapeCharToRepl,
+	PosixCharClass,
+	PosixStrictMode,
+	Regex,
+	Wildcard,
+	WholeWord,
+	DoReplace bool
+
+	Pos         LinesInfos
+	Occurrences int
+	OnEachLine  func(idx, lineStart, lineEnd int)
+
+	// Used to define if something has been changed in the parameters, that
+	// permit to avoid useless computation. Access via method, read only
+	readyToReplace,
+	// I use this variable to now whether a display have been done in the
+	// parent application. Access via method, read/write ...
+	hasBeenDisplayed bool
 }
 
 // SearchAndReplaceNew: Cre	at new "SearchAndReplace" structure
@@ -153,15 +163,15 @@ func SearchAndReplaceNew(textBytes []byte, toSearch, replaceWith string) (s *Sea
 	s = new(SearchAndReplace)
 	if len(textBytes) > 0 {
 		s.Init(textBytes, toSearch, replaceWith, true, false,
-			false, false, false, false, false, false)
+			false, false, false, false, false, false, false)
 	}
 	return
 }
 
-// InitFull: do a complete initialization a "SearchAndReplace"
+// Init: do a complete initialization a "SearchAndReplace"
 // structure with given parameters.
 func (s *SearchAndReplace) Init(textBytes []byte, toSearch, replaceWith string, caseSensitive, posixCharClass,
-	posixStrictMode, regex, wildcard, escapeChar, wholeWord, doReplace bool) (err error) {
+	posixStrictMode, regex, wildcard, escapeChar, escapeCharToRepl, wholeWord, doReplace bool) (err error) {
 
 	s.CaseSensitive = caseSensitive
 	s.PosixCharClass = posixCharClass
@@ -169,6 +179,7 @@ func (s *SearchAndReplace) Init(textBytes []byte, toSearch, replaceWith string, 
 	s.Regex = regex
 	s.Wildcard = wildcard
 	s.UseEscapeChar = escapeChar
+	s.UseEscapeCharToRepl = escapeCharToRepl
 	s.WholeWord = wholeWord
 	s.DoReplace = doReplace
 
@@ -199,8 +210,16 @@ func (s *SearchAndReplace) Reset() {
 
 // replace: check for and do it if ok.
 func (s *SearchAndReplace) replace() bool {
+
 	if s.readyToReplace {
-		s.TextBytes = []byte(s.ToSearchRegexp.ReplaceAllString(string(s.TextBytes), s.ReplaceWith))
+		replaceWith := s.ReplaceWith
+
+		if s.UseEscapeCharToRepl {
+			replaceWith = glsg.UnescapeToUtf8(replaceWith)
+		}
+
+		tmpTxt := s.ToSearchRegexp.ReplaceAllLiteralString(string(s.TextBytes), fmt.Sprintf(replaceWith))
+		s.TextBytes = []byte(tmpTxt)
 		s.DoReplace = false
 		return true
 	}

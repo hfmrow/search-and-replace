@@ -8,7 +8,7 @@
 	Measuring lapse (may be multiples) between operations.
 
 Usage:
-		bench := BenchNew(true) // true mean we want display results at Stop().
+		bench := BenchNew(true) // true means we want display results at Stop().
 		bench.Lapse("first lapse")
 		// Doing something ...
 		bench.Lapse("Nth lapse")
@@ -42,7 +42,9 @@ func BenchNew(showResults ...bool) (bench *Bench) {
 	}
 	return
 }
-
+func (b *Bench) Start(label ...string) {
+	b.Lapse(label...)
+}
 func (b *Bench) Lapse(label ...string) {
 	b.lbl = "Start"
 
@@ -69,24 +71,24 @@ func (b *Bench) NanoConv(nano int64) (min, sec, ms, ns int64) {
 
 func (b *Bench) Stop() {
 	b.Lapse()
-	var mean, nano int64
+	var means, nano int64
 	nextLbl, tmpNextLbl := b.Lapses[0].Label, ""
 	for t := 1; t < len(b.Lapses); t++ { // Lapses calculation
 		tmpNextLbl = b.Lapses[t].Label //
 		b.Lapses[t].Label = nextLbl    // Switching labels
 		nextLbl = tmpNextLbl           //
 		nano = b.Lapses[t].Time.Sub(b.Lapses[t-1].Time).Nanoseconds()
-		mean += nano
+		means += nano
 		b.Lapses[t].toLapse(nano)
 	}
 
 	b.Lapses = b.Lapses[1:]
 	if len(b.Lapses)-1 > 0 { // Average calculation
 
-		b.Average.toLapse(mean / int64(len(b.Lapses)))
+		b.Average.toLapse(means / int64(len(b.Lapses)))
 		b.Average.Label = "Average"
 
-		b.Total.toLapse(mean)
+		b.Total.toLapse(means)
 		b.Total.Label = "Total"
 	}
 

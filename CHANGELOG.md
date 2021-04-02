@@ -1,12 +1,44 @@
-# Search and Replace ©2018-20 H.F.M
+# Search and Replace ©2018-21 H.F.M
 
 ## Informations
 
-At the bottom you can find a compiled standalone ".7z" version with its checksum. The ".tar.gz" & ".zip" sources contain a "vendor" directory ensuring you can always compile it even if the official libraries have been changed.
+At the bottom you can find a compiled standalone ".deb" version with its checksum. The ".tar.gz" sources contain a "vendor" directory ensuring you can always compile it even if the official libraries have been changed.
 
 ## Changelog
 
 All notable changes to this project will be documented in this file.
+
+#### [1.9] 2021-04-02
+
+Since this version: [Golang GtkSourceView binding for use with gotk3](https://github.com/hfmrow/gotk3_gtksource). `$ sudo apt install libgtksourceview-4-dev` is required to be compiled.
+
+If your OS does not implement GtkSourceView library natively, you can install it using:
+
+`$ sudo apt install libgtksourceview-4-0`
+
+If your Debian version is < **focal** (*20.04*), this means like **xenial** (*16.04*), **bionic** (*18.04*), this version does not work, it must re-compiled with appropriate `libgtksourceview-3.0-dev` library and version restrictions commands:
+
+`$ go build -tags "gtksourceview_3_24" source.go`
+
+#### Added
+
+- Improving Source-code displaying [500ms for source > 350Kb]
+- Allow the use of 'escape' characters with replace pattern. An option was added to enable or not the use of it.
+- Source map is now included in preview window.
+
+#### Fixed
+
+- Application close while adding numbers to text > 360Kb, fixed using [GtkSourceView](https://github.com/hfmrow/gotk3_gtksource)
+
+#### Changed
+
+- Repository name was changed to [https://github.com/hfmrow/search-and-replace](https://github.com/hfmrow/search-and-replace) instead of `https://github.com/hfmrow/sAndReplace`
+- Lot of source code have been changed to use be able to use functionalities described below.
+- Text numbering provided by [GtkSourceView](https://github.com/hfmrow/gotk3_gtksource) now.
+- Preview search is now provided using [GtkSourceView](https://github.com/hfmrow/gotk3_gtksource) library
+- Syntax highlighting is now provided by [GtkSourceView](https://github.com/hfmrow/gotk3_gtksource) too
+
+---
 
 #### [1.8] 2020-08-06
 
@@ -48,6 +80,8 @@ All notable changes to this project will be documented in this file.
 
 - Code updated to fit actual version of [GitHub - Go bindings for GTK3](https://github.com/gotk3/gotk3)
 
+---
+
 #### [1.7.6] 2019-10-02
 
 #### Added
@@ -73,6 +107,8 @@ All notable changes to this project will be documented in this file.
 - Lot of parts of the code have been rewritten for more stability and a really must faster processing.
 
 - The interface has been reorganized.
+
+---
 
 #### [1.7.3] 2019-07-19
 

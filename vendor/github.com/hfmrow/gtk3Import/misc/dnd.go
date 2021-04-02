@@ -15,7 +15,6 @@ import (
 	"bytes"
 	"log"
 	"net/url"
-	"reflect"
 	"strings"
 
 	"github.com/gotk3/gotk3/gdk"
@@ -23,66 +22,163 @@ import (
 )
 
 type DragNDropStruct struct {
-	Object    interface{} // gtkObject that receive DND
-	FilesList *[]string   // Contain the files list received
-	CallBack  func()      // Function called after data was received
+	// gtkObject that receive DND
+	Object interface{}
+	// Contain the files list received
+	FilesList *[]string
+	// Callback called after data was received.
+	callBackRecieveDone func()
+	// Callback called during data reception. If false is returned, the loop ends
+	callBackOnRecieve func(item interface{}, context *gdk.DragContext) bool
+	// To build dnd context
+	targets []gtk.TargetEntry
 }
 
-// initDropSets: configure controls to receive dndcontent.
-func DragNDropNew(objects interface{}, filesList *[]string, callBack func()) *DragNDropStruct {
+// DragNDropNew: configure controls to receive dndcontent. "filesList" can be "nil"
+func DragNDropNew(objects interface{}, filesList *[]string,
+	callBackRecieveDone func(),
+	callBackOnRecieve ...func(item interface{}, context *gdk.DragContext) bool) *DragNDropStruct {
+
 	ds := new(DragNDropStruct)
 	ds.Object = objects
-	ds.CallBack = callBack
-	ds.FilesList = filesList
+
+	ds.callBackOnRecieve = nil
+	if len(callBackOnRecieve) > 0 {
+		ds.callBackOnRecieve = callBackOnRecieve[0]
+	}
+	ds.callBackRecieveDone = callBackRecieveDone
+
+	switch filesList {
+	case nil:
+		ds.FilesList = new([]string)
+	default:
+		ds.FilesList = filesList
+	}
 	ds.init()
 	return ds
 }
 
 // Dispatching reciever object type (TreeView, Button ...)
 func (ds *DragNDropStruct) init() {
-	var targets []gtk.TargetEntry // Build dnd context
-	te, err := gtk.TargetEntryNew("text/uri-list", gtk.TARGET_OTHER_APP, 0)
-	if err != nil {
-		log.Fatal(err)
+
+	// Build DnD context
+	targetTypes := []string{
+		"x-special/mate-icon-list",
+		"text/uri-list",
+		"UTF8_STRING",
+		"COMPOUND_TEXT",
+		"TEXT",
+		"STRING",
+		"text/plain;charset=utf-8",
+		"text/plain"}
+
+	for _, tType := range targetTypes {
+		te, err := gtk.TargetEntryNew(tType, gtk.TARGET_OTHER_APP, 0)
+		if err != nil {
+			log.Fatal(err)
+		}
+		ds.targets = append(ds.targets, *te)
 	}
-	targets = append(targets, *te)
-	objType := reflect.TypeOf(ds.Object).String()
-	switch objType {
-	case "*gtk.TreeView":
+
+	switch ds.Object.(type) {
+
+	case *gtk.Window:
+		ds.Object.(*gtk.Window).DragDestSet(
+			gtk.DEST_DEFAULT_ALL,
+			ds.targets,
+			gdk.ACTION_COPY)
+		ds.Object.(*gtk.Window).Connect("drag-data-received", ds.dndFilesReceived)
+
+	case *gtk.Entry:
+		ds.Object.(*gtk.Entry).DragDestSet(
+			gtk.DEST_DEFAULT_ALL,
+			ds.targets,
+			gdk.ACTION_COPY)
+		ds.Object.(*gtk.Entry).Connect("drag-data-received", ds.dndFilesReceived)
+
+	case *gtk.EventBox:
+		ds.Object.(*gtk.EventBox).DragDestSet(
+			gtk.DEST_DEFAULT_ALL,
+			ds.targets,
+			gdk.ACTION_COPY)
+		ds.Object.(*gtk.EventBox).Connect("drag-data-received", ds.dndFilesReceived)
+
+	case *gtk.TreeView:
 		ds.Object.(*gtk.TreeView).DragDestSet(
 			gtk.DEST_DEFAULT_ALL,
-			targets,
+			ds.targets,
 			gdk.ACTION_COPY)
 		ds.Object.(*gtk.TreeView).Connect("drag-data-received", ds.dndFilesReceived)
-	case "gtk.Button":
+
+	case *gtk.TextView:
+		ds.Object.(*gtk.TextView).DragDestSet(
+			gtk.DEST_DEFAULT_ALL,
+			ds.targets,
+			gdk.ACTION_COPY)
+		ds.Object.(*gtk.TextView).Connect("drag-data-received", ds.dndFilesReceived)
+
+	case *gtk.Button:
 		ds.Object.(*gtk.Button).DragDestSet(
 			gtk.DEST_DEFAULT_ALL,
-			targets,
+			ds.targets,
 			gdk.ACTION_COPY)
 		ds.Object.(*gtk.Button).Connect("drag-data-received", ds.dndFilesReceived)
+
+	case *gtk.Image:
+		ds.Object.(*gtk.Image).DragDestSet(
+			gtk.DEST_DEFAULT_ALL,
+			ds.targets,
+			gdk.ACTION_COPY)
+		ds.Object.(*gtk.Image).Connect("drag-data-received", ds.dndFilesReceived)
+
+		// Already handled natively !!!
+		// case *gtk.FileChooserButton:
+		// 	ds.Object.(*gtk.FileChooserButton).DragDestSet(
+		// 		gtk.DEST_DEFAULT_ALL,
+		// 		ds.targets,
+		// 		gdk.ACTION_COPY)
+		// 	ds.Object.(*gtk.FileChooserButton).Connect("drag-data-received", ds.dndFilesReceived)
 	}
 }
 
 // ButtonInFilesReceived: Store in files list
 func (ds *DragNDropStruct) dndFilesReceived(object interface{}, context *gdk.DragContext, x, y int, selData *gtk.SelectionData, info, time uint) {
+
 	*ds.FilesList = (*ds.FilesList)[:0]
 	data := selData.GetData()
 	list := strings.Split(string(data), getTextEOL(data))
-	for _, file := range list {
-		if len(file) != 0 {
-			if u, err := url.PathUnescape(file); err == nil {
-				*ds.FilesList = append(*ds.FilesList, strings.TrimPrefix(u, "file://"))
+
+	for _, item := range list {
+		if len(item) != 0 {
+
+			if ds.callBackOnRecieve != nil {
+				// For other type than string, callback permit to handle anything
+				if !ds.callBackOnRecieve(item, context) {
+					break
+				}
+			} else {
+				// Default handling as a string
+				if u, err := url.PathUnescape(item); err == nil {
+
+					*ds.FilesList = append(*ds.FilesList, strings.TrimPrefix(u, "file://"))
+				}
 			}
 		}
 	}
-	ds.CallBack()
+	if ds.callBackRecieveDone != nil {
+		ds.callBackRecieveDone()
+	}
 }
 
 // GetTextEOL: Get EOL from text bytes (CR, LF, CRLF)
 func getTextEOL(inTextBytes []byte) (outString string) {
-	bCR := []byte{0x0D}
-	bLF := []byte{0x0A}
-	bCRLF := []byte{0x0D, 0x0A}
+
+	var (
+		bCR   = []byte{0x0D}
+		bLF   = []byte{0x0A}
+		bCRLF = []byte{0x0D, 0x0A}
+	)
+
 	switch {
 	case bytes.Contains(inTextBytes, bCRLF):
 		outString = string(bCRLF)

@@ -16,7 +16,7 @@ import (
 
 	"github.com/gotk3/gotk3/gtk"
 
-	p "github.com/hfmrow/gtk3Import/pixbuff"
+	gipf "github.com/hfmrow/gtk3Import/pixbuff"
 )
 
 /***************************
@@ -38,7 +38,7 @@ var dialogType = map[string]gtk.MessageType{
 // DlgMessage: Display message dialog with multiples buttons.
 // return get <0 for cross closed or >-1 correspondig to buttons order representation.
 // dlgType accepte: "info", "warning", "question", "error", "other", by adding "WithMarkup" you enable it.
-// iconFileName: can be a []byte or a string. "" = No image
+// iconFileName: can be a []byte or a string. '' or nil -> No image
 func DialogMessage(window *gtk.Window, dlgType, title, text string, iconFileName interface{}, buttons ...string) (value int) {
 	var msgDialog *gtk.MessageDialog
 	var box *gtk.Box
@@ -49,14 +49,19 @@ func DialogMessage(window *gtk.Window, dlgType, title, text string, iconFileName
 		dialogType[dlgType],
 		gtk.BUTTONS_NONE,
 		"")
+
 	// Image
-	if len(iconFileName.(string)) != 0 {
-		if box, err = msgDialog.GetContentArea(); err == nil {
-			p.SetPict(box, iconFileName, 18)
-		} else {
-			fmt.Println(fmt.Sprintf("DlgMessage, could not get content area: %s", err))
+	switch iconFileName.(type) {
+	case string:
+		if len(iconFileName.(string)) != 0 {
+			if box, err = msgDialog.GetContentArea(); err == nil {
+				gipf.SetPict(box, iconFileName, 18)
+			} else {
+				fmt.Println(fmt.Sprintf("DlgMessage, could not get content area: %s", err))
+			}
 		}
 	}
+
 	msgDialog.SetSkipTaskbarHint(true)
 	msgDialog.SetKeepAbove(true)
 	// Check for link to make it clickable

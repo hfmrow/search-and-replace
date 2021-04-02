@@ -50,7 +50,7 @@ func checkUnrecoverableErr(err error) error {
 }
 
 // ScanDirDepth: retrieve files in a specific directory and his sub-directory depending on depth argument.
-// depth = -1 mean infinite, depth = 0 mean no sub-dir. optParams: showDir, followSymlinks as bool.
+// depth = -1 means infinite, depth = 0 means no sub-dir. optParams: showDir, followSymlinks as bool.
 func ScanDirDepth(root string, depth int, optParam ...bool) (files []string, err error) {
 	var showDirs, followSl, isDir bool
 	switch len(optParam) {

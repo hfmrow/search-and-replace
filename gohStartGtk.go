@@ -1,11 +1,11 @@
 // gohStartGtk.go
 
 /*
-	Source file auto-generated on Thu, 06 Aug 2020 20:25:48 using Gotk3ObjHandler v1.5 ©2018-20 H.F.M
+	Source file auto-generated on Fri, 02 Apr 2021 10:53:33 using Gotk3 Objects Handler v1.7.5 ©2018-21 hfmrow
 	This software use gotk3 that is licensed under the ISC License:
 	https://github.com/gotk3/gotk3/blob/master/LICENSE
 
-	Copyright ©2018-20 H.F.M - Search And Replace v1.8 github.com/hfmrow/sAndReplace
+	Copyright ©2018-21 H.F.M - Search And Replace v1.9 github.com/hfmrow/search-and-replace
 	This program comes with absolutely no warranty. See the The MIT License (MIT) for details:
 	https://opensource.org/licenses/mit-license.php
 */
@@ -53,5 +53,12 @@ func mainStartGtk(winTitle string, width, height int, center bool) {
 		gtk.Main()
 	} else {
 		log.Fatal("Builder initialisation error.")
+	}
+}
+
+// windowDestroy: on closing/destroying the gui window.
+func windowDestroy() {
+	if onShutdown() {
+		gtk.MainQuit()
 	}
 }

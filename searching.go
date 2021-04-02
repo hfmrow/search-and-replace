@@ -19,7 +19,6 @@ import (
 	glfsft "github.com/hfmrow/genLib/files/fileText"
 
 	gidg "github.com/hfmrow/gtk3Import/dialog"
-	gimc "github.com/hfmrow/gtk3Import/misc"
 	gitl "github.com/hfmrow/gtk3Import/tools"
 )
 
@@ -55,8 +54,6 @@ func searchAndReplace(treeviewSelectedRows []string,
 		treeviewSelectedRows,
 		entrySearchText,
 		entryReplaceText,
-		// mainOptions.LineEndThreshold,   // thresholdLineEnd
-		// mainOptions.OverCharsThreshold, // thresholdOverChars
 		mainOptions.FileMinSizeLimit, // Size limit >
 		mainOptions.FileMaxSizeLimit, // Size limit <
 		mainObjects.chkCaseSensitive.GetActive(),
@@ -65,6 +62,7 @@ func searchAndReplace(treeviewSelectedRows []string,
 		mainObjects.chkRegex.GetActive(),
 		mainObjects.chkWildcard.GetActive(),
 		mainObjects.chkUseEscapeChar.GetActive(),
+		mainObjects.chkUseEscapeCharToReplace.GetActive(),
 		mainObjects.chkWholeWord.GetActive(),
 		replace, // DoReplace
 		replace, // DoSave
@@ -103,18 +101,19 @@ func onTheFlySearch(inTextBytes []byte, doReplace bool) (outTextBytes []byte, er
 
 		fileFoundSingle.Init(
 			inTextBytes,
-			gitl.GetEntryText(mainObjects.entrySearch),
-			gitl.GetEntryText(mainObjects.entryReplace),
+			fmt.Sprint(gitl.GetEntryText(mainObjects.entrySearch)),
+			fmt.Sprint(gitl.GetEntryText(mainObjects.entryReplace)),
 			mainObjects.chkCaseSensitive.GetActive(),
 			mainObjects.chkCharacterClass.GetActive(),
 			mainObjects.chkCharacterClassStrictMode.GetActive(),
 			mainObjects.chkRegex.GetActive(),
 			mainObjects.chkWildcard.GetActive(),
 			mainObjects.chkUseEscapeChar.GetActive(),
+			mainObjects.chkUseEscapeCharToReplace.GetActive(),
 			mainObjects.chkWholeWord.GetActive(),
 			doReplace)
 
-		gimc.Notify("Information", "Please wait while processing ...")
+		// Return text after replacement (i.e: clipboard replace)
 		if err = fileFoundSingle.SearchAndReplace(); err == nil {
 			outTextBytes = fileFoundSingle.TextBytes
 

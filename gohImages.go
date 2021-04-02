@@ -1,16 +1,20 @@
 // gohImages.go
 
 /*
-	Source file auto-generated on Thu, 13 Aug 2020 04:08:31 using Gotk3ObjHandler v1.5 ©2018-20 H.F.M
+	Source file auto-generated on Fri, 02 Apr 2021 10:53:33 using Gotk3 Objects Handler v1.7.5 ©2018-21 hfmrow
 	This software use gotk3 that is licensed under the ISC License:
 	https://github.com/gotk3/gotk3/blob/master/LICENSE
 
-	Copyright ©2018-20 H.F.M - Search And Replace v1.8 github.com/hfmrow/sAndReplace
+	Copyright ©2018-21 H.F.M - Search And Replace v1.9 github.com/hfmrow/search-and-replace
 	This program comes with absolutely no warranty. See the The MIT License (MIT) for details:
 	https://opensource.org/licenses/mit-license.php
 */
 
 package main
+
+import (
+	"github.com/gotk3/gotk3/gtk"
+)
 
 /**********************************************************/
 /* This section preserve user modifications on update.   */
@@ -38,7 +42,8 @@ func assignImages() {
 	SetPict(mainObjects.OptionButtonDone, tickIcon48, 24)
 	SetPict(mainObjects.OptionsImageTop, options)
 	SetPict(mainObjects.OptionsWindow, searchFolder48)
-	SetPict(mainObjects.spinButtonDepth, folder48, "left")
+	SetPict(mainObjects.SourceToggleButtonMapWidth, "")
+	SetPict(mainObjects.spinButtonDepth, folder48, OptPict{Position: gtk.ENTRY_ICON_SECONDARY})
 	SetPict(mainObjects.textWin, searchFolder48)
 	SetPict(mainObjects.textWinBtnDone, tickIcon48, 24)
 }
@@ -49,13 +54,13 @@ func assignImages() {
 /* bridge between the differents types used, string or */
 /* []byte, and to simply switch from one to another.  */
 /*****************************************************/
+var mainGlade interface{}                  // assets/glade/main.glade
 var clipboard interface{}                  // assets/images/clipboard.png
 var clipboardRepl interface{}              // assets/images/clipboard-repl.png
 var crossIcon48 interface{}                // assets/images/Cross-icon-48.png
 var folder48 interface{}                   // assets/images/folder-48.png
 var linearProgressHorzBlue interface{}     // assets/images/linear-progress-horz-blue.gif
 var logout48 interface{}                   // assets/images/logout-48.png
-var mainGlade interface{}                  // assets/glade/main.glade
 var mimetypeSourceIconGolang48 interface{} // assets/images/Mimetype-source-icon-golang-48.png
 var options interface{}                    // assets/images/Options.png
 var replace interface{}                    // assets/images/replace.png

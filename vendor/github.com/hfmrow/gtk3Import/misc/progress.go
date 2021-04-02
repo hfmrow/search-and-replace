@@ -11,7 +11,6 @@
 package gtk3Import
 
 import (
-	"log"
 	"sync"
 	"time"
 
@@ -113,10 +112,10 @@ func (pbs *ProgressBarStruct) StartTicker() (err error) {
 	return
 }
 
-func (pbs *ProgressBarStruct) StartTimeOut() (err error) {
+func (pbs *ProgressBarStruct) StartTimeOut() {
 
 	pbs.TimeOutContinue = true
-	_, err = glib.TimeoutAdd(pbs.RefreshMs, func() bool {
+	glib.TimeoutAdd(pbs.RefreshMs, func() bool {
 		glib.IdleAdd(func() {
 			pbs.progressBar.Pulse()
 		})
@@ -130,11 +129,6 @@ func (pbs *ProgressBarStruct) StartTimeOut() (err error) {
 			return false
 		}
 	})
-
-	if err != nil {
-		log.Fatalf("ProgressBarStruct.StartTimeOut: %s\n", err.Error())
-		return
-	}
 
 	waitGroup := new(sync.WaitGroup)
 	waitGroup.Add(1)

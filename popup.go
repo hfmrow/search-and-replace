@@ -13,15 +13,15 @@
 package main
 
 import (
-	"os"
+	"fmt"
+	"log"
 	"path/filepath"
 
 	"github.com/gotk3/gotk3/glib"
 	"github.com/gotk3/gotk3/gtk"
 
 	glts "github.com/hfmrow/genLib/tools"
-
-	gimc "github.com/hfmrow/gtk3Import/misc"
+	"github.com/hfmrow/gotk3_gtksource/source"
 )
 
 /*
@@ -30,24 +30,30 @@ import (
 
 // initPopupTreeView:
 func initTreeViewPopupMenu() {
-	popupMenu = gimc.PopupMenuNew()
-	popupMenu.WithIcons = true
+
+	popupMenu = PopupMenuIconStructNew()
+
 	popupMenu.AddItem("Open _directory", func() {
 		getTreeViewFilename()
 		openDir(currFilename)
-	}, folder48)
+	}, popupMenu.OPT_ICON|popupMenu.OPT_NORMAL, folder48)
+
 	popupMenu.AddItem("Open _file", func() {
 		getTreeViewFilename()
 		openFile(currFilename)
-	}, mimetypeSourceIconGolang48)
+	}, popupMenu.OPT_ICON|popupMenu.OPT_NORMAL, mimetypeSourceIconGolang48)
+
 	popupMenu.MenuBuild()
 }
 
 // Retrieve filename from selected row to "currFilename"
 func getTreeViewFilename() {
-	var err error
-	var value *glib.Value
-	var iters []*gtk.TreeIter
+
+	var (
+		err   error
+		value *glib.Value
+		iters []*gtk.TreeIter
+	)
 
 	if iters = tvsList.GetSelectedIters(); len(iters) > 0 {
 
@@ -59,36 +65,57 @@ func getTreeViewFilename() {
 
 // openFile:
 func openFile(filename string) {
-	if _, err := os.Stat(filename); !os.IsNotExist(err) {
-		open(filename)
-	}
+	// if _, err := os.Stat(filename); !os.IsNotExist(err) {
+	open(filename)
+	// }
 }
 
 // openDir:
 func openDir(filename string) {
-	if _, err := os.Stat(filename); !os.IsNotExist(err) {
-		open(filepath.Dir(filename))
-	}
+	// if _, err := os.Stat(filename); !os.IsNotExist(err) {
+	open(filepath.Dir(filename))
+	// }
 }
 
 // open: show file or dir depending on "path".
 func open(path string) {
+
+	var goFunc = func() {
+
+		if _, err := glts.ExecCommand([]string{mainOptions.AppLauncher, path}); err != nil {
+
+			// Error is handled by "xdg-open" command
+			fmt.Println(err)
+		}
+	}
+
 	glib.IdleAdd(func() { // IdleAdd to permit gtk3 working right during goroutine
 		// Using goroutine to permit the usage of another thread and freeing the current one.
-		go glts.ExecCommand(mainOptions.AppLauncher, path)
+		go goFunc()
 	})
 }
 
 // popupTextViewPopulateMenu: Append some items to contextmenu of the popup textview
-func popupTextViewPopulateMenu(txtView *gtk.TextView, popup *gtk.Widget) {
-	// Convert gtk.Widget to gtk.Menu object
-	pop := &gtk.Menu{gtk.MenuShell{gtk.Container{*popup}}}
-	// create new menuitems
-	popMenuTextView = gimc.PopupMenuNew()
-	popMenuTextView.WithIcons = true
-	popMenuTextView.AddSeparator()
-	popMenuTextView.AddItem("Open _directory", func() { openDir(currFilename) }, folder48)
-	popMenuTextView.AddItem("Open _file", func() { openFile(currFilename) }, mimetypeSourceIconGolang48)
-	// Append them to the existing menu
-	popMenuTextView.AppendToExistingMenu(pop)
+func popupTextViewPopulateMenu(srcView *source.SourceView, popup *gtk.Widget) {
+
+	if IWidget, err := popup.Cast(); err == nil {
+		pop := IWidget.(*gtk.Menu)
+
+		// create new menuitems
+		popMenuTextView = PopupMenuIconStructNew()
+
+		popMenuTextView.AddItem("", nil, popMenuTextView.OPT_SEPARATOR)
+
+		popMenuTextView.AddItem("Open _directory", func() { openDir(currFilename) },
+			popMenuTextView.OPT_ICON|popMenuTextView.OPT_NORMAL, folder48)
+
+		popMenuTextView.AddItem("Open _file", func() { openFile(currFilename) },
+			popMenuTextView.OPT_ICON|popMenuTextView.OPT_NORMAL, mimetypeSourceIconGolang48)
+
+		// Append them to the existing menu
+		popMenuTextView.AppendToExistingMenu(pop)
+	} else {
+		log.Printf("popupTextViewPopulateMenu: %v\n", err)
+
+	}
 }

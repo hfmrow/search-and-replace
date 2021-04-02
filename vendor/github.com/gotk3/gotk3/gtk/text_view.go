@@ -14,6 +14,15 @@ import (
 	"github.com/gotk3/gotk3/pango"
 )
 
+func init() {
+
+	tm := []glib.TypeMarshaler{
+		{glib.Type(C.gtk_text_window_type_get_type()), marshalTextWindowType},
+	}
+
+	glib.RegisterGValueMarshalers(tm)
+}
+
 // TextWindowType is a representation of GTK's GtkTextWindowType.
 type TextWindowType int
 
@@ -26,6 +35,11 @@ const (
 	TEXT_WINDOW_TOP     TextWindowType = C.GTK_TEXT_WINDOW_TOP
 	TEXT_WINDOW_BOTTOM  TextWindowType = C.GTK_TEXT_WINDOW_BOTTOM
 )
+
+func marshalTextWindowType(p uintptr) (interface{}, error) {
+	c := C.g_value_get_enum((*C.GValue)(unsafe.Pointer(p)))
+	return TextWindowType(c), nil
+}
 
 /*
  * GtkTextView
@@ -52,6 +66,10 @@ func marshalTextView(p uintptr) (interface{}, error) {
 }
 
 func wrapTextView(obj *glib.Object) *TextView {
+	if obj == nil {
+		return nil
+	}
+
 	return &TextView{Container{Widget{glib.InitiallyUnowned{obj}}}}
 }
 
@@ -426,15 +444,5 @@ func (v *TextView) AddChildAtAnchor(child IWidget, anchor *TextChildAnchor) {
 }
 
 // TODO:
-// GtkTextChildAnchor * 	gtk_text_child_anchor_new ()
-// GList * 	gtk_text_child_anchor_get_widgets ()
-// gboolean 	gtk_text_child_anchor_get_deleted ()
-// void 	gtk_text_view_set_top_margin () -- SINCE 3.18
-// gint 	gtk_text_view_get_top_margin () -- SINCE 3.18
-// void 	gtk_text_view_set_bottom_margin ()  -- SINCE 3.18
-// gint 	gtk_text_view_get_bottom_margin ()  -- SINCE 3.18
 // GtkTextAttributes * 	gtk_text_view_get_default_attributes () -- GtkTextAttributes
-// void 	gtk_text_view_set_monospace () -- SINCE 3.16
-// gboolean 	gtk_text_view_get_monospace () -- SINCE 3.16
 // GtkTextViewLayer
-// GtkTextExtendSelection

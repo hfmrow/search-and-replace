@@ -37,6 +37,8 @@ import (
 	"github.com/gotk3/gotk3/gdk"
 	"github.com/gotk3/gotk3/gtk"
 
+	glsg "github.com/hfmrow/genLib/strings"
+
 	gipops "github.com/hfmrow/gtk3Import/pango/pangoSimple"
 	gipf "github.com/hfmrow/gtk3Import/pixbuff"
 )
@@ -46,23 +48,28 @@ import (
  */
 
 type AboutInfos struct {
-	TitleWindow       string
-	AppName           string
-	AppVers           string
-	AppCreats         string
-	YearCreat         string
-	LicenseAbrv       string
-	LicenseShort      string
-	Repository        string
-	Description       string
-	ImageTop          interface{}
-	ImageOkButton     interface{}
-	ImageOkButtonSize int
-	Width             int
-	Height            int
-	Resizable         bool
-	KeepAbove         bool
-	HttpKeepFromEnd   int // how many elements from end of http adress will be displayed in description and licence text.
+	TitleWindow,
+	AppName,
+	AppVers,
+	AppCreats,
+	YearCreat,
+	LicenseAbrv,
+	LicenseShort,
+	Repository,
+	CssName, // Used to access dialog fromm CSS
+	Description string
+
+	ImageTop,
+	ImageOkButton interface{}
+
+	MaxCharWidthText,
+	ImageOkButtonSize,
+	Width,
+	HttpKeepFromEnd, // how many elements from end of http adress will be displayed in description and licence text.
+	Height int
+
+	Resizable,
+	KeepAbove bool
 
 	parentWindow *gtk.Window
 	DlgBoxStruct *DialogBoxStructure
@@ -80,6 +87,10 @@ func AboutInfosNew(parentWindow *gtk.Window, titleWindow, appName, appVers, appC
 func (ab *AboutInfos) InitFillInfos(parentWindow *gtk.Window, titleWindow, appName, appVers, appCreat,
 	yearCreat, licenseAbrv, licenseShort, repository, description string, topImage, okBtnIcon interface{}) {
 
+	if ab.MaxCharWidthText == 0 {
+		ab.MaxCharWidthText = 80
+	}
+
 	ab.parentWindow = parentWindow
 	ab.TitleWindow = titleWindow
 	ab.AppName = appName
@@ -89,10 +100,10 @@ func (ab *AboutInfos) InitFillInfos(parentWindow *gtk.Window, titleWindow, appNa
 	ab.LicenseAbrv = licenseAbrv
 	ab.LicenseShort = licenseShort
 	ab.Repository = repository
-	ab.Description = description
+	ab.Description = glsg.FormatText(description, ab.MaxCharWidthText, true)
 	ab.ImageTop = topImage
 	ab.ImageOkButton = okBtnIcon
-
+	ab.CssName = "AboutBox"
 	ab.HttpKeepFromEnd = 2
 	ab.Width = 425
 	ab.Height = 100
@@ -103,6 +114,8 @@ func (ab *AboutInfos) InitFillInfos(parentWindow *gtk.Window, titleWindow, appNa
 // Show: Display about box
 func (ab *AboutInfos) Show() (err error) {
 	if err = ab.build(); err == nil {
+
+		ab.DlgBoxStruct.CssName = ab.CssName
 		ab.DlgBoxStruct.KeepAbove = ab.KeepAbove
 		// ab.DlgBoxStruct.WidgetExpend = true
 		ab.DlgBoxStruct.SetSize(ab.Width, ab.Height)
@@ -133,7 +146,7 @@ func (ab *AboutInfos) build() (err error) {
 	name, repo, lic := doMarkup(ab.AppName, ab.Repository, ab.LicenseShort, ab.HttpKeepFromEnd)
 
 	// Build widgets used to this About box window
-	pixbuf, _ = gipf.GetPixBuf(ab.ImageTop) // If an error occurs pixbuf will be nul and imageTop too. So, no image displayed.
+	pixbuf, _ = gipf.GetPixBuf(ab.ImageTop, nil) // If an error occurs pixbuf will be nul and imageTop too. So, no image displayed.
 	if imageTop, err = gtk.ImageNewFromPixbuf(pixbuf); err == nil {
 		if labelAppName, err = gtk.LabelNew(""); err == nil {
 			labelAppName.SetMarkup("\n" + name)

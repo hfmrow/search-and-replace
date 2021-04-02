@@ -2,13 +2,8 @@
 
 /*
 	Source file auto-generated using Gotk3ObjHandler v1.3.9 ©2018-19 H.F.M
-
-	This software use:
-	- gotk3 that is licensed under the ISC License:
-	  https://github.com/gotk3/gotk3/blob/master/LICENSE
-
-	- Chroma — A general purpose syntax highlighter in pure Go, under the MIT License:
-	  https://github.com/alecthomas/chroma/LICENSE
+	This software use gotk3 that is licensed under the ISC License:
+	https://github.com/gotk3/gotk3/blob/master/LICENSE
 
 	Copyright ©2018-19 H.F.M - Search And Replace
 	This program comes with absolutely no warranty. See the The MIT License (MIT) for details:
@@ -23,7 +18,6 @@ import (
 	"log"
 	"os"
 	"path/filepath"
-	"reflect"
 	"strings"
 
 	humanize "github.com/dustin/go-humanize"
@@ -37,28 +31,15 @@ import (
 	gidg "github.com/hfmrow/gtk3Import/dialog"
 	gipo "github.com/hfmrow/gtk3Import/pango"
 	gipops "github.com/hfmrow/gtk3Import/pango/pangoSimple"
-	gitvtt "github.com/hfmrow/gtk3Import/textView/textTag"
 	gitl "github.com/hfmrow/gtk3Import/tools"
 )
 
 // displayProgressBar: Hide or show some controls during a long search process.
 func displayProgressBar(toggle bool) {
-	// Finally i prefere blocking whole boxes except the bottom (exit button)
-	// since aplying modifications depend on actual selected files and entries
-	// when proceeded from found window
-	// if this solution becomes unfriendly to use
-
-	// TODO Keep previous selected files and entries, options ... to avoid this.
 
 	mainObjects.MainGrid.SetSensitive(!toggle)
 	mainObjects.MainTopGrig.SetSensitive(!toggle)
 	mainObjects.listViewFiles.SetSensitive(!toggle)
-	// mainObjects.btnFind.SetSensitive(!toggle)
-	// mainObjects.fileChooserBtn.SetSensitive(!toggle)
-	// mainObjects.btnScan.SetSensitive(!toggle)
-	// mainObjects.spinButtonDepth.SetSensitive(!toggle)
-	// mainObjects.btnReplaceInClipboard.SetSensitive(!toggle)
-	// mainObjects.btnShowClipboard.SetSensitive(!toggle)
 }
 
 // updateTreeViewFilesDisplay: Display files to treeView
@@ -214,7 +195,7 @@ func BringToFront(win *gtk.Window) {
 }
 
 // Show text edit window with colored text (preview)
-func showTextWin(text string, filename string, line int) {
+func showTextWin(text string, filename string) {
 	var occurrences int
 	var err error
 
@@ -227,108 +208,102 @@ func showTextWin(text string, filename string, line int) {
 		alreadyPlacedPrevWin = true
 	}
 	// Set text
-	if occurrences, err = highlightText(text, line, mainObjects.textWinChkShowModifications.GetActive()); err == nil {
+	if occurrences, err = highlightText(text, mainObjects.textWinChkShowModifications.GetActive()); err == nil {
 		textWinTitle.MainTitle = glsg.TruncatePath(filename, mainOptions.FilePathLength)
 		textWinTitle.Update([]string{fmt.Sprintf("%s %d", sts["totalOccurrences"], occurrences)})
-		BringToFront(mainObjects.textWin)
+
+		svs.BringToFront()
 	}
 
 	DlgErr("showTextWin:highlightText", err)
 }
 
 // highlightText: Highlight (found) and syntax highlight operations.
-func highlightText(txtStr string, line int, doReplace bool) (occurrences int, err error) {
+func highlightText(txtStr string, doReplace bool) (occurrences int, err error) {
 
-	// Set colors for TextView
-	textViewRowNumber.TxtBgCol = mainOptions.TxtBgCol
-	textViewRowNumber.TxtFgCol = mainOptions.TxtFgCol
-	textViewRowNumber.NumFgCol = mainOptions.NumFgCol
+	// Set colors for GtkSourceView
+	svs.TxtBgCol = mainOptions.TxtBgCol
+	svs.TxtFgCol = mainOptions.TxtFgCol
 
 	// store current text
-	if currentText != txtStr {
+	if currentText != txtStr || (!doReplace && currentTextChanged) {
 		currentText = txtStr
+		svs.SetText(txtStr)
+		currentTextChanged = false
 	}
+
 	if len(currentText) != 0 {
 
-		var outTextBytes []byte
+		tmpTxtStr, _ := onTheFlySearch([]byte(txtStr), doReplace)
 
-		if outTextBytes, err = onTheFlySearch([]byte(currentText), doReplace); err != nil {
-			return
+		svs.SetText(string(tmpTxtStr))
+
+		if doReplace {
+			currentTextChanged = true
+
+			tmpTextSearch := svs.TextSearch
+			svs.TextSearch = gitl.GetEntryText(mainObjects.entryReplace)
+			svs.Search(svs.Buffer.GetStartIter(), false)
+			svs.TextSearch = tmpTextSearch
+
+		} else {
+			// SourceView search part: used to highlight found or replaced patterns
+			svs.TextSearch = gitl.GetEntryText(mainObjects.entrySearch)
+			svs.UseRegexp = mainObjects.chkRegex.GetActive()
+			svs.WordBoundaries = mainObjects.chkWholeWord.GetActive()
+			svs.CaseSensitive = mainObjects.chkCaseSensitive.GetActive()
+			svs.Search(svs.Buffer.GetStartIter(), false)
 		}
 
-		// Only compute new display if not already done.
-		if /*true*/ !fileFoundSingle.HasBeenDisplayed() {
+		textWinTitle.Update([]string{fmt.Sprintf("%s %d", sts["totalOccurrences"], fileFoundSingle.Occurrences)})
 
-			// Remove found_background_color_lightgreen tag
-			gitvtt.TagRemoveIfExists(textViewRowNumber.BuffTxt, found_background_color_lightgreen)
-
-			textViewRowNumber.WaitForEventPending()
-
-			if mainObjects.textWinChkSyntxHighlight.GetActive() {
-
-				// Chroma syntax highlighting initialisation
-				if !highlighter.Initialised() {
-					if highlighter, err = ChromaHighlightNew(textViewRowNumber.BuffTxt, 1); err != nil {
-						return
-					}
-					fileFoundSingle.HasBeenDisplayed(true)
-				}
-				textViewRowNumber.BufferDetach()
-
-				// Let there be more light ... as a pig on the wings
-				err = highlighter.Highlight(string(outTextBytes),
-					mainObjects.textWinComboBoxLanguage.GetActiveText(),
-					mainObjects.textWinComboBoxTextStyleChooser.GetActiveText())
-				DlgErr("Highlight:gtkDirectToTextBuffer", err)
-
-				switch highlighter.Formatter {
-				case 1, 2:
-					err = highlighter.ToTextBuff()
-					DlgErr("Highlight:gtkTextBuffer/pango", err)
-				default:
-					err = highlighter.ToFile("out.php")
-					DlgErr("Highlight:ToFile", err)
-				}
-
-				textViewRowNumber.BufferAttach()
-
-			} else {
-				textViewRowNumber.BufferDetach()
-				highlighter.RemoveTags()
-				textViewRowNumber.BuffTxt.SetText(string(outTextBytes))
-				textViewRowNumber.BufferAttach()
-			}
+		if currentLine > -1 {
+			svs.RunAfterEvents(func() {
+				svs.ScrollToLine(currentLine)
+			})
 		}
-
-		if !reflect.DeepEqual(fileFoundSingle.Pos.WordsPosIdx, previsouWordsPos) || doReplace {
-
-			occurrences = fileFoundSingle.Occurrences
-			if !doReplace {
-
-				prop := map[string]interface{}{"background": "#AAFFAA"}
-				tag := gitvtt.TagCreateIfNotExists(textViewRowNumber.BuffTxt, found_background_color_lightgreen, prop)
-				DlgErr("highlightText:CreateTag", err)
-
-				for _, line := range fileFoundSingle.Pos.FoundLinesIdx {
-					for pIdx := 0; pIdx < len(line.FoundIdx); pIdx = pIdx + 2 {
-						// Using line Index instead the Offsets to avoid issue where characters lenght > 1 byte (unicode)
-						s := textViewRowNumber.BuffTxt.GetIterAtLineIndex(line.Number, line.FoundIdx[pIdx])
-						e := textViewRowNumber.BuffTxt.GetIterAtLineIndex(line.Number, line.FoundIdx[pIdx+1])
-
-						textViewRowNumber.BuffTxt.ApplyTag(tag, s, e)
-					}
-				}
-			}
-		}
-
-		textViewRowNumber.ScrollToLine(line)
-		textViewRowNumber.ColorBgRange(line, line+1)
 	}
 
-	currentText = txtStr
+	// // Set colors for GtkSourceView
+	// svs.TxtBgCol = mainOptions.TxtBgCol
+	// svs.TxtFgCol = mainOptions.TxtFgCol
 
-	// All errors have been handled previously
-	err = nil
+	// // store current text
+	// if currentText != txtStr || (!doReplace && currentTextChanged) {
+	// 	currentText = txtStr
+	// 	svs.SetText(txtStr)
+	// 	currentTextChanged = false
+	// }
+
+	// if len(currentText) != 0 {
+
+	// 	svs.TextSearch = gitl.GetEntryText(mainObjects.entrySearch)
+	// 	svs.UseRegexp = mainObjects.chkRegex.GetActive()
+	// 	svs.WordBoundaries = mainObjects.chkWholeWord.GetActive()
+	// 	svs.CaseSensitive = mainObjects.chkCaseSensitive.GetActive()
+
+	// 	if !doReplace {
+	// 		svs.Search(svs.Buffer.GetStartIter(), false)
+	// 	} else {
+	// 		svs.TextReplace = gitl.GetEntryText(mainObjects.entryReplace)
+	// 		occurrences, err = svs.SearchCtx.ReplaceAll(svs.TextReplace)
+	// 		currentTextChanged = true
+	// 		tmpTextSearch := svs.TextSearch
+	// 		svs.TextSearch = svs.TextReplace
+	// 		svs.Search(svs.Buffer.GetStartIter(), false)
+	// 		svs.TextSearch = tmpTextSearch
+	// 	}
+
+	// 	svs.GetOccurences(func(occ int) {
+	// 		textWinTitle.Update([]string{fmt.Sprintf("%s %d", sts["totalOccurrences"], occ)})
+	// 	})
+
+	// 	if currentLine > -1 {
+	// 		svs.RunAfterEvents(func() {
+	// 			svs.ScrollToLine(currentLine)
+	// 		})
+	// 	}
+	// }
 
 	return
 }
@@ -367,11 +342,11 @@ func clipboardInit() {
 }
 
 func clipboardCopyFromTextWin() {
-	mainObjects.clipboard.SetText(textViewRowNumber.GetText())
+	mainObjects.clipboard.SetText(svs.GetText())
 }
 
 func clipboardPastToTextWin() {
-	textViewRowNumber.SetText(clipboardGet())
+	svs.Buffer.SetText(clipboardGet())
 }
 
 func clipboardGet() (clipboardContent string) {

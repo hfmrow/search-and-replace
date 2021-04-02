@@ -54,7 +54,7 @@ func (wp *WidgetProperties) PropsToWidget(wdg gtk.IWidget) {
 
 // AddPropertyUnallowed: add new unallowed property to the list
 // i.e: []interface{}{new(gtk.Image), "justify", "wrap", "pattern", "relief"}
-// mean that the gtk.Image object cannot handle:
+// means that the gtk.Image object cannot handle:
 // "justify", "wrap", "pattern", "relief" properties.
 func (wp *WidgetProperties) AddPropertyUnallowed(value []interface{}) {
 	wp.init()
