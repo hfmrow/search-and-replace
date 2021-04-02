@@ -33,10 +33,11 @@ If your Debian version is < **focal** (*20.04*), this means like **xenial** (*16
 #### Changed
 
 - Repository name was changed to [https://github.com/hfmrow/search-and-replace](https://github.com/hfmrow/search-and-replace) instead of `https://github.com/hfmrow/sAndReplace`
-- Lot of source code have been changed to use be able to use functionalities described below.
+- Lot of source code have been changed to be able to use functionalities described below.
 - Text numbering provided by [GtkSourceView](https://github.com/hfmrow/gotk3_gtksource) now.
 - Preview search is now provided using [GtkSourceView](https://github.com/hfmrow/gotk3_gtksource) library
 - Syntax highlighting is now provided by [GtkSourceView](https://github.com/hfmrow/gotk3_gtksource) too
+- Code updated to fit actual version of [GitHub - Go bindings for GTK3](https://github.com/gotk3/gotk3)
 
 ---
 
