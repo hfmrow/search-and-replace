@@ -1,6 +1,6 @@
 # Search and Replace v1.9
 
-**Note**: since v1.9 '*Search and Replace*' require: [Golang GtkSourceView binding for use with gotk3](https://github.com/hfmrow/gotk3_gtksource)
+**Note**: since v1.9 '*Search and Replace*' use: [Golang GtkSourceView binding for use with gotk3](https://github.com/hfmrow/gotk3_gtksource)
 
 #### Last update 2021-04-02
 
