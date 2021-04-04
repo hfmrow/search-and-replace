@@ -46,7 +46,7 @@ Take a look at [H.F.M repositories](https://github.com/hfmrow/) for others usefu
 
 - Be sure you have golang installed in right way. [Go installation](https://golang.org/doc/install).
 
-- Open terminal window and at command prompt, type: `go get github.com/hfmrow/search-and-replace
+- Open terminal window and at command prompt, type: `go get github.com/hfmrow/search-and-replace`
 
 - See [Gotk3 Installation instructions](https://github.com/gotk3/gotk3/wiki#installation) for gui installation instruction.
 
