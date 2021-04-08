@@ -40,7 +40,7 @@ Take a look at [H.F.M repositories](https://github.com/hfmrow/) for others usefu
 
 *This is the main screen, and children*
 
-![whole.jpg](https://github.com/hfmrow/search-and-replace/blob/master/assets/readme/whole.jpg)
+![Overview](assets/readme/whole.jpg)
 
 ### How to compile
 
