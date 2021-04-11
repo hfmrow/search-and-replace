@@ -1,11 +1,11 @@
 // main.go
 
 /*
-	Source file auto-generated on Fri, 02 Apr 2021 10:53:33 using Gotk3 Objects Handler v1.7.5 ©2018-21 hfmrow
+	Source file auto-generated on Fri, 09 Apr 2021 03:01:52 using Gotk3 Objects Handler v1.7.5 ©2018-21 hfmrow
 	This software use gotk3 that is licensed under the ISC License:
 	https://github.com/gotk3/gotk3/blob/master/LICENSE
 
-	Copyright ©2018-21 H.F.M - Search And Replace v1.9 github.com/hfmrow/search-and-replace
+	Copyright ©2018-21 hfmrow - Search And Replace v1.10 github.com/hfmrow/search-and-replace
 	This program comes with absolutely no warranty. See the The MIT License (MIT) for details:
 	https://opensource.org/licenses/mit-license.php
 */
@@ -20,11 +20,6 @@ import (
 	"path/filepath"
 
 	"github.com/gotk3/gotk3/gtk"
-
-	glfsft "github.com/hfmrow/genLib/files/fileText"
-
-	gimc "github.com/hfmrow/gtk3Import/misc"
-	gitw "github.com/hfmrow/gtk3Import/treeview"
 )
 
 func main() {
@@ -40,6 +35,10 @@ func main() {
 	devMode = true
 	absoluteRealPath, optFilename = getAbsRealPath()
 
+	/* Logger init. */
+	Logger = Log2FileStructNew(optFilename, devMode)
+	defer Logger.CloseLogger()
+
 	// Initialization of assets according to the chosen mode (devMode).
 	// you can set this flag to your liking without reference to devMode.
 	assetsDeclarationsUseEmbedded(!devMode)
@@ -48,8 +47,8 @@ func main() {
 	doTempDir = false
 
 	/* Init & read options file */
-	mainOptions = new(MainOpt) // Assignate options' structure.
-	mainOptions.Read()         // Read values from options' file if exists.
+	opt = new(MainOpt) // Assignate options' structure.
+	opt.Read()         // Read values from options' file if exists.
 
 	/* Init gtk display */
 	mainWindowTitle = fmt.Sprintf("%s %s  %s %s %s",
@@ -60,8 +59,8 @@ func main() {
 		LicenseAbrv)
 
 	mainStartGtk(mainWindowTitle,
-		mainOptions.MainWinWidth,
-		mainOptions.MainWinHeight, true)
+		opt.MainWinWidth,
+		opt.MainWinHeight, true)
 }
 
 func mainApplication() {
@@ -72,8 +71,8 @@ func mainApplication() {
 	)
 
 	/* Init AboutBox */
-	mainOptions.AboutOptions.InitFillInfos(
-		mainObjects.mainWin,
+	opt.AboutOptions.InitFillInfos(
+		obj.mainWin,
 		"About "+Name,
 		Name,
 		Vers,
@@ -90,22 +89,22 @@ func mainApplication() {
 	chkCharacterClassToggled()
 
 	/* Init Windows title for easy updating */
-	mainWinTitle = gimc.TitleBarStructureNew(mainObjects.mainWin)
-	findWinTitle = gimc.TitleBarStructureNew(mainObjects.findWin, sts["titleSearchResults"])
-	textWinTitle = gimc.TitleBarStructureNew(mainObjects.textWin, sts["titlePreviewText"])
+	mainWinTitle = TitleBarStructureNew(obj.mainWin)
+	findWinTitle = TitleBarStructureNew(obj.findWin, sts["titleSearchResults"])
+	textWinTitle = TitleBarStructureNew(obj.textWin, sts["titlePreviewText"])
 
 	/* Translate init. */
-	translate = MainTranslateNew(absoluteRealPath+mainOptions.LanguageFilename, devMode)
+	translate = MainTranslateNew(absoluteRealPath+opt.LanguageFilename, devMode)
 
 	/*	Init Statusbar	*/
-	statusbar = gimc.StatusBarStructureNew(mainObjects.statusbar, []string{
+	statusbar = StatusBarStructureNew(obj.statusbar, []string{
 		sts["sbFiles"], sts["sbFilesSel"], sts["scanTime"],
 		sts["searchTime"], sts["dispTime"], sts["status"]})
 
 	/* Init ListStore */
-	if tvsList, err = gitw.TreeViewStructureNew(mainObjects.listViewFiles, true, false); err == nil {
+	if tvsList, err = TreeViewStructureNew(obj.listViewFiles, true, false); err == nil {
 
-		tvsList.AddColumns(mainOptions.listStoreColumns, false, true, true, true, false, true)
+		tvsList.AddColumns(opt.listStoreColumns, false, true, true, true, false, true)
 
 		// Define selection changed function .
 		tvsList.SelectionChangedFunc = func() {
@@ -113,20 +112,53 @@ func mainApplication() {
 				updateStatusBar()
 			}
 		}
+		tvsList.Columns[opt.mapListStore["pathReal"]].Visible = false // Hold filename not midified, hidden
 
 		if err = tvsList.StoreSetup(new(gtk.ListStore)); err == nil {
 			// Assign sorted column
-			tvsList.Columns[1].Column.SetSortColumnID(4) // (col 1 will be sorted using values of col 4)
-			tvsList.Columns[2].Column.SetSortColumnID(5) // (col 2 will be sorted using values of col 5)
-
+			tvsList.Columns[opt.mapListStore["Size"]].Column.SetSortColumnID(opt.mapListStore["sizeSort"]) // (col 1 will be sorted using values of col 4)
+			tvsList.Columns[opt.mapListStore["Date"]].Column.SetSortColumnID(opt.mapListStore["dateSort"]) // (col 2 will be sorted using values of col 5)
 			/* Init treeView popup menu */
 			initTreeViewPopupMenu()
 
 			/* Init TreeStore (found results) */
-			if tvsTree, err = gitw.TreeViewStructureNew(mainObjects.findWinTreeView, true, false); err == nil {
-				tvsTree.AddColumns(mainOptions.treeStoreColumns, false, true, false, false, false, true)
-				err = tvsTree.StoreSetup(new(gtk.TreeStore))
+			if tvsTree, err = TreeViewStructureNew(obj.findWinTreeView, true, false); err == nil {
+				tvsTree.AddColumns(opt.treeStoreColumns, false, true, false, false, false, true)
+				tvsTree.Columns[opt.mapTreeStore["Toggle"]].Editable = true
+				tvsTree.Columns[opt.mapTreeStore["Toggle"]].ReadOnly = false
+				tvsTree.Columns[opt.mapTreeStore["fileIdx"]].Visible = false // File index storage
+				tvsTree.Columns[opt.mapTreeStore["lineIdx"]].Visible = false // Line Index storage
+
+				tvsTree.CallbackOnSetColValue = func(iter *gtk.TreeIter, col int, value interface{}) {
+
+					if col == opt.mapTreeStore["Toggle"] {
+						fileIdx := int(tvsTree.GetColValue(iter, opt.mapTreeStore["fileIdx"]).(int64))
+						lineIdx := int(tvsTree.GetColValue(iter, opt.mapTreeStore["lineIdx"]).(int64))
+
+						if lineIdx > -1 {
+							idxExist := IsExistSlIface(
+								&filesFoundMulti[fileIdx].SearchAndRepl.Pos.UntouchedLines,
+								filesFoundMulti[fileIdx].SearchAndRepl.Pos.FoundLinesIdx[lineIdx].Number)
+
+							if !value.(bool) && idxExist == -1 {
+								filesFoundMulti[fileIdx].SearchAndRepl.Pos.UntouchedLines = append(
+									filesFoundMulti[fileIdx].SearchAndRepl.Pos.UntouchedLines,
+									filesFoundMulti[fileIdx].SearchAndRepl.Pos.FoundLinesIdx[lineIdx].Number)
+
+							} else if idxExist > -1 {
+								for idxExist > -1 {
+
+									DeleteSlIface(&filesFoundMulti[fileIdx].SearchAndRepl.Pos.UntouchedLines, idxExist)
+									idxExist = IsExistSlIface(
+										&filesFoundMulti[fileIdx].SearchAndRepl.Pos.UntouchedLines,
+										filesFoundMulti[fileIdx].SearchAndRepl.Pos.FoundLinesIdx[lineIdx].Number)
+								}
+							}
+						}
+					}
+				}
 			}
+			err = tvsTree.StoreSetup(new(gtk.TreeStore))
 		}
 	}
 	if err != nil {
@@ -135,13 +167,17 @@ func mainApplication() {
 	}
 
 	/* Init Drag and drop */
-	dnd = gimc.DragNDropNew(mainObjects.listViewFiles, &currentInFilesList,
+	dnd = DragNDropNew(obj.listViewFiles, &currentInFilesList,
 		func() {
 			// Callaback function on Drag and drop operations
 			fromDnD = true
-			mainObjects.switchFileChooserButton.SetActive(false)
-			mainObjects.fileChooserBtn.SetFilename("None")
-			updateTreeViewFilesDisplay()
+			obj.switchFileChooserButton.SetActive(false)
+			if len(*dnd.FilesList) > 0 {
+				l := *dnd.FilesList
+				dir := filepath.Dir(l[0])
+				obj.fileChooserBtn.SetFilename(dir)
+				updateTreeViewFilesDisplay()
+			}
 		})
 
 	/* Init Clipboard */
@@ -166,8 +202,8 @@ func mainApplication() {
 		}
 		if err == nil {
 			fromDnD = true
-			mainObjects.switchFileChooserButton.SetActive(false)
-			mainObjects.fileChooserBtn.SetFilename("None")
+			obj.switchFileChooserButton.SetActive(false)
+			obj.fileChooserBtn.SetFilename("None")
 		} else {
 			if len(tmpErr) != 0 {
 				err = errors.New(tmpErr)
@@ -178,7 +214,7 @@ func mainApplication() {
 	}
 
 	/* TextView with line number init.*/
-	svs, err = SourceViewStructNew(mainObjects.View, mainObjects.Map, mainObjects.textWin)
+	svs, err = SourceViewStructNew(obj.View, obj.Map, obj.textWin)
 	DlgErr("mainApplication:SourceViewStructNew", err)
 
 	svs.View.SetEditable(false)
@@ -195,22 +231,25 @@ func mainApplication() {
 	updateTreeViewFilesDisplay()
 
 	/*Init single found structure */
-	fileFoundSingle = glfsft.SearchAndReplaceNew([]byte{}, "", "")
+	fileFoundSingle = SearchAndReplaceNew("", []byte{}, "", "")
 
 	/* Initialize comboboxEntry */
-	svs.UserLanguagePath = filepath.Join(absoluteRealPath, mainOptions.HighlightUserDefined)
-	svs.UserStylePath = filepath.Join(absoluteRealPath, mainOptions.HighlightUserDefined)
-	svs.DefaultLanguageId = mainOptions.DefaultSourceLang
-	svs.DefaultStyleShemeId = mainOptions.DefaultSourceStyle
+	svs.UserLanguagePath = filepath.Join(absoluteRealPath, opt.HighlightUserDefined)
+	svs.UserStylePath = filepath.Join(absoluteRealPath, opt.HighlightUserDefined)
+	svs.DefaultLanguageId = opt.DefaultSourceLang
+	svs.DefaultStyleShemeId = opt.DefaultSourceStyle
 
 	svs.ComboboxHandling(
-		mainObjects.textWinComboBoxLanguage,
-		mainObjects.textWinComboBoxTextStyleChooser,
-		&mainOptions.DefaultSourceLang,
-		&mainOptions.DefaultSourceStyle)
+		obj.textWinComboBoxLanguage,
+		obj.textWinComboBoxTextStyleChooser,
+		&opt.DefaultSourceLang,
+		&opt.DefaultSourceStyle)
 
 	/* Focus search entry */
-	mainObjects.entrySearch.GrabFocus()
+	obj.entrySearch.GrabFocus()
+
+	/* Progressbar Init */
+	pbs = ProgressGifNew(linearProgressHorzBlue, obj.mainBox, 1)
 }
 
 /*************************************\
@@ -218,8 +257,8 @@ func mainApplication() {
 /************************************/
 func onShutdown() bool {
 	var err error
-	// Update mainOptions with GtkObjects and save it
-	if err = mainOptions.Write(); err == nil {
+	// Update opt with GtkObjects and save it
+	if err = opt.Write(); err == nil {
 		// What you want to execute before closing the app.
 		// Return:
 		// true for exit applicaton

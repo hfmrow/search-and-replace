@@ -1,11 +1,11 @@
 // gohOptions.go
 
 /*
-	Source file auto-generated on Fri, 02 Apr 2021 10:53:33 using Gotk3 Objects Handler v1.7.5 ©2018-21 hfmrow
+	Source file auto-generated on Fri, 09 Apr 2021 03:01:52 using Gotk3 Objects Handler v1.7.5 ©2018-21 hfmrow
 	This software use gotk3 that is licensed under the ISC License:
 	https://github.com/gotk3/gotk3/blob/master/LICENSE
 
-	Copyright ©2018-21 H.F.M - Search And Replace v1.9 github.com/hfmrow/search-and-replace
+	Copyright ©2018-21 hfmrow - Search And Replace v1.10 github.com/hfmrow/search-and-replace
 	This program comes with absolutely no warranty. See the The MIT License (MIT) for details:
 	https://opensource.org/licenses/mit-license.php
 */
@@ -21,10 +21,18 @@ import (
 
 	glfsft "github.com/hfmrow/genLib/files/fileText"
 	glfssf "github.com/hfmrow/genLib/files/scanFileDir"
+	glss "github.com/hfmrow/genLib/slices"
+	glsg "github.com/hfmrow/genLib/strings"
+	glts "github.com/hfmrow/genLib/tools"
+	gltsbh "github.com/hfmrow/genLib/tools/bench"
+	gltsle "github.com/hfmrow/genLib/tools/log2file"
+	gltsushe "github.com/hfmrow/genLib/tools/units/human_readable"
 
 	gidg "github.com/hfmrow/gtk3Import/dialog"
 	gimc "github.com/hfmrow/gtk3Import/misc"
+	gipops "github.com/hfmrow/gtk3Import/pango/pangoSimple"
 	gitvsv "github.com/hfmrow/gtk3Import/textView/sourceView"
+	gitl "github.com/hfmrow/gtk3Import/tools"
 	gits "github.com/hfmrow/gtk3Import/tools"
 	gitw "github.com/hfmrow/gtk3Import/treeview"
 )
@@ -32,9 +40,9 @@ import (
 // App infos
 var (
 	Name         = "Search And Replace"
-	Vers         = "v1.9"
+	Vers         = "v1.10"
 	Descr        = "Search and replace text sequences in one or more files.\nThe clipboard is also included inside replacing functionality.\nThere is some useful functionalities like code preview with\nsyntax highlighting, backup modified files whether is requested,\nand many more tricks."
-	Creat        = "H.F.M"
+	Creat        = "hfmrow"
 	YearCreat    = "2018-21"
 	LicenseShort = "This program comes with absolutely no warranty.\nSee the The MIT License (MIT) for details:\nhttps://opensource.org/licenses/mit-license.php"
 	LicenseAbrv  = "License (MIT)"
@@ -46,7 +54,7 @@ var (
 	absoluteRealPath,
 	optFilename string
 
-	mainOptions *MainOpt
+	opt *MainOpt
 	tempDir,
 	currFilename,
 	mainWindowTitle string
@@ -62,10 +70,14 @@ var (
 	// Lib mapping
 	tvsTree,
 	tvsList *gitw.TreeViewStructure
+	TreeViewStructureNew = gitw.TreeViewStructureNew
 
 	statusbar                                *gimc.StatusBar
 	mainWinTitle, textWinTitle, findWinTitle *gimc.TitleBar
 	dnd                                      *gimc.DragNDropStruct
+	DragNDropNew                             = gimc.DragNDropNew
+	TitleBarStructureNew                     = gimc.TitleBarStructureNew
+	StatusBarStructureNew                    = gimc.StatusBarStructureNew
 
 	// Popup menu
 	PopupMenuIconStructNew = gimc.PopupMenuIconStructNew
@@ -74,22 +86,54 @@ var (
 
 	DialogMessage = gidg.DialogMessage
 
-	pbs *gimc.ProgressBarStruct
+	GetEntryText      = gitl.GetEntryText
+	GetEntryTextAsInt = gitl.GetEntryTextAsInt
+
+	pbs            *gimc.ProgressBarStruct
+	ProgressGifNew = gimc.ProgressGifNew
+
+	PangoColorNew = gipops.PangoColorNew
 
 	// Error handling
 	DlgErr = func(dsc string, err error) (yes bool) {
-		yes = gidg.DialogError(mainObjects.mainWin, sts["issue"], dsc, err, devMode, devMode)
+		yes = gidg.DialogError(obj.mainWin, sts["issue"], dsc, err, devMode, devMode)
 		return
 	}
+	// Errors handling
+	Log2FileStructNew = gltsle.Log2FileStructNew
+	Logger            *gltsle.Log2FileStruct
 
 	// GtkSourceView
 	svs                 *gitvsv.SourceViewStruct
 	SourceViewStructNew = gitvsv.SourceViewStructNew
 
 	// Genlib decl
-	filesFoundMulti []glfsft.SearchAndReplaceFiles
-	fileFoundSingle *glfsft.SearchAndReplace
-	toDispFileList  []glfssf.ScanDirFileInfos
+	filesFoundMulti         []glfsft.SearchAndReplaceFiles
+	fileFoundSingle         *glfsft.SearchAndReplace
+	SearchAndReplaceNew     = glfsft.SearchAndReplaceNew
+	SearchAndReplaceInFiles = glfsft.SearchAndReplaceInFiles
+	IsTextFile              = glfsft.IsTextFile
+
+	IsExistSl         = glss.IsExistSl
+	IsExistSlIface    = glss.IsExistSlIface
+	DeleteSlIface     = glss.DeleteSlIface
+	HumanReadableSize = gltsushe.HumanReadableSize
+	TruncatePath      = glsg.TruncatePath
+	RemoveNonNum      = glsg.RemoveNonNum
+	UnEscapedStr      = func(in string) string {
+		if obj.chkUseEscapeChar.GetActive() {
+			return glsg.UnEscapedStr(in)
+		}
+		return in
+	}
+	// UnEscapeString = glsg.UnEscapeString
+
+	BenchNew    = gltsbh.BenchNew
+	ExecCommand = glts.ExecCommand
+
+	// Files
+	toDispFileList       []glfssf.ScanDirFileInfos
+	ScanDirDepthFileInfo = glfssf.ScanDirDepthFileInfo
 
 	// Global vars
 	previsouWordsPos   [][]int
@@ -137,6 +181,7 @@ type MainOpt struct {
 	UseWildcard,
 	WrapText,
 	DispForbiddenFiles,
+	ExpandAll,
 	UseEscapeChar,
 	UseEscapeCharToReplace,
 	AutoScan,
@@ -163,6 +208,8 @@ type MainOpt struct {
 	/* Private, will NOT be saved */
 	listStoreColumns,
 	treeStoreColumns [][]string
+	mapListStore,
+	mapTreeStore map[string]int
 }
 
 // Main options initialisation
@@ -189,9 +236,27 @@ func (opt *MainOpt) Init() {
 		{"Size", "text"},
 		{"Date", "text"},
 		{"Path", "markup"},
+		{"pathReal", "text"},  // This one will be invisible (int64)
 		{"sizeSort", "int64"}, // This one will be invisible (int64)
 		{"dateSort", "int64"}} // This one will be invisible (int64)}
-	opt.treeStoreColumns = [][]string{{"Filename(s)", "markup"}}
+	opt.mapListStore = map[string]int{
+		"Name":     0,
+		"Size":     1,
+		"Date":     2,
+		"PathDisp": 3,
+		"pathReal": 4,
+		"sizeSort": 5,
+		"dateSort": 6}
+	opt.treeStoreColumns = [][]string{
+		{"", "active"},
+		{"Filename(s)", "markup"},
+		{"fileIdx", "int64"},
+		{"lineIdx", "int64"}}
+	opt.mapTreeStore = map[string]int{
+		"Toggle":   0,
+		"Filename": 1,
+		"fileIdx":  2, // This one will be invisible (int64)
+		"lineIdx":  3} // This one will be invisible (int64)
 
 	opt.ScanDirDepth = -1
 	opt.AutoScan = true
@@ -213,70 +278,74 @@ func (opt *MainOpt) Init() {
 
 // Variables -> Objects.
 func (opt *MainOpt) UpdateObjects() {
-	mainObjects.mainWin.Resize(opt.MainWinWidth, opt.MainWinHeight)
-	mainObjects.mainWin.Move(opt.MainWinPosX, opt.MainWinPosY)
+	obj.mainWin.Resize(opt.MainWinWidth, opt.MainWinHeight)
+	obj.mainWin.Move(opt.MainWinPosX, opt.MainWinPosY)
 
-	mainObjects.textWin.Resize(opt.SourceWinWidth, opt.SourceWinHeight)
-	mainObjects.textWin.Move(opt.SourceWinPosX, opt.SourceWinPosY)
-	mainObjects.Paned.SetPosition(opt.SourceWinWidth - opt.PanedWidth)
+	obj.textWin.Resize(opt.SourceWinWidth, opt.SourceWinHeight)
+	obj.textWin.Move(opt.SourceWinPosX, opt.SourceWinPosY)
+	obj.Paned.SetPosition(opt.SourceWinWidth - opt.PanedWidth)
 
 	OptToExtSlice()
-	mainObjects.fileChooserBtn.SetCurrentFolder(opt.Directory)
-	mainObjects.chkCaseSensitive.SetActive(opt.CaseSensitive)
-	mainObjects.chkRegex.SetActive(opt.UseRegex)
-	mainObjects.chkWholeWord.SetActive(opt.WholeWord)
-	mainObjects.chkWildcard.SetActive(opt.UseWildcard)
-	mainObjects.chkCharacterClass.SetActive(opt.UseCharacterClass)
-	mainObjects.textWinChkWrap.SetActive(opt.WrapText)
-	mainObjects.findWinChkBackUp.SetActive(mainOptions.MakeBackup)
-	mainObjects.findWinChkDispForbFiles.SetActive(opt.DispForbiddenFiles)
-	mainObjects.chkFollowSymlinkDir.SetActive(opt.FollowSymlinkDir)
-	mainObjects.textWinChkSyntxHighlight.SetActive(opt.SyntaxHighlight)
+	obj.fileChooserBtn.SetCurrentFolder(opt.Directory)
+	obj.chkCaseSensitive.SetActive(opt.CaseSensitive)
+	obj.chkRegex.SetActive(opt.UseRegex)
+	obj.chkWholeWord.SetActive(opt.WholeWord)
+	obj.chkWildcard.SetActive(opt.UseWildcard)
+	obj.chkCharacterClass.SetActive(opt.UseCharacterClass)
+	obj.textWinChkWrap.SetActive(opt.WrapText)
+	obj.findWinChkBackUp.SetActive(opt.MakeBackup)
+	obj.findWinChkDispForbFiles.SetActive(opt.DispForbiddenFiles)
+	obj.chkFollowSymlinkDir.SetActive(opt.FollowSymlinkDir)
+	obj.textWinChkSyntxHighlight.SetActive(opt.SyntaxHighlight)
 
-	mainObjects.chkUseEscapeChar.SetActive(opt.UseEscapeChar)
-	mainObjects.chkUseEscapeCharToReplace.SetActive(opt.UseEscapeCharToReplace)
+	obj.chkUseEscapeChar.SetActive(opt.UseEscapeChar)
+	obj.chkUseEscapeCharToReplace.SetActive(opt.UseEscapeCharToReplace)
 
-	mainObjects.OptionsEntryMaxFileSize.SetText(fmt.Sprintf("%d", opt.FileMaxSizeLimit))
-	mainObjects.OptionsEntryMinFileSize.SetText(fmt.Sprintf("%d", opt.FileMinSizeLimit))
-	mainObjects.switchFileChooserButton.SetActive(opt.AutoScan)
-	mainObjects.SourceToggleButtonMapWidth.SetActive(opt.FixedMapWidth)
+	obj.OptionsEntryMaxFileSize.SetText(fmt.Sprintf("%d", opt.FileMaxSizeLimit))
+	obj.OptionsEntryMinFileSize.SetText(fmt.Sprintf("%d", opt.FileMinSizeLimit))
+	obj.switchFileChooserButton.SetActive(opt.AutoScan)
+	obj.SourceToggleButtonMapWidth.SetActive(opt.FixedMapWidth)
+
+	obj.findWinChkExpandAll.SetActive(opt.ExpandAll)
 
 	/* Init spinButton */
-	gits.SpinScaleSetNew(mainObjects.spinButtonDepth, -1, 128, float64(opt.ScanDirDepth), 1)
+	gits.SpinScaleSetNew(obj.spinButtonDepth, -1, 128, float64(opt.ScanDirDepth), 1)
 }
 
 // Objects -> Variables.
 func (opt *MainOpt) UpdateOptions() {
-	opt.MainWinWidth, opt.MainWinHeight = mainObjects.mainWin.GetSize()
-	opt.MainWinPosX, opt.MainWinPosY = mainObjects.mainWin.GetPosition()
+	opt.MainWinWidth, opt.MainWinHeight = obj.mainWin.GetSize()
+	opt.MainWinPosX, opt.MainWinPosY = obj.mainWin.GetPosition()
 
-	opt.SourceWinWidth, opt.SourceWinHeight = mainObjects.textWin.GetSize()
-	opt.SourceWinPosX, opt.SourceWinPosY = mainObjects.textWin.GetPosition()
-	opt.PanedWidth = opt.SourceWinWidth - mainObjects.Paned.GetPosition()
-	opt.FixedMapWidth = mainObjects.SourceToggleButtonMapWidth.GetActive()
+	opt.SourceWinWidth, opt.SourceWinHeight = obj.textWin.GetSize()
+	opt.SourceWinPosX, opt.SourceWinPosY = obj.textWin.GetPosition()
+	opt.PanedWidth = opt.SourceWinWidth - obj.Paned.GetPosition()
+	opt.FixedMapWidth = obj.SourceToggleButtonMapWidth.GetActive()
 
 	ExtSliceToOpt() // Store extensions list
-	opt.Directory = mainObjects.fileChooserBtn.FileChooser.GetFilename()
-	opt.CaseSensitive = mainObjects.chkCaseSensitive.GetActive()
-	opt.UseRegex = mainObjects.chkRegex.GetActive()
-	opt.WholeWord = mainObjects.chkWholeWord.GetActive()
-	opt.UseWildcard = mainObjects.chkWildcard.GetActive()
-	opt.UseCharacterClass = mainObjects.chkCharacterClass.GetActive()
-	opt.WrapText = mainObjects.textWinChkWrap.GetActive()
-	opt.MakeBackup = mainObjects.findWinChkBackUp.GetActive()
-	opt.DispForbiddenFiles = mainObjects.findWinChkDispForbFiles.GetActive()
-	opt.FollowSymlinkDir = mainObjects.chkFollowSymlinkDir.GetActive()
-	opt.SyntaxHighlight = mainObjects.textWinChkSyntxHighlight.GetActive()
+	opt.Directory = obj.fileChooserBtn.FileChooser.GetFilename()
+	opt.CaseSensitive = obj.chkCaseSensitive.GetActive()
+	opt.UseRegex = obj.chkRegex.GetActive()
+	opt.WholeWord = obj.chkWholeWord.GetActive()
+	opt.UseWildcard = obj.chkWildcard.GetActive()
+	opt.UseCharacterClass = obj.chkCharacterClass.GetActive()
+	opt.WrapText = obj.textWinChkWrap.GetActive()
+	opt.MakeBackup = obj.findWinChkBackUp.GetActive()
+	opt.DispForbiddenFiles = obj.findWinChkDispForbFiles.GetActive()
+	opt.FollowSymlinkDir = obj.chkFollowSymlinkDir.GetActive()
+	opt.SyntaxHighlight = obj.textWinChkSyntxHighlight.GetActive()
 
-	opt.UseEscapeChar = mainObjects.chkUseEscapeChar.GetActive()
-	opt.UseEscapeCharToReplace = mainObjects.chkUseEscapeCharToReplace.GetActive()
+	opt.UseEscapeChar = obj.chkUseEscapeChar.GetActive()
+	opt.UseEscapeCharToReplace = obj.chkUseEscapeCharToReplace.GetActive()
 
 	// Value are sanitized, so, we only need to retrieve them
-	opt.FileMaxSizeLimit = int64(gits.GetEntryTextAsInt(mainObjects.OptionsEntryMaxFileSize))
-	opt.FileMinSizeLimit = int64(gits.GetEntryTextAsInt(mainObjects.OptionsEntryMinFileSize))
-	opt.AutoScan = mainObjects.switchFileChooserButton.GetActive()
+	opt.FileMaxSizeLimit = int64(gits.GetEntryTextAsInt(obj.OptionsEntryMaxFileSize))
+	opt.FileMinSizeLimit = int64(gits.GetEntryTextAsInt(obj.OptionsEntryMinFileSize))
+	opt.AutoScan = obj.switchFileChooserButton.GetActive()
 
-	opt.ScanDirDepth = mainObjects.spinButtonDepth.GetValueAsInt()
+	opt.ExpandAll = obj.findWinChkExpandAll.GetActive()
+
+	opt.ScanDirDepth = obj.spinButtonDepth.GetValueAsInt()
 }
 
 // Read Options from file

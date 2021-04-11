@@ -22,19 +22,10 @@ import (
 	"strings"
 
 	"github.com/gotk3/gotk3/gdk"
-	"github.com/hfmrow/gotk3_gtksource/source"
-
 	"github.com/gotk3/gotk3/glib"
 	"github.com/gotk3/gotk3/gtk"
 
-	glfsft "github.com/hfmrow/genLib/files/fileText"
-	glsg "github.com/hfmrow/genLib/strings"
-	gltsbh "github.com/hfmrow/genLib/tools/bench"
-
-	gidg "github.com/hfmrow/gtk3Import/dialog"
-	gimc "github.com/hfmrow/gtk3Import/misc"
-	gipf "github.com/hfmrow/gtk3Import/pixbuff"
-	gitl "github.com/hfmrow/gtk3Import/tools"
+	"github.com/hfmrow/gotk3_gtksource/source"
 )
 
 // Signal handler dblClick ... doudble click on found result to display text preview
@@ -48,17 +39,19 @@ func findTreeViewDblClick(tw *gtk.TreeView) {
 		path          *gtk.TreePath
 	)
 
-	mainObjects.textWinChkShowModifications.SetActive(false)
-	mainObjects.textWinChkWrap.SetActive(false)
+	obj.textWinChkShowModifications.SetActive(false)
+	obj.textWinChkWrap.SetActive(false)
 
 	if iters = tvsTree.GetSelectedIters(); len(iters) > 0 {
-		selContent = tvsTree.GetColValue(iters[0], 0).(string)
+		selContent = tvsTree.GetColValue(iters[0], opt.mapTreeStore["Filename"]).(string)
+
+		// TODO Use treeview stored line number instead of the one part of the displayed row
 
 		if path, err = tvsTree.TreeStore.GetPath(iters[0]); err == nil {
 			var regLine = regexp.MustCompile(`[><]`)
 			newCurrentLine := regLine.Split(selContent, -1)
 
-			// Retrieve line number if xist ...
+			// Retrieve line number if exist ...
 			if len(newCurrentLine) > 1 {
 				currentLine, _ = strconv.Atoi(strings.TrimSpace(newCurrentLine[2]))
 			}
@@ -67,15 +60,15 @@ func findTreeViewDblClick(tw *gtk.TreeView) {
 			if len(path.String()) == 0 {
 				parentContent = selContent
 			} else {
-				parentContent = tvsTree.GetColValuePath(path, 0).(string)
+				parentContent = tvsTree.GetColValuePath(path, opt.mapTreeStore["Filename"]).(string)
 			}
 
 			if text, err = ioutil.ReadFile(parentContent); err == nil {
 
 				currFilename = parentContent // Filename passed to popup menu of the TextView
 
-				showTextWin(string(text), glsg.TruncatePath(parentContent,
-					mainOptions.FilePathLength))
+				showTextWin(string(text), TruncatePath(parentContent,
+					opt.FilePathLength))
 			} else if os.IsNotExist(err) { // Skip error if not exist
 				err = nil
 			}
@@ -98,17 +91,17 @@ func listViewFilesRowActivated(tw *gtk.TreeView) {
 			filename, err = value.GetString() // Get selected file path
 		}
 		// Check for text file
-		if isTxt, gtLimit, err = glfsft.IsTextFile(
+		if isTxt, gtLimit, err = IsTextFile(
 			filename,
-			mainOptions.FileMinSizeLimit,
-			mainOptions.FileMaxSizeLimit); err == nil {
+			opt.FileMinSizeLimit,
+			opt.FileMaxSizeLimit); err == nil {
 
 			if isTxt && gtLimit {
 				if textWinTextToShowBytes, err = ioutil.ReadFile(filename); err == nil {
 
 					currFilename = filename // Filename passed to popup menu of the TextView
 
-					showTextWin(string(textWinTextToShowBytes), glsg.TruncatePath(filename, mainOptions.FilePathLength))
+					showTextWin(string(textWinTextToShowBytes), TruncatePath(filename, opt.FilePathLength))
 				}
 			}
 		}
@@ -135,48 +128,34 @@ func btnFindClicked() {
 	}
 	if treeviewSelectedRows, entrySearchText, entryReplaceText, err = getArguments(); err == nil {
 
-		bench := gltsbh.BenchNew(false) // TODO
+		bench := BenchNew(false) // TODO
 
 		displayProgressBar(true)
-		var s = func() (err error) {
+
+		pbs.Init(func() (err error) {
 
 			bench.Lapse("Search") // TODO
 
 			filesFoundMulti, occurrences, err = searchAndReplace(treeviewSelectedRows,
 				entrySearchText, entryReplaceText, removeEmptyResult, false)
 			return
-		}
+		},
+			func() (err error) {
 
-		var d = func() (err error) {
+				bench.Lapse("Disp") // TODO
 
-			bench.Lapse("Disp") // TODO
+				displayResults(occurrences)
+				displayProgressBar(false)
 
-			displayResults(occurrences)
-			displayProgressBar(false)
+				bench.Stop() // TODO
 
-			bench.Stop() // TODO
+				searchTime = bench.Lapses[0].StringShort
+				dispTime = bench.Lapses[1].StringShort
+				updateStatusBar()
+				return
+			})
 
-			searchTime = bench.Lapses[0].StringShort
-			dispTime = bench.Lapses[1].StringShort
-			updateStatusBar()
-			return
-		}
-
-		anim, err := gipf.GetPixBufAnimation(linearProgressHorzBlue)
-
-		if err != nil {
-			log.Fatalf("GetPixBufAnimation: %s\n", err.Error())
-		}
-
-		gifImage, err := gtk.ImageNewFromAnimation(anim)
-
-		if err != nil {
-			log.Fatalf("ImageNewFromAnimation: %s\n", err.Error())
-		}
-
-		pbs = gimc.ProgressGifNew(gifImage, mainObjects.mainBox, 1, s, d)
 		go func() { err = pbs.StartGif() }()
-
 	}
 
 	DlgErr(sts["missing"], err)
@@ -189,29 +168,29 @@ func textWinChkShowModificationsToggled() {
 
 	var err error
 
-	if mainObjects.textWinChkShowModifications.GetActive() {
+	if obj.textWinChkShowModifications.GetActive() {
 		textWinTextToShowBytes = []byte(svs.GetText())
 
-		if len(gitl.GetEntryText(mainObjects.entrySearch)) == 0 {
+		if len(GetEntryText(obj.entrySearch)) == 0 {
 
 			DlgErr(sts["missing"], fmt.Errorf(sts["nothingToSearch"]))
 
-			mainObjects.textWinChkShowModifications.SetActive(false)
+			obj.textWinChkShowModifications.SetActive(false)
 			return
 		}
 	}
 
-	_, err = highlightText(string(textWinTextToShowBytes), mainObjects.textWinChkShowModifications.GetActive())
+	_, err = highlightText(string(textWinTextToShowBytes), obj.textWinChkShowModifications.GetActive())
 
 	if DlgErr("textWinChkShowModificationsToggled:highlightText", err) {
-		mainObjects.textWinChkShowModifications.SetActive(false)
+		obj.textWinChkShowModifications.SetActive(false)
 	}
 }
 
 // fileChooserBtnSelectionChanged
 func fileChooserBtnSelectionChanged(fc *gtk.FileChooserButton) {
-	if mainObjects.switchFileChooserButton.GetActive() {
-		filename := mainObjects.fileChooserBtn.GetFilename()
+	if obj.switchFileChooserButton.GetActive() {
+		filename := obj.fileChooserBtn.GetFilename()
 		if _, err := os.Stat(filename); err == nil {
 			currentInFilesList = append(currentInFilesList, filename)
 			updateTreeViewFilesDisplay()
@@ -219,16 +198,32 @@ func fileChooserBtnSelectionChanged(fc *gtk.FileChooserButton) {
 	}
 }
 
+func findWinBtnDeselectClicked(btn *gtk.Button) {
+	tvsTree.ChangeCheckState(opt.mapTreeStore["Toggle"], false, false)
+}
+
+func findWinBtnInvertSelClicked(btn *gtk.Button) {
+	tvsTree.ChangeCheckState(opt.mapTreeStore["Toggle"], false, true)
+}
+
+/*
+ * Checkbuttons
+ */
+func findWinChkExpandAllToggled(chk *gtk.CheckButton) {
+	opt.ExpandAll = chk.GetActive()
+	tvsTree.ExpandAll(!opt.ExpandAll)
+}
+
 // findWinChkDispForbFilesToggled
 func findWinChkDispForbFilesToggled(chk *gtk.CheckButton) {
-	if mainObjects.findWin.GetVisible() {
+	if obj.findWin.GetVisible() {
 		showResults(&filesFoundMulti)
 	}
 }
 
 // btnScanClicked:
 func btnScanClicked() {
-	filename := mainObjects.fileChooserBtn.GetFilename()
+	filename := obj.fileChooserBtn.GetFilename()
 	if _, err := os.Stat(filename); err == nil {
 		currentInFilesList = currentInFilesList[:0]
 		currentInFilesList = append(currentInFilesList, filename)
@@ -276,94 +271,148 @@ func textWinChkSyntxHighlightToggled(chk *gtk.CheckButton) {
 
 // Signal handler toggled ...
 func chkCharacterClassToggled() {
-	if mainObjects.chkCharacterClass.GetActive() {
-		mainObjects.chkUseEscapeChar.SetActive(false)
-		mainObjects.chkRegex.SetActive(false)
-		mainObjects.chkWildcard.SetActive(false)
-		mainObjects.chkCharacterClassStrictMode.SetVisible(true)
+	if obj.chkCharacterClass.GetActive() {
+		obj.chkCaseSensitive.SetSensitive(false)
+		obj.chkWholeWord.SetSensitive(false)
+		obj.chkUseEscapeChar.SetSensitive(false)
+		obj.chkRegex.SetSensitive(false)
+		obj.chkWildcard.SetSensitive(false)
+		obj.chkCaseSensitive.SetActive(false)
+		obj.chkWholeWord.SetActive(false)
+		obj.chkUseEscapeChar.SetActive(false)
+		obj.chkRegex.SetActive(false)
+		obj.chkWildcard.SetActive(false)
+		obj.chkCharacterClassStrictMode.SetVisible(true)
 	} else {
-		mainObjects.chkCharacterClassStrictMode.SetVisible(false)
+		obj.chkCaseSensitive.SetSensitive(true)
+		obj.chkWholeWord.SetSensitive(true)
+		obj.chkUseEscapeChar.SetSensitive(true)
+		obj.chkRegex.SetSensitive(true)
+		obj.chkWildcard.SetSensitive(true)
+		obj.chkCharacterClassStrictMode.SetVisible(false)
 	}
 }
 
 // Signal handler toggled ...
 func chkUseEscapeCharToggled() {
-	if mainObjects.chkUseEscapeChar.GetActive() {
-		mainObjects.chkCharacterClass.SetActive(false)
-		mainObjects.chkRegex.SetActive(false)
+	if obj.chkUseEscapeChar.GetActive() {
+		obj.chkWildcard.SetSensitive(false)
+		obj.chkCharacterClass.SetSensitive(false)
+		obj.chkRegex.SetSensitive(false)
+		obj.chkWholeWord.SetSensitive(false)
+		obj.chkWildcard.SetActive(false)
+		obj.chkCharacterClass.SetActive(false)
+		obj.chkRegex.SetActive(false)
+		obj.chkWholeWord.SetActive(false)
+	} else {
+		obj.chkWildcard.SetSensitive(true)
+		obj.chkCharacterClass.SetSensitive(true)
+		obj.chkRegex.SetSensitive(true)
+		obj.chkWholeWord.SetSensitive(true)
 	}
 }
 
 // Signal handler toggled ...
 func chkRegexToggled() {
-	if mainObjects.chkRegex.GetActive() {
-		mainObjects.chkCharacterClass.SetActive(false)
-		mainObjects.chkUseEscapeChar.SetActive(false)
-		mainObjects.chkCaseSensitive.SetActive(false)
-		mainObjects.chkWholeWord.SetActive(false)
-		mainObjects.chkWildcard.SetActive(false)
+	if obj.chkRegex.GetActive() {
+		obj.chkCharacterClass.SetSensitive(false)
+		obj.chkUseEscapeChar.SetSensitive(false)
+		obj.chkCaseSensitive.SetSensitive(false)
+		obj.chkWholeWord.SetSensitive(false)
+		obj.chkWildcard.SetSensitive(false)
+		obj.chkCharacterClass.SetActive(false)
+		obj.chkUseEscapeChar.SetActive(false)
+		obj.chkCaseSensitive.SetActive(false)
+		obj.chkWholeWord.SetActive(false)
+		obj.chkWildcard.SetActive(false)
+	} else {
+		obj.chkCharacterClass.SetSensitive(true)
+		obj.chkUseEscapeChar.SetSensitive(true)
+		obj.chkCaseSensitive.SetSensitive(true)
+		obj.chkWholeWord.SetSensitive(true)
+		obj.chkWildcard.SetSensitive(true)
 	}
 }
 
 // Signal handler toggled ...
 func findWinChkBackUpToggled() {
-	mainOptions.MakeBackup = mainObjects.findWinChkBackUp.GetActive()
+	opt.MakeBackup = obj.findWinChkBackUp.GetActive()
 }
 
 // Signal handler toggled ...
 func chkWholeWordToggled() {
-	if mainObjects.chkWholeWord.GetActive() {
-		mainObjects.chkRegex.SetActive(false)
+	if obj.chkWholeWord.GetActive() {
+		obj.chkRegex.SetActive(false)
 	}
 }
 
 // Signal handler toggled ...
 func chkCaseSensitiveToggled() {
-	if mainObjects.chkCaseSensitive.GetActive() {
-		mainObjects.chkRegex.SetActive(false)
+	if obj.chkCaseSensitive.GetActive() {
+		obj.chkRegex.SetActive(false)
 	}
 }
 
 // Signal handler toggled ...
 func chkWildcardToggled() {
-	if mainObjects.chkWildcard.GetActive() {
-		mainObjects.chkRegex.SetActive(false)
-		mainObjects.chkCharacterClass.SetActive(false)
+	if obj.chkWildcard.GetActive() {
+		obj.chkRegex.SetActive(false)
+		obj.chkCharacterClass.SetActive(false)
 	}
 }
 
 // Signal handler clicked ...
 func findWinReplaceBtnClicked() {
-	var err error
-	var occurences int
+	var (
+		err error
+		occurences,
+		occReplaced int
+	)
 
-	if gidg.DialogMessage(mainObjects.mainWin, "error", sts["confirm"], "\n\n"+sts["proceed"], "", sts["ok"], sts["cancel"]) == 1 {
+	// Confirmation message
+	if DialogMessage(obj.mainWin, "error", sts["confirm"], "\n\n"+sts["proceed"], "", sts["ok"], sts["cancel"]) == 1 {
 		return
 	}
 
-	if treeviewSelectedRows, entrySearchText, entryReplaceText, err := getArguments(); err == nil {
-		_, occurences, err = searchAndReplace(treeviewSelectedRows, entrySearchText, entryReplaceText, true, true) // Do replace in files
+	// if treeviewSelectedRows, entrySearchText, entryReplaceText, err := getArguments(); err == nil {
+	// 	_, occurences, err = searchAndReplace(treeviewSelectedRows, entrySearchText, entryReplaceText, true, true) // Do replace in files
+	// }
+	if _, _, entryReplaceText, err := getArguments(); err == nil {
+		for _, fileFound := range filesFoundMulti {
+			if !fileFound.NotTextFile {
+
+				fileFound.SearchAndRepl.ReplaceWith = entryReplaceText
+				fileFound.SearchAndRepl.DoBackup = obj.findWinChkBackUp.GetActive()
+				err = fileFound.SearchAndRepl.ReplaceInFile()
+			}
+			occReplaced += fileFound.SearchAndRepl.OccReplaced
+			occurences += fileFound.SearchAndRepl.Occurrences
+
+			fmt.Println(string(fileFound.SearchAndRepl.TextBytes))
+		}
 	}
+
+	// TODO adjust occurances modified !!!
 
 	if DlgErr(sts["unexpected"], err) {
 		return
 	}
-	genericHideWindow(mainObjects.findWin) // Hide find window
-	genericHideWindow(mainObjects.textWin) // Hide preview text window
+	genericHideWindow(obj.findWin) // Hide find window
+	genericHideWindow(obj.textWin) // Hide preview text window
 
-	gidg.DialogMessage(mainObjects.mainWin, "info", sts["done"],
-		fmt.Sprintf("\n\n%s: %d\n", sts["totalModified"], occurences), "", "Ok")
+	DialogMessage(obj.mainWin, "info", sts["done"],
+		fmt.Sprintf("\n\n%s: %d/%d\n", sts["totalModified"], occReplaced, occurences), "", "Ok")
 
 	if occurences > 0 {
 		// Reset Init single found structure to avoid always display found pattern(s)
-		fileFoundSingle = glfsft.SearchAndReplaceNew([]byte{}, "", "")
+		fileFoundSingle = SearchAndReplaceNew("", []byte{}, "", "")
 	}
 }
 
 // btnShowClipboardClicked:
 func btnShowClipboardClicked() {
 
-	if mainObjects.entrySearch.GetTextLength() != 0 {
+	if obj.entrySearch.GetTextLength() != 0 {
 
 		textWinTextToShowBytes = []byte(clipboardGet())
 		showTextWin(string(textWinTextToShowBytes), sts["clpbrdPreview"])
@@ -373,9 +422,9 @@ func btnShowClipboardClicked() {
 // btnReplaceInClipboardClicked:
 func btnReplaceInClipboardClicked() {
 
-	if len(gitl.GetEntryText(mainObjects.entrySearch)) == 0 {
+	if len(GetEntryText(obj.entrySearch)) == 0 {
 
-		gidg.DialogMessage(mainObjects.mainWin,
+		DialogMessage(obj.mainWin,
 			"warning", sts["missing"],
 			"\n\n"+sts["nothingToSearch"], "", "Ok")
 	} else {
@@ -391,19 +440,19 @@ func btnReplaceInClipboardClicked() {
 
 // findWinCancelBtnClicked:
 func findWinCancelBtnClicked() {
-	genericHideWindow(mainObjects.findWin)
-	genericHideWindow(mainObjects.textWin)
+	genericHideWindow(obj.findWin)
+	genericHideWindow(obj.textWin)
 }
 
 // Signal handler clicked ...
 func textWinBtnDoneClicked() {
-	mainObjects.textWinChkShowModifications.SetActive(false)
+	obj.textWinChkShowModifications.SetActive(false)
 
-	mainOptions.SourceWinWidth, mainOptions.SourceWinHeight = mainObjects.textWin.GetSize()
-	mainOptions.SourceWinPosX, mainOptions.SourceWinPosY = mainObjects.textWin.GetPosition()
-	mainOptions.PanedWidth = mainOptions.SourceWinWidth - mainObjects.Paned.GetPosition()
+	opt.SourceWinWidth, opt.SourceWinHeight = obj.textWin.GetSize()
+	opt.SourceWinPosX, opt.SourceWinPosY = obj.textWin.GetPosition()
+	opt.PanedWidth = opt.SourceWinWidth - obj.Paned.GetPosition()
 
-	genericHideWindow(mainObjects.textWin)
+	genericHideWindow(obj.textWin)
 
 	currentText = ""
 	currentLine = -1
@@ -419,15 +468,15 @@ func ViewButtonPressEvent(sv *source.SourceView, event *gdk.Event) {
 
 // SourceToggleButtonMapWidthToggled:
 func SourceToggleButtonMapWidthToggled() {
-	mainOptions.PanedWidth = mainOptions.SourceWinWidth - mainObjects.Paned.GetPosition()
+	opt.PanedWidth = opt.SourceWinWidth - obj.Paned.GetPosition()
 }
 
 // WindowSourceCheckResize:
 func WindowSourceCheckResize(w *gtk.Window) {
 
-	if mainObjects.SourceToggleButtonMapWidth.GetActive() {
-		mainOptions.SourceWinWidth, mainOptions.SourceWinHeight = w.GetSize()
-		mainObjects.Paned.SetPosition(mainOptions.SourceWinWidth - mainOptions.PanedWidth)
+	if obj.SourceToggleButtonMapWidth.GetActive() {
+		opt.SourceWinWidth, opt.SourceWinHeight = w.GetSize()
+		obj.Paned.SetPosition(opt.SourceWinWidth - opt.PanedWidth)
 	}
 }
 
@@ -449,32 +498,32 @@ func genericEntryFocusOut(e *gtk.Entry) {
 		entry = strings.Replace(fmt.Sprintf("%q", entry), `"`, ``, -1)
 
 		e.SetText(entry)
-		if mainObjects.textWin.GetVisible() {
-			listViewFilesRowActivated(mainObjects.listViewFiles)
+		if obj.textWin.GetVisible() {
+			listViewFilesRowActivated(obj.listViewFiles)
 		}
-		// mainObjects.textWin.SetVisible(true)
+		// obj.textWin.SetVisible(true)
 	}
 }
 
 // imgTop handler release signal (Display about box)
 func imgTopReleaseEvent() {
-	mainOptions.AboutOptions.Width = 400
-	mainOptions.AboutOptions.ImageOkButtonSize = 24
-	mainOptions.AboutOptions.Show()
+	opt.AboutOptions.Width = 400
+	opt.AboutOptions.ImageOkButtonSize = 24
+	opt.AboutOptions.Show()
 }
 
 // Signal handler on Exit window ... Saving options before quit
 func mainWinOnExit() {
 	var err error
-	mainOptions.UpdateOptions()
-	if err = mainOptions.Write(); err != nil {
+	opt.UpdateOptions()
+	if err = opt.Write(); err != nil {
 		log.Fatalf("Error writing option file: %s\n", err.Error())
 	}
 }
 
 // OptionButtonDoneClicked
 func OptionButtonDoneClicked() {
-	genericHideWindow(mainObjects.OptionsWindow)
+	genericHideWindow(obj.OptionsWindow)
 }
 
 // OptionsEntryFileSizeFocusOutEvent:
@@ -485,20 +534,20 @@ func OptionsEntryFileSizeChanged(e *gtk.Entry) {
 		entry = strings.TrimSpace(entry)
 		if _, err = strconv.Atoi(entry); err == nil {
 			// Value are sanitized, so, we only need to retrieve them
-			mainOptions.FileMaxSizeLimit = int64(gitl.GetEntryTextAsInt(mainObjects.OptionsEntryMaxFileSize))
-			mainOptions.FileMinSizeLimit = int64(gitl.GetEntryTextAsInt(mainObjects.OptionsEntryMinFileSize))
-			mainObjects.OptionButtonDone.SetSensitive(true)
+			opt.FileMaxSizeLimit = int64(GetEntryTextAsInt(obj.OptionsEntryMaxFileSize))
+			opt.FileMinSizeLimit = int64(GetEntryTextAsInt(obj.OptionsEntryMinFileSize))
+			obj.OptionButtonDone.SetSensitive(true)
 		}
 	}
 	if err != nil {
-		gidg.DialogMessage(mainObjects.mainWin, "error", sts["alert"], "\n\n"+err.Error(), "", "Ok")
+		DialogMessage(obj.mainWin, "error", sts["alert"], "\n\n"+err.Error(), "", "Ok")
 	}
-	e.SetText(glsg.RemoveNonNum(entry))
+	e.SetText(RemoveNonNum(entry))
 	return
 }
 
 // MainButtonOptionsClicked:
 func MainButtonOptionsClicked() {
-	mainObjects.OptionsWindow.ShowAll()
-	mainObjects.OptionsWindow.SetKeepAbove(true)
+	obj.OptionsWindow.ShowAll()
+	obj.OptionsWindow.SetKeepAbove(true)
 }

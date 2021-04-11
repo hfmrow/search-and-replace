@@ -1,6 +1,6 @@
 // translate.go
 
-// File generated on Thu, 03 Dec 2020 02:40:03 using Gotk3 Objects Translate v1.5 2019-20 H.F.M
+// File generated on Sat, 10 Apr 2021 22:05:31 using Gotk3 Objects Translate v1.5.2 2019-21 hfmrow
 
 /*
 * 	This program comes with absolutely no warranty.
@@ -22,56 +22,59 @@ import (
 
 // initGtkObjectsText: read translations from structure and set them to objects.
 func (trans *MainTranslate) initGtkObjectsText() {
-	trans.setTextToGtkObjects(&mainObjects.btnFind.Widget, "btnFind")
-	trans.setTextToGtkObjects(&mainObjects.btnReplaceInClipboard.Widget, "btnReplaceInClipboard")
-	trans.setTextToGtkObjects(&mainObjects.btnScan.Widget, "btnScan")
-	trans.setTextToGtkObjects(&mainObjects.btnShowClipboard.Widget, "btnShowClipboard")
-	trans.setTextToGtkObjects(&mainObjects.chkCaseSensitive.Widget, "chkCaseSensitive")
-	trans.setTextToGtkObjects(&mainObjects.chkCharacterClass.Widget, "chkCharacterClass")
-	trans.setTextToGtkObjects(&mainObjects.chkCharacterClassStrictMode.Widget, "chkCharacterClassStrictMode")
-	trans.setTextToGtkObjects(&mainObjects.chkFollowSymlinkDir.Widget, "chkFollowSymlinkDir")
-	trans.setTextToGtkObjects(&mainObjects.chkRegex.Widget, "chkRegex")
-	trans.setTextToGtkObjects(&mainObjects.chkUseEscapeChar.Widget, "chkUseEscapeChar")
-	trans.setTextToGtkObjects(&mainObjects.chkUseEscapeCharToReplace.Widget, "chkUseEscapeCharToReplace")
-	trans.setTextToGtkObjects(&mainObjects.chkWholeWord.Widget, "chkWholeWord")
-	trans.setTextToGtkObjects(&mainObjects.chkWildcard.Widget, "chkWildcard")
-	trans.setTextToGtkObjects(&mainObjects.entryExtMask.Widget, "entryExtMask")
-	trans.setTextToGtkObjects(&mainObjects.entryReplace.Widget, "entryReplace")
-	trans.setTextToGtkObjects(&mainObjects.entrySearch.Widget, "entrySearch")
-	trans.setTextToGtkObjects(&mainObjects.fileChooserBtn.Widget, "fileChooserBtn")
-	trans.setTextToGtkObjects(&mainObjects.findWinCancelBtn.Widget, "findWinCancelBtn")
-	trans.setTextToGtkObjects(&mainObjects.findWinChkBackUp.Widget, "findWinChkBackUp")
-	trans.setTextToGtkObjects(&mainObjects.findWinChkDispForbFiles.Widget, "findWinChkDispForbFiles")
-	trans.setTextToGtkObjects(&mainObjects.findWinReplaceBtn.Widget, "findWinReplaceBtn")
-	trans.setTextToGtkObjects(&mainObjects.findWinScrollWin.Widget, "findWinScrollWin")
-	trans.setTextToGtkObjects(&mainObjects.findWinTreeView.Widget, "findWinTreeView")
-	trans.setTextToGtkObjects(&mainObjects.imgTop.Widget, "imgTop")
-	trans.setTextToGtkObjects(&mainObjects.lblExtMask.Widget, "lblExtMask")
-	trans.setTextToGtkObjects(&mainObjects.lblReplace.Widget, "lblReplace")
-	trans.setTextToGtkObjects(&mainObjects.lblSearch.Widget, "lblSearch")
-	trans.setTextToGtkObjects(&mainObjects.listViewFiles.Widget, "listViewFiles")
-	trans.setTextToGtkObjects(&mainObjects.MainButtonOptions.Widget, "MainButtonOptions")
-	trans.setTextToGtkObjects(&mainObjects.mainWinBtnClose.Widget, "mainWinBtnClose")
-	trans.setTextToGtkObjects(&mainObjects.OptionButtonDone.Widget, "OptionButtonDone")
-	trans.setTextToGtkObjects(&mainObjects.OptionsEntryMaxFileSize.Widget, "OptionsEntryMaxFileSize")
-	trans.setTextToGtkObjects(&mainObjects.OptionsEntryMinFileSize.Widget, "OptionsEntryMinFileSize")
-	trans.setTextToGtkObjects(&mainObjects.OptionsImageTop.Widget, "OptionsImageTop")
-	trans.setTextToGtkObjects(&mainObjects.OptionsLabelChooseDepth.Widget, "OptionsLabelChooseDepth")
-	trans.setTextToGtkObjects(&mainObjects.OptionsLabelEnableDirChooser.Widget, "OptionsLabelEnableDirChooser")
-	trans.setTextToGtkObjects(&mainObjects.OptionsLabelMaxFileSize.Widget, "OptionsLabelMaxFileSize")
-	trans.setTextToGtkObjects(&mainObjects.OptionsLabelMinFileSize.Widget, "OptionsLabelMinFileSize")
-	trans.setTextToGtkObjects(&mainObjects.scrolledWindowTreeView.Widget, "scrolledWindowTreeView")
-	trans.setTextToGtkObjects(&mainObjects.SourceToggleButtonMapWidth.Widget, "SourceToggleButtonMapWidth")
-	trans.setTextToGtkObjects(&mainObjects.spinButtonDepth.Widget, "spinButtonDepth")
-	trans.setTextToGtkObjects(&mainObjects.statusbar.Widget, "statusbar")
-	trans.setTextToGtkObjects(&mainObjects.switchFileChooserButton.Widget, "switchFileChooserButton")
-	trans.setTextToGtkObjects(&mainObjects.textWinBtnDone.Widget, "textWinBtnDone")
-	trans.setTextToGtkObjects(&mainObjects.textWinChkShowModifications.Widget, "textWinChkShowModifications")
-	trans.setTextToGtkObjects(&mainObjects.textWinChkSyntxHighlight.Widget, "textWinChkSyntxHighlight")
-	trans.setTextToGtkObjects(&mainObjects.textWinChkWrap.Widget, "textWinChkWrap")
-	trans.setTextToGtkObjects(&mainObjects.textWinComboBoxLanguage.Widget, "textWinComboBoxLanguage")
-	trans.setTextToGtkObjects(&mainObjects.textWinComboBoxTextStyleChooser.Widget, "textWinComboBoxTextStyleChooser")
-	trans.setTextToGtkObjects(&mainObjects.View.Widget, "View")
+	trans.setTextToGtkObjects(&obj.btnFind.Widget, "btnFind")
+	trans.setTextToGtkObjects(&obj.btnReplaceInClipboard.Widget, "btnReplaceInClipboard")
+	trans.setTextToGtkObjects(&obj.btnScan.Widget, "btnScan")
+	trans.setTextToGtkObjects(&obj.btnShowClipboard.Widget, "btnShowClipboard")
+	trans.setTextToGtkObjects(&obj.chkCaseSensitive.Widget, "chkCaseSensitive")
+	trans.setTextToGtkObjects(&obj.chkCharacterClass.Widget, "chkCharacterClass")
+	trans.setTextToGtkObjects(&obj.chkCharacterClassStrictMode.Widget, "chkCharacterClassStrictMode")
+	trans.setTextToGtkObjects(&obj.chkFollowSymlinkDir.Widget, "chkFollowSymlinkDir")
+	trans.setTextToGtkObjects(&obj.chkRegex.Widget, "chkRegex")
+	trans.setTextToGtkObjects(&obj.chkUseEscapeChar.Widget, "chkUseEscapeChar")
+	trans.setTextToGtkObjects(&obj.chkUseEscapeCharToReplace.Widget, "chkUseEscapeCharToReplace")
+	trans.setTextToGtkObjects(&obj.chkWholeWord.Widget, "chkWholeWord")
+	trans.setTextToGtkObjects(&obj.chkWildcard.Widget, "chkWildcard")
+	trans.setTextToGtkObjects(&obj.entryExtMask.Widget, "entryExtMask")
+	trans.setTextToGtkObjects(&obj.entryReplace.Widget, "entryReplace")
+	trans.setTextToGtkObjects(&obj.entrySearch.Widget, "entrySearch")
+	trans.setTextToGtkObjects(&obj.fileChooserBtn.Widget, "fileChooserBtn")
+	trans.setTextToGtkObjects(&obj.findWinBtnDeselect.Widget, "findWinBtnDeselect")
+	trans.setTextToGtkObjects(&obj.findWinBtnInvertSel.Widget, "findWinBtnInvertSel")
+	trans.setTextToGtkObjects(&obj.findWinCancelBtn.Widget, "findWinCancelBtn")
+	trans.setTextToGtkObjects(&obj.findWinChkBackUp.Widget, "findWinChkBackUp")
+	trans.setTextToGtkObjects(&obj.findWinChkDispForbFiles.Widget, "findWinChkDispForbFiles")
+	trans.setTextToGtkObjects(&obj.findWinChkExpandAll.Widget, "findWinChkExpandAll")
+	trans.setTextToGtkObjects(&obj.findWinReplaceBtn.Widget, "findWinReplaceBtn")
+	trans.setTextToGtkObjects(&obj.findWinScrollWin.Widget, "findWinScrollWin")
+	trans.setTextToGtkObjects(&obj.findWinTreeView.Widget, "findWinTreeView")
+	trans.setTextToGtkObjects(&obj.imgTop.Widget, "imgTop")
+	trans.setTextToGtkObjects(&obj.lblExtMask.Widget, "lblExtMask")
+	trans.setTextToGtkObjects(&obj.lblReplace.Widget, "lblReplace")
+	trans.setTextToGtkObjects(&obj.lblSearch.Widget, "lblSearch")
+	trans.setTextToGtkObjects(&obj.listViewFiles.Widget, "listViewFiles")
+	trans.setTextToGtkObjects(&obj.MainButtonOptions.Widget, "MainButtonOptions")
+	trans.setTextToGtkObjects(&obj.mainWinBtnClose.Widget, "mainWinBtnClose")
+	trans.setTextToGtkObjects(&obj.OptionButtonDone.Widget, "OptionButtonDone")
+	trans.setTextToGtkObjects(&obj.OptionsEntryMaxFileSize.Widget, "OptionsEntryMaxFileSize")
+	trans.setTextToGtkObjects(&obj.OptionsEntryMinFileSize.Widget, "OptionsEntryMinFileSize")
+	trans.setTextToGtkObjects(&obj.OptionsImageTop.Widget, "OptionsImageTop")
+	trans.setTextToGtkObjects(&obj.OptionsLabelChooseDepth.Widget, "OptionsLabelChooseDepth")
+	trans.setTextToGtkObjects(&obj.OptionsLabelEnableDirChooser.Widget, "OptionsLabelEnableDirChooser")
+	trans.setTextToGtkObjects(&obj.OptionsLabelMaxFileSize.Widget, "OptionsLabelMaxFileSize")
+	trans.setTextToGtkObjects(&obj.OptionsLabelMinFileSize.Widget, "OptionsLabelMinFileSize")
+	trans.setTextToGtkObjects(&obj.scrolledWindowTreeView.Widget, "scrolledWindowTreeView")
+	trans.setTextToGtkObjects(&obj.SourceToggleButtonMapWidth.Widget, "SourceToggleButtonMapWidth")
+	trans.setTextToGtkObjects(&obj.spinButtonDepth.Widget, "spinButtonDepth")
+	trans.setTextToGtkObjects(&obj.statusbar.Widget, "statusbar")
+	trans.setTextToGtkObjects(&obj.switchFileChooserButton.Widget, "switchFileChooserButton")
+	trans.setTextToGtkObjects(&obj.textWinBtnDone.Widget, "textWinBtnDone")
+	trans.setTextToGtkObjects(&obj.textWinChkShowModifications.Widget, "textWinChkShowModifications")
+	trans.setTextToGtkObjects(&obj.textWinChkSyntxHighlight.Widget, "textWinChkSyntxHighlight")
+	trans.setTextToGtkObjects(&obj.textWinChkWrap.Widget, "textWinChkWrap")
+	trans.setTextToGtkObjects(&obj.textWinComboBoxLanguage.Widget, "textWinComboBoxLanguage")
+	trans.setTextToGtkObjects(&obj.textWinComboBoxTextStyleChooser.Widget, "textWinComboBoxTextStyleChooser")
+	trans.setTextToGtkObjects(&obj.View.Widget, "View")
 }
 // Translations structure declaration. To be used in main application.
 var translate = new(MainTranslate)
@@ -81,48 +84,48 @@ var translate = new(MainTranslate)
 // They'll be added to language file each time application started
 // when "devMode" is set at true.
 var sts = map[string]string{
-	`proceed`: `Are you sure you want to replace pattern in files ?`,
-	`allow`: `Allow`,
-	`dispTime`: `Display time:`,
-	`no`: `No`,
-	`savef`: `Save file`,
-	`titlePreviewText`: `Preview window`,
-	`done`: `Operation done.`,
-	`missing`: `Something missing`,
-	`sbFileSel`: `File selected:`,
-	`removed`: `File has been removed before processing.`,
-	`in`: `in`,
-	`deny`: `Deny`,
-	`ok`: `Ok`,
-	`file-perm`: `File permissions error.`,
-	`searchTime`: `Search time:`,
-	`openf`: `Open file`,
 	`scanTime`: `Scan files time:`,
-	`status`: `Status:`,
-	`file`: `file(s)`,
-	`totalOccurrences`: `Occurrence(s) found:`,
-	`noFileSel`: `No selected file(s) to search in ...`,
+	`totalModified`: `Occurrence(s) modified`,
+	`allow`: `Allow`,
+	`file-LinkNotExist`: `File does not exist, or symlink endpoint not found.`,
 	`sbFiles`: `Files:`,
-	`dir-rem`: `Directory does not exist. The current application directory will be used.`,
-	`file-rem`: `File(s) does not exist.`,
+	`status`: `Status:`,
+	`deny`: `Deny`,
+	`savef`: `Save file`,
 	`regexpErr`: `Regex mistake ...`,
-	`notFound`: `Nothing was found ...`,
-	`confirm`: `Confirmation`,
-	`retry`: `Retry`,
-	`sbFilesSel`: `Files selected:`,
-	`cancel`: `Cancel`,
 	`titleSearchResults`: `Search results`,
+	`removed`: `File has been removed before processing.`,
+	`file-rem`: `File(s) does not exist.`,
+	`file`: `file(s)`,
+	`noFileSel`: `No selected file(s) to search in ...`,
+	`dispTime`: `Display time:`,
+	`searchTime`: `Search time:`,
+	`missing`: `Something missing`,
+	`totalOccurrences`: `Occurrence(s) found:`,
+	`in`: `in`,
+	`yes`: `Yes`,
+	`clpbrdPreview`: `Clipboard content preview.`,
+	`no`: `No`,
+	`nothingToSearch`: `Nothing to search ...`,
+	`openf`: `Open file`,
 	`forbiddenFiles`: `Some files could not be accessed ...
 Unchecking "Follow symlink" may be useful.`,
-	`yes`: `Yes`,
-	`emptyCB`: `Nothing to do with an empty clipboard ...`,
-	`clpbrdPreview`: `Clipboard content preview.`,
-	`file-LinkNotExist`: `File does not exist, or symlink endpoint not found.`,
+	`notFound`: `Nothing was found ...`,
 	`sbFile`: `File`,
-	`unexpected`: `An unexpected error occurred`,
-	`nothingToSearch`: `Nothing to search ...`,
 	`alert`: `Alert ...`,
-	`totalModified`: `Occurrence(s) modified`,
+	`sbFilesSel`: `Files selected:`,
+	`titlePreviewText`: `Preview window`,
+	`file-perm`: `File permissions error.`,
+	`done`: `Operation done.`,
+	`ok`: `Ok`,
+	`sbFileSel`: `File selected:`,
+	`cancel`: `Cancel`,
+	`dir-rem`: `Directory does not exist. The current application directory will be used.`,
+	`unexpected`: `An unexpected error occurred`,
+	`confirm`: `Confirmation`,
+	`proceed`: `Are you sure you want to replace pattern in files ?`,
+	`emptyCB`: `Nothing to do with an empty clipboard ...`,
+	`retry`: `Retry`,
 }
 
 

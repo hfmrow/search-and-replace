@@ -20,7 +20,6 @@ import (
 	"github.com/gotk3/gotk3/glib"
 	"github.com/gotk3/gotk3/gtk"
 
-	glts "github.com/hfmrow/genLib/tools"
 	"github.com/hfmrow/gotk3_gtksource/source"
 )
 
@@ -82,7 +81,7 @@ func open(path string) {
 
 	var goFunc = func() {
 
-		if _, err := glts.ExecCommand([]string{mainOptions.AppLauncher, path}); err != nil {
+		if _, err := ExecCommand([]string{opt.AppLauncher, path}); err != nil {
 
 			// Error is handled by "xdg-open" command
 			fmt.Println(err)

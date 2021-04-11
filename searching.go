@@ -17,30 +17,28 @@ import (
 	"fmt"
 
 	glfsft "github.com/hfmrow/genLib/files/fileText"
-
-	gidg "github.com/hfmrow/gtk3Import/dialog"
-	gitl "github.com/hfmrow/gtk3Import/tools"
 )
 
 func getArguments() (treeviewSelectedRows []string, entrySearchText, entryReplaceText string, err error) {
 	var rows [][]string
 
-	entrySearchText = gitl.GetEntryText(mainObjects.entrySearch)
-	entryReplaceText = gitl.GetEntryText(mainObjects.entryReplace)
+	entrySearchText = GetEntryText(obj.entrySearch)
+	entryReplaceText = GetEntryText(obj.entryReplace)
 
 	if len(entrySearchText) == 0 {
 		err = errors.New(sts["nothingToSearch"])
 		return
 	}
 
+	// if there is no row selected, consider there are all selected.
 	if tvsList.Selection.CountSelectedRows() == 0 {
-		err = errors.New(sts["noFileSel"])
-		return
-	}
+		// err = errors.New(sts["noFileSel"])
+		// return
+		treeviewSelectedRows, err = tvsList.StoreColToStringSl(opt.mapListStore["pathReal"])
 
-	if rows, err = tvsList.GetSelectedRows(); err == nil {
+	} else if rows, err = tvsList.GetSelectedRows(); err == nil {
 		for _, row := range rows {
-			treeviewSelectedRows = append(treeviewSelectedRows, row[3])
+			treeviewSelectedRows = append(treeviewSelectedRows, row[opt.mapListStore["pathReal"]])
 		}
 	}
 	return
@@ -50,23 +48,21 @@ func searchAndReplace(treeviewSelectedRows []string,
 	entrySearchText, entryReplaceText string,
 	removeEmptyResult, replace bool) (mainFound []glfsft.SearchAndReplaceFiles, occurrences int, err error) {
 
-	return glfsft.SearchAndReplaceInFiles(
+	return SearchAndReplaceInFiles(
 		treeviewSelectedRows,
 		entrySearchText,
 		entryReplaceText,
-		mainOptions.FileMinSizeLimit, // Size limit >
-		mainOptions.FileMaxSizeLimit, // Size limit <
-		mainObjects.chkCaseSensitive.GetActive(),
-		mainObjects.chkCharacterClass.GetActive(),
-		mainObjects.chkCharacterClassStrictMode.GetActive(),
-		mainObjects.chkRegex.GetActive(),
-		mainObjects.chkWildcard.GetActive(),
-		mainObjects.chkUseEscapeChar.GetActive(),
-		mainObjects.chkUseEscapeCharToReplace.GetActive(),
-		mainObjects.chkWholeWord.GetActive(),
+		opt.FileMinSizeLimit, // Size limit >
+		opt.FileMaxSizeLimit, // Size limit <
+		obj.chkCaseSensitive.GetActive(),
+		obj.chkCharacterClass.GetActive(),
+		obj.chkCharacterClassStrictMode.GetActive(),
+		obj.chkRegex.GetActive(),
+		obj.chkWildcard.GetActive(),
+		obj.chkUseEscapeChar.GetActive(),
+		obj.chkUseEscapeCharToReplace.GetActive(),
+		obj.chkWholeWord.GetActive(),
 		replace, // DoReplace
-		replace, // DoSave
-		mainOptions.MakeBackup,
 		acceptBinary,
 		removeEmptyResult)
 }
@@ -75,19 +71,19 @@ func displayResults(occurrences int) (countFiles int) {
 	if occurrences > 0 {
 		// Prepare displaying results window
 		if !alreadyPlacedFoundWin {
-			x, y := mainObjects.mainWin.GetPosition()
-			mainObjects.findWin.Move(x+mainOptions.CascadeDepth, y+mainOptions.CascadeDepth)
-			mainObjects.findWin.Resize(mainObjects.mainWin.GetSize())
+			x, y := obj.mainWin.GetPosition()
+			obj.findWin.Move(x+opt.CascadeDepth, y+opt.CascadeDepth)
+			obj.findWin.Resize(obj.mainWin.GetSize())
 			alreadyPlacedFoundWin = true
 		}
 
 		countFiles = showResults(&filesFoundMulti)
 		findWinTitle.Update([]string{fmt.Sprintf("%s %d %s %d %s", sts["totalOccurrences"], occurrences, sts["in"], countFiles, sts["file"])})
 
-		BringToFront(mainObjects.findWin)
+		BringToFront(obj.findWin)
 		return
 	}
-	gidg.DialogMessage(mainObjects.mainWin, "warning", sts["done"], "\n\n"+sts["notFound"], "", "Ok")
+	DialogMessage(obj.mainWin, "warning", sts["done"], "\n\n"+sts["notFound"], "", "Ok")
 	return
 }
 
@@ -95,22 +91,22 @@ func displayResults(occurrences int) (countFiles int) {
 func onTheFlySearch(inTextBytes []byte, doReplace bool) (outTextBytes []byte, err error) {
 
 	if len(inTextBytes) != 0 {
-		if !fileFoundSingle.ReadyToReplace() {
-			fileFoundSingle = glfsft.SearchAndReplaceNew([]byte{}, "", "")
+		if !fileFoundSingle.IsReadyToReplace() {
+			fileFoundSingle = SearchAndReplaceNew("", []byte{}, "", "")
 		}
 
 		fileFoundSingle.Init(
 			inTextBytes,
-			fmt.Sprint(gitl.GetEntryText(mainObjects.entrySearch)),
-			fmt.Sprint(gitl.GetEntryText(mainObjects.entryReplace)),
-			mainObjects.chkCaseSensitive.GetActive(),
-			mainObjects.chkCharacterClass.GetActive(),
-			mainObjects.chkCharacterClassStrictMode.GetActive(),
-			mainObjects.chkRegex.GetActive(),
-			mainObjects.chkWildcard.GetActive(),
-			mainObjects.chkUseEscapeChar.GetActive(),
-			mainObjects.chkUseEscapeCharToReplace.GetActive(),
-			mainObjects.chkWholeWord.GetActive(),
+			fmt.Sprint(GetEntryText(obj.entrySearch)),
+			fmt.Sprint(GetEntryText(obj.entryReplace)),
+			obj.chkCaseSensitive.GetActive(),
+			obj.chkCharacterClass.GetActive(),
+			obj.chkCharacterClassStrictMode.GetActive(),
+			obj.chkRegex.GetActive(),
+			obj.chkWildcard.GetActive(),
+			obj.chkUseEscapeChar.GetActive(),
+			obj.chkUseEscapeCharToReplace.GetActive(),
+			obj.chkWholeWord.GetActive(),
 			doReplace)
 
 		// Return text after replacement (i.e: clipboard replace)

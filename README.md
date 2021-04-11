@@ -1,8 +1,8 @@
-# Search and Replace v1.9
+# Search and Replace v1.10
 
 **Note**: since v1.9 '*Search and Replace*' use: [Golang GtkSourceView binding for use with gotk3](https://github.com/hfmrow/gotk3_gtksource)
 
-#### Last update 2021-04-02
+#### Last update 2021-04-10
 
 *This program is designed to find and replace a text pattern in one or more files stored in one or more directories, sub-directories.
 Search and replace in the clipboard is allowed. Drag and drop can be used.
@@ -29,18 +29,24 @@ Take a look at [H.F.M repositories](https://github.com/hfmrow/) for others usefu
 - Search and replace text pattern into clipboard.
 - A map that allows you to view the content of the text and allows easy navigation through it.
 - Allow the displaying of preview with highlighted patterns before modification.
-- Source code highlighting for multiple languages.
+- Source code highlighting for multiple languages with navigation map.
 - Wildcard, regex, case sensitive, character classes can be used.
 - Whole word functionality, Escape character can be used.
 - Drag and drop capacity.
 - Files can be sorted by extension or using a mask for filename.
+- Lines that contain the searched pattern can be independently selected to be modified or vice versa to keep the content unchanged.
 - Options (top right) to filter text files analysis behavior (text detection) and to limit depth of directories where files will be searched.
 - Backup function available.
 - Each function have his tool-tip for explanations.
 
-*This is the main screen, and children*
+This is the main screen
+![](assets/readme/main.jpg)
 
-![whole.jpg](assets/readme/whole.jpg)
+Found window
+![Found window](assets/readme/found.jpg)
+
+Preview window
+![Preview window](assets/readme/preview.jpg)
 
 ### How to compile
 
@@ -74,11 +80,14 @@ into
 
 This operation indicate that externals data (Image/Icons) must be embedded into the executable file.
 
-### Os information (build using)
+## Os information:
+
+<details>
+  <summary>Built using</summary>
 
 | Name                                                       | Version / Info / Name                          |
 | ---------------------------------------------------------- | ---------------------------------------------- |
-| GOLANG                                                     | V1.16.2 -> GO111MODULE="off", GOPROXY="direct" |
+| GOLANG                                                     | V1.16.3 -> GO111MODULE="off", GOPROXY="direct" |
 | DISTRIB                                                    | LinuxMint Xfce                                 |
 | VERSION                                                    | 20                                             |
 | CODENAME                                                   | ulyana                                         |
@@ -92,6 +101,8 @@ This operation indicate that externals data (Image/Icons) must be embedded into 
 | [GtkSourceView](https://github.com/hfmrow/gotk3_gtksource) | 4.6.0                                          |
 | [LiteIDE](https://github.com/visualfc/liteide)             | 37.4 qt5.x                                     |
 | Qt5                                                        | 5.12.8 in /usr/lib/x86_64-linux-gnu            |
+
+</details>
 
 - The compilation have not been tested under Windows or Mac OS, but all file access functions, line-end manipulations or charset implementation are made with OS portability in mind.
 

@@ -8,6 +8,27 @@ At the bottom you can find a compiled standalone ".deb" version with its checksu
 
 All notable changes to this project will be documented in this file.
 
+#### [1.10] 2021-04-10
+
+#### Added
+
+- When the files are dropped, the parent directory is now considered as root, it is stored in the file selector, if the button "Scan files" is pressed , this directory will be fully analyzed.
+- Adding expand all in found files window.
+- Adding check boxes to un-select lines to be preserved during replace actions.
+- Adding un-select all and invert selection in found window.
+
+#### Fixed
+
+- The text preview window does not correctly highlight the searched pattern when escaped characters [Esc search] are used. This is fixed and no longer occurs.
+
+#### Changed
+
+- The application can be closed during the search process, of course the operation will be interrupted.
+- By clicking on the search button, if there is no selected file, it will be considered that all files are selected (previously, file selection was explicitly required). Of course, the explicit selection of file (s) remains possible.
+- Some incompatible search combinations are now disabled depending on the options checked.
+
+---
+
 #### [1.9] 2021-04-02
 
 Since this version: [Golang GtkSourceView binding for use with gotk3](https://github.com/hfmrow/gotk3_gtksource). `$ sudo apt install libgtksourceview-4-dev` is required to be compiled.
@@ -33,7 +54,7 @@ If your Debian version is < **focal** (*20.04*), this means like **xenial** (*16
 #### Changed
 
 - Repository name was changed to [https://github.com/hfmrow/search-and-replace](https://github.com/hfmrow/search-and-replace) instead of `https://github.com/hfmrow/sAndReplace`
-- Lot of source code have been changed to be able to use functionalities described below.
+- A lot of source code has been modified to be able to use the features described below.
 - Text numbering provided by [GtkSourceView](https://github.com/hfmrow/gotk3_gtksource) now.
 - Preview search is now provided using [GtkSourceView](https://github.com/hfmrow/gotk3_gtksource) library
 - Syntax highlighting is now provided by [GtkSourceView](https://github.com/hfmrow/gotk3_gtksource) too

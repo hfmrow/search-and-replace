@@ -1,11 +1,11 @@
 // gohImages.go
 
 /*
-	Source file auto-generated on Fri, 02 Apr 2021 10:53:33 using Gotk3 Objects Handler v1.7.5 ©2018-21 hfmrow
+	Source file auto-generated on Fri, 09 Apr 2021 03:01:52 using Gotk3 Objects Handler v1.7.5 ©2018-21 hfmrow
 	This software use gotk3 that is licensed under the ISC License:
 	https://github.com/gotk3/gotk3/blob/master/LICENSE
 
-	Copyright ©2018-21 H.F.M - Search And Replace v1.9 github.com/hfmrow/search-and-replace
+	Copyright ©2018-21 hfmrow - Search And Replace v1.10 github.com/hfmrow/search-and-replace
 	This program comes with absolutely no warranty. See the The MIT License (MIT) for details:
 	https://opensource.org/licenses/mit-license.php
 */
@@ -28,24 +28,26 @@ import (
 /* declaration to learn more on how to use it.   */
 /************************************************/
 func assignImages() {
-	SetPict(mainObjects.btnFind, searchIcon48, 24) // www.freeiconspng.com
-	SetPict(mainObjects.btnReplaceInClipboard, clipboardRepl, 24)
-	SetPict(mainObjects.btnScan, folder48, 24)
-	SetPict(mainObjects.btnShowClipboard, clipboard, 24)
-	SetPict(mainObjects.findWin, searchFolder48)
-	SetPict(mainObjects.findWinCancelBtn, crossIcon48, 24)
-	SetPict(mainObjects.findWinReplaceBtn, replace, 24)
-	SetPict(mainObjects.imgTop, searchAndReplaceTop48)
-	SetPict(mainObjects.MainButtonOptions, options, 18)
-	SetPict(mainObjects.mainWin, searchFolder48)
-	SetPict(mainObjects.mainWinBtnClose, logout48, 18)
-	SetPict(mainObjects.OptionButtonDone, tickIcon48, 24)
-	SetPict(mainObjects.OptionsImageTop, options)
-	SetPict(mainObjects.OptionsWindow, searchFolder48)
-	SetPict(mainObjects.SourceToggleButtonMapWidth, "")
-	SetPict(mainObjects.spinButtonDepth, folder48, OptPict{Position: gtk.ENTRY_ICON_SECONDARY})
-	SetPict(mainObjects.textWin, searchFolder48)
-	SetPict(mainObjects.textWinBtnDone, tickIcon48, 24)
+	SetPict(obj.btnFind, searchIcon48, 24) // www.freeiconspng.com
+	SetPict(obj.btnReplaceInClipboard, clipboardRepl, 24)
+	SetPict(obj.btnScan, folder48, 24)
+	SetPict(obj.btnShowClipboard, clipboard, 24)
+	SetPict(obj.findWin, searchFolder48)
+	SetPict(obj.findWinBtnDeselect, "")
+	SetPict(obj.findWinBtnInvertSel, "")
+	SetPict(obj.findWinCancelBtn, crossIcon48, 24)
+	SetPict(obj.findWinReplaceBtn, replace, 24)
+	SetPict(obj.imgTop, searchAndReplaceTop48)
+	SetPict(obj.MainButtonOptions, options, 18)
+	SetPict(obj.mainWin, searchFolder48)
+	SetPict(obj.mainWinBtnClose, logout48, 18)
+	SetPict(obj.OptionButtonDone, tickIcon48, 24)
+	SetPict(obj.OptionsImageTop, options)
+	SetPict(obj.OptionsWindow, searchFolder48)
+	SetPict(obj.SourceToggleButtonMapWidth, "")
+	SetPict(obj.spinButtonDepth, folder48, OptPict{Position: gtk.ENTRY_ICON_SECONDARY})
+	SetPict(obj.textWin, searchFolder48)
+	SetPict(obj.textWinBtnDone, tickIcon48, 24)
 }
 
 /**********************************************************/

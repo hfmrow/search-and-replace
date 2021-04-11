@@ -1,11 +1,11 @@
 // gohObjects.go
 
 /*
-	Source file auto-generated on Fri, 02 Apr 2021 10:53:33 using Gotk3 Objects Handler v1.7.5 ©2018-21 hfmrow
+	Source file auto-generated on Fri, 09 Apr 2021 03:01:52 using Gotk3 Objects Handler v1.7.5 ©2018-21 hfmrow
 	This software use gotk3 that is licensed under the ISC License:
 	https://github.com/gotk3/gotk3/blob/master/LICENSE
 
-	Copyright ©2018-21 H.F.M - Search And Replace v1.9 github.com/hfmrow/search-and-replace
+	Copyright ©2018-21 hfmrow - Search And Replace v1.10 github.com/hfmrow/search-and-replace
 	This program comes with absolutely no warranty. See the The MIT License (MIT) for details:
 	https://opensource.org/licenses/mit-license.php
 */
@@ -19,7 +19,7 @@ import (
 )
 
 // Control over all used objects from glade.
-var mainObjects *MainControlsObj
+var obj *MainControlsObj
 
 /******************************/
 /* Main structure Declaration */
@@ -44,9 +44,12 @@ type MainControlsObj struct {
 	entrySearch                     *gtk.Entry
 	fileChooserBtn                  *gtk.FileChooserButton
 	findWin                         *gtk.Window
+	findWinBtnDeselect              *gtk.Button
+	findWinBtnInvertSel             *gtk.Button
 	findWinCancelBtn                *gtk.Button
 	findWinChkBackUp                *gtk.CheckButton
 	findWinChkDispForbFiles         *gtk.CheckButton
+	findWinChkExpandAll             *gtk.CheckButton
 	findWinGrid                     *gtk.Grid
 	findWinGridBtn                  *gtk.Grid
 	findWinReplaceBtn               *gtk.Button
@@ -60,7 +63,6 @@ type MainControlsObj struct {
 	listViewFiles                   *gtk.TreeView
 	mainBox                         *gtk.Box
 	MainButtonOptions               *gtk.Button
-	MainGrid                        *gtk.Grid
 	MainTopGrig                     *gtk.Grid
 	mainUiBuilder                   *gtk.Builder
 	mainWin                         *gtk.Window
@@ -98,72 +100,74 @@ type MainControlsObj struct {
 /******************************/
 /* GtkObjects  Initialisation */
 /******************************/
-// gladeObjParser: Initialise Gtk3 Objects into mainObjects structure.
+// gladeObjParser: Initialise Gtk3 Objects into obj structure.
 func gladeObjParser() {
-	mainObjects.btnFind = loadObject("btnFind").(*gtk.Button)
-	mainObjects.btnReplaceInClipboard = loadObject("btnReplaceInClipboard").(*gtk.Button)
-	mainObjects.btnScan = loadObject("btnScan").(*gtk.Button)
-	mainObjects.btnShowClipboard = loadObject("btnShowClipboard").(*gtk.Button)
-	mainObjects.chkCaseSensitive = loadObject("chkCaseSensitive").(*gtk.CheckButton)
-	mainObjects.chkCharacterClass = loadObject("chkCharacterClass").(*gtk.CheckButton)
-	mainObjects.chkCharacterClassStrictMode = loadObject("chkCharacterClassStrictMode").(*gtk.CheckButton)
-	mainObjects.chkFollowSymlinkDir = loadObject("chkFollowSymlinkDir").(*gtk.CheckButton)
-	mainObjects.chkRegex = loadObject("chkRegex").(*gtk.CheckButton)
-	mainObjects.chkUseEscapeChar = loadObject("chkUseEscapeChar").(*gtk.CheckButton)
-	mainObjects.chkUseEscapeCharToReplace = loadObject("chkUseEscapeCharToReplace").(*gtk.CheckButton)
-	mainObjects.chkWholeWord = loadObject("chkWholeWord").(*gtk.CheckButton)
-	mainObjects.chkWildcard = loadObject("chkWildcard").(*gtk.CheckButton)
-	mainObjects.entryExtMask = loadObject("entryExtMask").(*gtk.Entry)
-	mainObjects.entryReplace = loadObject("entryReplace").(*gtk.Entry)
-	mainObjects.entrySearch = loadObject("entrySearch").(*gtk.Entry)
-	mainObjects.fileChooserBtn = loadObject("fileChooserBtn").(*gtk.FileChooserButton)
-	mainObjects.findWin = loadObject("findWin").(*gtk.Window)
-	mainObjects.findWinCancelBtn = loadObject("findWinCancelBtn").(*gtk.Button)
-	mainObjects.findWinChkBackUp = loadObject("findWinChkBackUp").(*gtk.CheckButton)
-	mainObjects.findWinChkDispForbFiles = loadObject("findWinChkDispForbFiles").(*gtk.CheckButton)
-	mainObjects.findWinGrid = loadObject("findWinGrid").(*gtk.Grid)
-	mainObjects.findWinGridBtn = loadObject("findWinGridBtn").(*gtk.Grid)
-	mainObjects.findWinReplaceBtn = loadObject("findWinReplaceBtn").(*gtk.Button)
-	mainObjects.findWinScrollWin = loadObject("findWinScrollWin").(*gtk.ScrolledWindow)
-	mainObjects.findWinTreeView = loadObject("findWinTreeView").(*gtk.TreeView)
-	mainObjects.imgTop = loadObject("imgTop").(*gtk.Image)
-	mainObjects.ImgTopEventbox = loadObject("ImgTopEventbox").(*gtk.EventBox)
-	mainObjects.lblExtMask = loadObject("lblExtMask").(*gtk.Label)
-	mainObjects.lblReplace = loadObject("lblReplace").(*gtk.Label)
-	mainObjects.lblSearch = loadObject("lblSearch").(*gtk.Label)
-	mainObjects.listViewFiles = loadObject("listViewFiles").(*gtk.TreeView)
-	mainObjects.mainBox = loadObject("mainBox").(*gtk.Box)
-	mainObjects.MainButtonOptions = loadObject("MainButtonOptions").(*gtk.Button)
-	mainObjects.MainGrid = loadObject("MainGrid").(*gtk.Grid)
-	mainObjects.MainTopGrig = loadObject("MainTopGrig").(*gtk.Grid)
-	mainObjects.mainWin = loadObject("mainWin").(*gtk.Window)
-	mainObjects.mainWinBtnClose = loadObject("mainWinBtnClose").(*gtk.Button)
-	mainObjects.Map = loadObject("Map").(*source.SourceMap)
-	mainObjects.OptionButtonDone = loadObject("OptionButtonDone").(*gtk.Button)
-	mainObjects.OptionsEntryMaxFileSize = loadObject("OptionsEntryMaxFileSize").(*gtk.Entry)
-	mainObjects.OptionsEntryMinFileSize = loadObject("OptionsEntryMinFileSize").(*gtk.Entry)
-	mainObjects.OptionsImageTop = loadObject("OptionsImageTop").(*gtk.Image)
-	mainObjects.OptionsLabelChooseDepth = loadObject("OptionsLabelChooseDepth").(*gtk.Label)
-	mainObjects.OptionsLabelEnableDirChooser = loadObject("OptionsLabelEnableDirChooser").(*gtk.Label)
-	mainObjects.OptionsLabelMaxFileSize = loadObject("OptionsLabelMaxFileSize").(*gtk.Label)
-	mainObjects.OptionsLabelMinFileSize = loadObject("OptionsLabelMinFileSize").(*gtk.Label)
-	mainObjects.OptionsWindow = loadObject("OptionsWindow").(*gtk.Window)
-	mainObjects.Paned = loadObject("Paned").(*gtk.Paned)
-	mainObjects.replaceGrid = loadObject("replaceGrid").(*gtk.Grid)
-	mainObjects.scrolledWindowTreeView = loadObject("scrolledWindowTreeView").(*gtk.ScrolledWindow)
-	mainObjects.SourceToggleButtonMapWidth = loadObject("SourceToggleButtonMapWidth").(*gtk.ToggleButton)
-	mainObjects.spinButtonDepth = loadObject("spinButtonDepth").(*gtk.SpinButton)
-	mainObjects.statusbar = loadObject("statusbar").(*gtk.Statusbar)
-	mainObjects.switchFileChooserButton = loadObject("switchFileChooserButton").(*gtk.Switch)
-	mainObjects.textWin = loadObject("textWin").(*gtk.Window)
-	mainObjects.textWinBox = loadObject("textWinBox").(*gtk.Box)
-	mainObjects.textWinBtnDone = loadObject("textWinBtnDone").(*gtk.Button)
-	mainObjects.textWinChkShowModifications = loadObject("textWinChkShowModifications").(*gtk.CheckButton)
-	mainObjects.textWinChkSyntxHighlight = loadObject("textWinChkSyntxHighlight").(*gtk.CheckButton)
-	mainObjects.textWinChkWrap = loadObject("textWinChkWrap").(*gtk.CheckButton)
-	mainObjects.textWinComboBoxLanguage = loadObject("textWinComboBoxLanguage").(*gtk.ComboBoxText)
-	mainObjects.textWinComboBoxTextStyleChooser = loadObject("textWinComboBoxTextStyleChooser").(*gtk.ComboBoxText)
-	mainObjects.textWinGridTop = loadObject("textWinGridTop").(*gtk.Grid)
-	mainObjects.treeviewSelection = loadObject("treeviewSelection").(*gtk.TreeSelection)
-	mainObjects.View = loadObject("View").(*source.SourceView)
+	obj.btnFind = loadObject("btnFind").(*gtk.Button)
+	obj.btnReplaceInClipboard = loadObject("btnReplaceInClipboard").(*gtk.Button)
+	obj.btnScan = loadObject("btnScan").(*gtk.Button)
+	obj.btnShowClipboard = loadObject("btnShowClipboard").(*gtk.Button)
+	obj.chkCaseSensitive = loadObject("chkCaseSensitive").(*gtk.CheckButton)
+	obj.chkCharacterClass = loadObject("chkCharacterClass").(*gtk.CheckButton)
+	obj.chkCharacterClassStrictMode = loadObject("chkCharacterClassStrictMode").(*gtk.CheckButton)
+	obj.chkFollowSymlinkDir = loadObject("chkFollowSymlinkDir").(*gtk.CheckButton)
+	obj.chkRegex = loadObject("chkRegex").(*gtk.CheckButton)
+	obj.chkUseEscapeChar = loadObject("chkUseEscapeChar").(*gtk.CheckButton)
+	obj.chkUseEscapeCharToReplace = loadObject("chkUseEscapeCharToReplace").(*gtk.CheckButton)
+	obj.chkWholeWord = loadObject("chkWholeWord").(*gtk.CheckButton)
+	obj.chkWildcard = loadObject("chkWildcard").(*gtk.CheckButton)
+	obj.entryExtMask = loadObject("entryExtMask").(*gtk.Entry)
+	obj.entryReplace = loadObject("entryReplace").(*gtk.Entry)
+	obj.entrySearch = loadObject("entrySearch").(*gtk.Entry)
+	obj.fileChooserBtn = loadObject("fileChooserBtn").(*gtk.FileChooserButton)
+	obj.findWin = loadObject("findWin").(*gtk.Window)
+	obj.findWinBtnDeselect = loadObject("findWinBtnDeselect").(*gtk.Button)
+	obj.findWinBtnInvertSel = loadObject("findWinBtnInvertSel").(*gtk.Button)
+	obj.findWinCancelBtn = loadObject("findWinCancelBtn").(*gtk.Button)
+	obj.findWinChkBackUp = loadObject("findWinChkBackUp").(*gtk.CheckButton)
+	obj.findWinChkDispForbFiles = loadObject("findWinChkDispForbFiles").(*gtk.CheckButton)
+	obj.findWinChkExpandAll = loadObject("findWinChkExpandAll").(*gtk.CheckButton)
+	obj.findWinGrid = loadObject("findWinGrid").(*gtk.Grid)
+	obj.findWinGridBtn = loadObject("findWinGridBtn").(*gtk.Grid)
+	obj.findWinReplaceBtn = loadObject("findWinReplaceBtn").(*gtk.Button)
+	obj.findWinScrollWin = loadObject("findWinScrollWin").(*gtk.ScrolledWindow)
+	obj.findWinTreeView = loadObject("findWinTreeView").(*gtk.TreeView)
+	obj.imgTop = loadObject("imgTop").(*gtk.Image)
+	obj.ImgTopEventbox = loadObject("ImgTopEventbox").(*gtk.EventBox)
+	obj.lblExtMask = loadObject("lblExtMask").(*gtk.Label)
+	obj.lblReplace = loadObject("lblReplace").(*gtk.Label)
+	obj.lblSearch = loadObject("lblSearch").(*gtk.Label)
+	obj.listViewFiles = loadObject("listViewFiles").(*gtk.TreeView)
+	obj.mainBox = loadObject("mainBox").(*gtk.Box)
+	obj.MainButtonOptions = loadObject("MainButtonOptions").(*gtk.Button)
+	obj.MainTopGrig = loadObject("MainTopGrig").(*gtk.Grid)
+	obj.mainWin = loadObject("mainWin").(*gtk.Window)
+	obj.mainWinBtnClose = loadObject("mainWinBtnClose").(*gtk.Button)
+	obj.Map = loadObject("Map").(*source.SourceMap)
+	obj.OptionButtonDone = loadObject("OptionButtonDone").(*gtk.Button)
+	obj.OptionsEntryMaxFileSize = loadObject("OptionsEntryMaxFileSize").(*gtk.Entry)
+	obj.OptionsEntryMinFileSize = loadObject("OptionsEntryMinFileSize").(*gtk.Entry)
+	obj.OptionsImageTop = loadObject("OptionsImageTop").(*gtk.Image)
+	obj.OptionsLabelChooseDepth = loadObject("OptionsLabelChooseDepth").(*gtk.Label)
+	obj.OptionsLabelEnableDirChooser = loadObject("OptionsLabelEnableDirChooser").(*gtk.Label)
+	obj.OptionsLabelMaxFileSize = loadObject("OptionsLabelMaxFileSize").(*gtk.Label)
+	obj.OptionsLabelMinFileSize = loadObject("OptionsLabelMinFileSize").(*gtk.Label)
+	obj.OptionsWindow = loadObject("OptionsWindow").(*gtk.Window)
+	obj.Paned = loadObject("Paned").(*gtk.Paned)
+	obj.replaceGrid = loadObject("replaceGrid").(*gtk.Grid)
+	obj.scrolledWindowTreeView = loadObject("scrolledWindowTreeView").(*gtk.ScrolledWindow)
+	obj.SourceToggleButtonMapWidth = loadObject("SourceToggleButtonMapWidth").(*gtk.ToggleButton)
+	obj.spinButtonDepth = loadObject("spinButtonDepth").(*gtk.SpinButton)
+	obj.statusbar = loadObject("statusbar").(*gtk.Statusbar)
+	obj.switchFileChooserButton = loadObject("switchFileChooserButton").(*gtk.Switch)
+	obj.textWin = loadObject("textWin").(*gtk.Window)
+	obj.textWinBox = loadObject("textWinBox").(*gtk.Box)
+	obj.textWinBtnDone = loadObject("textWinBtnDone").(*gtk.Button)
+	obj.textWinChkShowModifications = loadObject("textWinChkShowModifications").(*gtk.CheckButton)
+	obj.textWinChkSyntxHighlight = loadObject("textWinChkSyntxHighlight").(*gtk.CheckButton)
+	obj.textWinChkWrap = loadObject("textWinChkWrap").(*gtk.CheckButton)
+	obj.textWinComboBoxLanguage = loadObject("textWinComboBoxLanguage").(*gtk.ComboBoxText)
+	obj.textWinComboBoxTextStyleChooser = loadObject("textWinComboBoxTextStyleChooser").(*gtk.ComboBoxText)
+	obj.textWinGridTop = loadObject("textWinGridTop").(*gtk.Grid)
+	obj.treeviewSelection = loadObject("treeviewSelection").(*gtk.TreeSelection)
+	obj.View = loadObject("View").(*source.SourceView)
 }

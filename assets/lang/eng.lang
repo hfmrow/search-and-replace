@@ -1,9 +1,9 @@
 {
 	"ProgInfos": {
 		"Name": "Search And Replace",
-		"Version": "v1.25",
-		"Creat": "H.F.M",
-		"MainObjStructName": "mainObjects",
+		"Version": "v1.10",
+		"Creat": "hfmrow",
+		"MainObjStructName": "obj",
 		"GladeXmlFilename": "assets/glade/main.glade",
 		"TranslateFilename": "translate.go",
 		"ProjectRootDir": "github.com/hfmrow/search-and-replace",
@@ -14,7 +14,7 @@
 		"LangNameShrt": "eng",
 		"Author": "H.F.M",
 		"Date": "Mon, 11 Mar 2019 04:04:21",
-		"Updated": "Thu, 03 Dec 2020 02:40:07",
+		"Updated": "Sun, 11 Apr 2021 00:20:02",
 		"Contributors": [
 			""
 		]
@@ -25,39 +25,39 @@
 		"SkipEmptyName": true,
 		"DoBackup": true
 	},
-	"ObjectsCount": 50,
+	"ObjectsCount": 53,
 	"Objects": [
 		{
 			"Class": "GtkButton",
 			"Id": "btnFind",
 			"Label": "Search in file(s)",
-			"Tooltip": "Search in selected file(s)",
+			"Tooltip": "\u003cspan foreground=\"#3465A4FF\"\u003eSearch in selected file(s)\u003c/span\u003e\n\n\u003cspan foreground=\"#75507BFF\"\u003eIf there is no selected file, it will be considered that\nall the files are selected.\u003c/span\u003e",
 			"Text": "",
 			"Uri": "",
 			"Comment": "",
 			"LabelMarkup": false,
 			"LabelWrap": false,
-			"TooltipMarkup": false,
+			"TooltipMarkup": true,
 			"Idx": 0
 		},
 		{
 			"Class": "GtkButton",
 			"Id": "btnReplaceInClipboard",
 			"Label": "Replace in clipboard",
-			"Tooltip": "Replace clipboard content.",
+			"Tooltip": "\u003cspan foreground=\"#3465A4FF\"\u003eReplace clipboard content.\u003c/span\u003e",
 			"Text": "",
 			"Uri": "",
 			"Comment": "",
 			"LabelMarkup": false,
 			"LabelWrap": false,
-			"TooltipMarkup": false,
+			"TooltipMarkup": true,
 			"Idx": 1
 		},
 		{
 			"Class": "GtkButton",
 			"Id": "btnScan",
 			"Label": "Scan files",
-			"Tooltip": "Scanning selected directory and display found files.\n\n\u003cb\u003eDisabled\u003c/b\u003e when files comes from \u003cb\u003edrag and drop\u003c/b\u003e\nor of the \u003cb\u003ecommand line\u003c/b\u003e arguments.",
+			"Tooltip": "\u003cspan foreground=\"#3465A4FF\"\u003eScanning selected directory and display found files.\u003c/span\u003e\n\n\u003cspan foreground=\"#75507BFF\"\u003eWhen files come from drag and drop or command line arguments,\nthe scanned directory will be the parent of the first given file.\u003c/span\u003e",
 			"Text": "",
 			"Uri": "",
 			"Comment": "",
@@ -70,33 +70,33 @@
 			"Class": "GtkButton",
 			"Id": "btnShowClipboard",
 			"Label": "View clipboard",
-			"Tooltip": "Display clipboard content.",
+			"Tooltip": "\u003cspan foreground=\"#3465A4FF\"\u003eDisplay clipboard content.\u003c/span\u003e",
 			"Text": "",
 			"Uri": "",
 			"Comment": "",
 			"LabelMarkup": false,
 			"LabelWrap": false,
-			"TooltipMarkup": false,
+			"TooltipMarkup": true,
 			"Idx": 3
 		},
 		{
 			"Class": "GtkCheckButton",
 			"Id": "chkCaseSensitive",
 			"Label": "Case sensitive",
-			"Tooltip": "Respect character case when searching.",
+			"Tooltip": "\u003cspan foreground=\"#3465A4FF\"\u003eRespect character case when searching.\u003c/span\u003e",
 			"Text": "",
 			"Uri": "",
 			"Comment": "",
 			"LabelMarkup": false,
 			"LabelWrap": false,
-			"TooltipMarkup": false,
+			"TooltipMarkup": true,
 			"Idx": 4
 		},
 		{
 			"Class": "GtkCheckButton",
 			"Id": "chkCharacterClass",
 			"Label": "Posix char class",
-			"Tooltip": "Use POSIX character classes to search.\ni.e: \"\u003cspan foreground=\"#6D0000FF\"\u003e\u003cb\u003eOk!\u003c/b\u003e\u003c/span\u003e\"\nwill be transformed as:\n\u003cb\u003e[[:\u003cspan foreground=\"#6D0000FF\"\u003eupper\u003c/span\u003e:]][[:\u003cspan foreground=\"#6D0000FF\"\u003elower\u003c/span\u003e:]][[:\u003cspan foreground=\"#6D0000FF\"\u003epunct\u003c/span\u003e:]]\u003c/b\u003e\n\n\u003cspan foreground=\"#3465A4FF\"\u003eUse this function with caution, a poorly designed \u003cb\u003epattern\u003c/b\u003e\ncould result in a very long search if there are lot of files.\u003c/span\u003e",
+			"Tooltip": "\u003cspan foreground=\"#3465A4FF\"\u003eUse POSIX character classes to search.\n\u003c/span\u003e\ni.e: \"\u003cspan foreground=\"#6D0000FF\"\u003e\u003cb\u003eOk!\u003c/b\u003e\u003c/span\u003e\"\nwill be transformed as:\n\u003cb\u003e[[:\u003cspan foreground=\"#6D0000FF\"\u003eupper\u003c/span\u003e:]][[:\u003cspan foreground=\"#6D0000FF\"\u003elower\u003c/span\u003e:]][[:\u003cspan foreground=\"#6D0000FF\"\u003epunct\u003c/span\u003e:]]\u003c/b\u003e\n\n\u003cspan foreground=\"#3465A4FF\"\u003eUse this function with caution, a poorly designed \u003cb\u003epattern\u003c/b\u003e\ncould result in a very long search if there are lot of files.\u003c/span\u003e",
 			"Text": "",
 			"Uri": "",
 			"Comment": "",
@@ -109,20 +109,20 @@
 			"Class": "GtkCheckButton",
 			"Id": "chkCharacterClassStrictMode",
 			"Label": "Strict mode",
-			"Tooltip": "Use all character classes equivalents.",
+			"Tooltip": "\u003cspan foreground=\"#3465A4FF\"\u003eUse all character classes equivalents.\u003c/span\u003e",
 			"Text": "",
 			"Uri": "",
 			"Comment": "",
 			"LabelMarkup": false,
 			"LabelWrap": false,
-			"TooltipMarkup": false,
+			"TooltipMarkup": true,
 			"Idx": 6
 		},
 		{
 			"Class": "GtkCheckButton",
 			"Id": "chkFollowSymlinkDir",
 			"Label": "Follow symlink directory",
-			"Tooltip": "If directory is a symbolic link, follow it.\n\n\u003cspan background=\"#FCE94FFF\"\u003e\u003cb\u003e\u003cspan foreground=\"#6D0000FF\"\u003eMust be used with care to avoid file loop search.\u003c/span\u003e\u003c/b\u003e\u003c/span\u003e",
+			"Tooltip": "\u003cspan foreground=\"#3465A4FF\"\u003eIf directory is a symbolic link, follow it.\u003c/span\u003e\n\n\u003cspan background=\"#FCE94FFF\"\u003e\u003cb\u003e\u003cspan foreground=\"#6D0000FF\"\u003eMust be used with care to avoid file loop search.\u003c/span\u003e\u003c/b\u003e\u003c/span\u003e",
 			"Text": "",
 			"Uri": "",
 			"Comment": "",
@@ -135,7 +135,7 @@
 			"Class": "GtkCheckButton",
 			"Id": "chkRegex",
 			"Label": "Regex",
-			"Tooltip": "Consider the search entry as a regular expression.\n\ni.e:\n\t\u003cspan background=\"#FCE94FFF\"\u003e- Search all patterns \"|\" means \"or\", \"(\\b)\" means whole word.\u003c/span\u003e\n\t\u003cspan background=\"#FCE94FFF\"\u003e- \"\\(\\)\" means escaping \"()\" to specify that is not a part of expression\u003c/span\u003e\n\t\u003cspan foreground=\"#3465A4FF\"\u003e(\\b)(require|exit\\(\\)|if|else|function|global|php)\u003c/span\u003e\n\n\t\u003cspan background=\"#FCE94FFF\"\u003e- Search all patterns \"image\", \"(?i)\" means case insensitive.\u003c/span\u003e\n\t\u003cspan foreground=\"#3465A4FF\"\u003e(?i)image\u003c/span\u003e",
+			"Tooltip": "\u003cspan foreground=\"#3465A4FF\"\u003eConsider the search entry as a regular expression.\u003c/span\u003e\n\ni.e:\n\t\u003cspan background=\"#FCE94FFF\"\u003e- Search all patterns '\u003cb\u003e|\u003c/b\u003e' means \"or\", '\u003cb\u003e(\\b)\u003c/b\u003e' means whole word.\u003c/span\u003e\n\t\u003cspan background=\"#FCE94FFF\"\u003e- '\u003cb\u003e\\(\\)\u003c/b\u003e' means escaping \"\u003cb\u003e()\u003c/b\u003e\" to specify that is not a part of expression\u003c/span\u003e\n\t\u003cspan foreground=\"#3465A4FF\"\u003e(require|exit\\(\\)|if|else|function|global|php)\u003cb\u003e(\\b)\u003c/b\u003e\u003c/span\u003e\n\n\t\u003cspan background=\"#FCE94FFF\"\u003e- Search all patterns \"image\", \"(?i)\" means case insensitive.\u003c/span\u003e\n\t\u003cspan foreground=\"#3465A4FF\"\u003e(?i)image\u003c/span\u003e\n\n\t\u003cspan background=\"#FCE94FFF\"\u003e- Search all patterns \"image\", '\u003cb\u003e(?gmi)\u003c/b\u003e' means global, multi-line,\u003c/span\u003e\n\t\u003cspan background=\"#FCE94FFF\"\u003ecase insensitive,  '\u003cb\u003e(\\b)\u003c/b\u003e' for whole word \u003ci\u003eis placed at the end \u003c/i\u003e.\u003c/span\u003e\n\t\u003cspan foreground=\"#3465A4FF\"\u003e(?gmi)image(\\b)\u003c/span\u003e\n\n\u003cspan foreground=\"#A40000FF\"\u003eFor more explanation, you can see at:\u003c/span\u003e\n\u003cspan foreground=\"#003EFFFF\"\u003e\u003cb\u003ehttps://regex101.com/\u003c/b\u003e\u003c/span\u003e\n\u003cspan foreground=\"#CE5C00FF\"\u003eand select '\u003cb\u003egolang\u003c/b\u003e' as language, you will see all the available\ncommands, and making some test to get what you wish.\u003c/span\u003e",
 			"Text": "",
 			"Uri": "",
 			"Comment": "",
@@ -147,8 +147,8 @@
 		{
 			"Class": "GtkCheckButton",
 			"Id": "chkUseEscapeChar",
-			"Label": "Esc char",
-			"Tooltip": "When \u003ci\u003e\u003cspan foreground=\"#690101FF\"\u003esearching\u003c/span\u003e\u003c/i\u003e for expression,\nyou are allowed to use escape characters\n\u003ci\u003ee.g:\u003c/i\u003e\n\t\u003cb\u003e\\n\u003c/b\u003e\t\t\u003cspan foreground=\"#204A87FF\"\u003eline feed or newline\u003c/span\u003e\n\t\u003cb\u003e\\t\u003c/b\u003e\t\t\u003cspan foreground=\"#204A87FF\"\u003ehorizontal tab\u003c/span\u003e\n\t\u003cb\u003e\\\"\u003c/b\u003e\t\t\u003cspan foreground=\"#204A87FF\"\u003edouble quote\u003c/span\u003e\n\t\u003cb\u003e\\r\u003c/b\u003e\t\t\u003cspan foreground=\"#204A87FF\"\u003ecarriage return\u003c/span\u003e\n\t\u003cb\u003e\\\\\u003c/b\u003e\t\t\u003cspan foreground=\"#204A87FF\"\u003ebackslash\u003c/span\u003e\n\t\u003cb\u003e\\f\u003c/b\u003e\t\t\u003cspan foreground=\"#204A87FF\"\u003eform feed\u003c/span\u003e\n\t\u003cb\u003e\\v\u003c/b\u003e\t\t\u003cspan foreground=\"#204A87FF\"\u003evertical tab\u003c/span\u003e\n",
+			"Label": "Esc search",
+			"Tooltip": "\u003cspan foreground=\"#3465A4FF\"\u003eWhen\u003c/span\u003e \u003ci\u003e\u003cspan foreground=\"#690101FF\"\u003e\u003cb\u003esearching\u003c/b\u003e\u003c/span\u003e\u003c/i\u003e\u003cspan foreground=\"#3465A4FF\"\u003e for expression,\nyou are allowed to use escape characters.\u003c/span\u003e\n\u003ci\u003ee.g:\u003c/i\u003e\n\t\u003cb\u003e\\n\u003c/b\u003e\t\t\u003cspan foreground=\"#204A87FF\"\u003eline feed or newline\u003c/span\u003e\n\t\u003cb\u003e\\t\u003c/b\u003e\t\t\u003cspan foreground=\"#204A87FF\"\u003ehorizontal tab\u003c/span\u003e\n\t\u003cb\u003e\\\"\u003c/b\u003e\t\t\u003cspan foreground=\"#204A87FF\"\u003edouble quote\u003c/span\u003e\n\t\u003cb\u003e\\r\u003c/b\u003e\t\t\u003cspan foreground=\"#204A87FF\"\u003ecarriage return\u003c/span\u003e\n\t\u003cb\u003e\\\\\u003c/b\u003e\t\t\u003cspan foreground=\"#204A87FF\"\u003ebackslash\u003c/span\u003e\n\t\u003cb\u003e\\f\u003c/b\u003e\t\t\u003cspan foreground=\"#204A87FF\"\u003eform feed\u003c/span\u003e\n\t\u003cb\u003e\\v\u003c/b\u003e\t\t\u003cspan foreground=\"#204A87FF\"\u003evertical tab\u003c/span\u003e\n",
 			"Text": "",
 			"Uri": "",
 			"Comment": "",
@@ -161,7 +161,7 @@
 			"Class": "GtkCheckButton",
 			"Id": "chkUseEscapeCharToReplace",
 			"Label": "Esc replace",
-			"Tooltip": "When \u003ci\u003e\u003cspan foreground=\"#690101FF\"\u003ereplacing\u003c/span\u003e\u003c/i\u003e the expression found,\nyou are allowed to use escape characters\n\u003ci\u003ee.g:\u003c/i\u003e\n\t\u003cb\u003e\\n\u003c/b\u003e\t\t\u003cspan foreground=\"#204A87FF\"\u003eline feed or newline\u003c/span\u003e\n\t\u003cb\u003e\\t\u003c/b\u003e\t\t\u003cspan foreground=\"#204A87FF\"\u003ehorizontal tab\u003c/span\u003e\n\t\u003cb\u003e\\\"\u003c/b\u003e\t\t\u003cspan foreground=\"#204A87FF\"\u003edouble quote\u003c/span\u003e\n\t\u003cb\u003e\\r\u003c/b\u003e\t\t\u003cspan foreground=\"#204A87FF\"\u003ecarriage return\u003c/span\u003e\n\t\u003cb\u003e\\\\\u003c/b\u003e\t\t\u003cspan foreground=\"#204A87FF\"\u003ebackslash\u003c/span\u003e\n\t\u003cb\u003e\\f\u003c/b\u003e\t\t\u003cspan foreground=\"#204A87FF\"\u003eform feed\u003c/span\u003e\n\t\u003cb\u003e\\v\u003c/b\u003e\t\t\u003cspan foreground=\"#204A87FF\"\u003evertical tab\u003c/span\u003e\n",
+			"Tooltip": "\u003cspan foreground=\"#3465A4FF\"\u003eWhen\u003c/span\u003e \u003ci\u003e\u003cspan foreground=\"#690101FF\"\u003e\u003cb\u003ereplacing\u003c/b\u003e\u003c/span\u003e\u003c/i\u003e\u003cspan foreground=\"#3465A4FF\"\u003e for expression,\nyou are allowed to use escape characters.\u003c/span\u003e\n\u003ci\u003ee.g:\u003c/i\u003e\n\t\u003cb\u003e\\n\u003c/b\u003e\t\t\u003cspan foreground=\"#204A87FF\"\u003eline feed or newline\u003c/span\u003e\n\t\u003cb\u003e\\t\u003c/b\u003e\t\t\u003cspan foreground=\"#204A87FF\"\u003ehorizontal tab\u003c/span\u003e\n\t\u003cb\u003e\\\"\u003c/b\u003e\t\t\u003cspan foreground=\"#204A87FF\"\u003edouble quote\u003c/span\u003e\n\t\u003cb\u003e\\r\u003c/b\u003e\t\t\u003cspan foreground=\"#204A87FF\"\u003ecarriage return\u003c/span\u003e\n\t\u003cb\u003e\\\\\u003c/b\u003e\t\t\u003cspan foreground=\"#204A87FF\"\u003eackslash\u003c/span\u003e\n\t\u003cb\u003e\\f\u003c/b\u003e\t\t\u003cspan foreground=\"#204A87FF\"\u003eform feed\u003c/span\u003e\n\t\u003cb\u003e\\v\u003c/b\u003e\t\t\u003cspan foreground=\"#204A87FF\"\u003evertical tab\u003c/span\u003e\n",
 			"Text": "",
 			"Uri": "",
 			"Comment": "",
@@ -174,33 +174,33 @@
 			"Class": "GtkCheckButton",
 			"Id": "chkWholeWord",
 			"Label": "Whole word",
-			"Tooltip": "Search only for the whole word\n(does not be a part of another word).",
+			"Tooltip": "\u003cspan foreground=\"#3465A4FF\"\u003eSearch only for the whole word\n(does not be a part of another word).\u003c/span\u003e",
 			"Text": "",
 			"Uri": "",
 			"Comment": "",
 			"LabelMarkup": false,
 			"LabelWrap": false,
-			"TooltipMarkup": false,
+			"TooltipMarkup": true,
 			"Idx": 11
 		},
 		{
 			"Class": "GtkCheckButton",
 			"Id": "chkWildcard",
 			"Label": "Use wildcard",
-			"Tooltip": "Allow use of wildcard like \"*\" or \"?\"\nin search statement.",
+			"Tooltip": "\u003cspan foreground=\"#3465A4FF\"\u003eAllow use of wildcard like \"*\" or \"?\"\nin search statement.\u003c/span\u003e",
 			"Text": "",
 			"Uri": "",
 			"Comment": "",
 			"LabelMarkup": false,
 			"LabelWrap": false,
-			"TooltipMarkup": false,
+			"TooltipMarkup": true,
 			"Idx": 12
 		},
 		{
 			"Class": "GtkEntry",
 			"Id": "entryExtMask",
 			"Label": "",
-			"Tooltip": "You can set a mask to restrict the display to these files extensions.\n\nPress \u003cspan font_weight=\"bold\"\u003e\"Enter\"\u003c/span\u003e to take effect.\n\nEach of them must be separated by \";\".\nie: '*.go; *.opt; *.debug'",
+			"Tooltip": "\u003cspan foreground=\"#3465A4FF\"\u003eYou can set a mask to restrict the display to these files extensions.\u003c/span\u003e\n\n\u003cspan foreground=\"#75507BFF\"\u003ePress '\u003cb\u003eEnter\u003c/b\u003e' to take effect.\u003c/span\u003e\n\nEach of them must be separated by \";\".\nie: '*.go; *.opt; *.debug'",
 			"Text": "*.*",
 			"Uri": "",
 			"Comment": "",
@@ -239,66 +239,105 @@
 			"Class": "GtkFileChooserButton",
 			"Id": "fileChooserBtn",
 			"Label": "",
-			"Tooltip": "Select directory to be scanned.",
+			"Tooltip": "\u003cspan foreground=\"#3465A4FF\"\u003eSelect directory to be scanned.\u003c/span\u003e",
 			"Text": "",
 			"Uri": "",
 			"Comment": "",
 			"LabelMarkup": false,
 			"LabelWrap": false,
-			"TooltipMarkup": false,
+			"TooltipMarkup": true,
 			"Idx": 16
+		},
+		{
+			"Class": "GtkButton",
+			"Id": "findWinBtnDeselect",
+			"Label": "Deselect all",
+			"Tooltip": "\u003cspan foreground=\"#3465A4FF\"\u003eUncheck all treeview lines\u003c/span\u003e",
+			"Text": "",
+			"Uri": "",
+			"Comment": "",
+			"LabelMarkup": false,
+			"LabelWrap": false,
+			"TooltipMarkup": true,
+			"Idx": 17
+		},
+		{
+			"Class": "GtkButton",
+			"Id": "findWinBtnInvertSel",
+			"Label": "Invert sel.",
+			"Tooltip": "\u003cspan foreground=\"#3465A4FF\"\u003eInvert the selection state of all rows in the treeview\u003c/span\u003e",
+			"Text": "",
+			"Uri": "",
+			"Comment": "",
+			"LabelMarkup": false,
+			"LabelWrap": false,
+			"TooltipMarkup": true,
+			"Idx": 18
 		},
 		{
 			"Class": "GtkButton",
 			"Id": "findWinCancelBtn",
 			"Label": "Close",
-			"Tooltip": "Close window.",
+			"Tooltip": "\u003cspan foreground=\"#3465A4FF\"\u003eClose window.\u003c/span\u003e",
 			"Text": "",
 			"Uri": "",
 			"Comment": "",
 			"LabelMarkup": false,
 			"LabelWrap": false,
-			"TooltipMarkup": false,
-			"Idx": 17
+			"TooltipMarkup": true,
+			"Idx": 19
 		},
 		{
 			"Class": "GtkCheckButton",
 			"Id": "findWinChkBackUp",
 			"Label": "Make backup",
-			"Tooltip": "Do backup when changes applied.",
+			"Tooltip": "\u003cspan foreground=\"#3465A4FF\"\u003eDo backup when changes applied.\u003c/span\u003e",
 			"Text": "",
 			"Uri": "",
 			"Comment": "",
 			"LabelMarkup": false,
 			"LabelWrap": false,
-			"TooltipMarkup": false,
-			"Idx": 18
+			"TooltipMarkup": true,
+			"Idx": 20
 		},
 		{
 			"Class": "GtkCheckButton",
 			"Id": "findWinChkDispForbFiles",
 			"Label": "Display forbidden files",
-			"Tooltip": "By this way you can show skipped files during search process.\nSome of these are \u003c 8 bytes or are binary type.",
+			"Tooltip": "\u003cspan foreground=\"#3465A4FF\"\u003eBy this way you can show skipped files during search process.\nSome of these are \u0026lt; 8 bytes or are binary type.\u003c/span\u003e",
 			"Text": "",
 			"Uri": "",
 			"Comment": "",
 			"LabelMarkup": false,
 			"LabelWrap": false,
-			"TooltipMarkup": false,
-			"Idx": 19
+			"TooltipMarkup": true,
+			"Idx": 21
+		},
+		{
+			"Class": "GtkCheckButton",
+			"Id": "findWinChkExpandAll",
+			"Label": "Expand all",
+			"Tooltip": "\u003cspan foreground=\"#3465A4FF\"\u003eExpand / Collapse treeview nodes.\u003c/span\u003e",
+			"Text": "",
+			"Uri": "",
+			"Comment": "",
+			"LabelMarkup": false,
+			"LabelWrap": false,
+			"TooltipMarkup": true,
+			"Idx": 22
 		},
 		{
 			"Class": "GtkButton",
 			"Id": "findWinReplaceBtn",
 			"Label": "Replace",
-			"Tooltip": "Replace in selected files with\ndefined text.",
+			"Tooltip": "\u003cspan foreground=\"#3465A4FF\"\u003eReplace in selected files with defined pattern.\u003c/span\u003e",
 			"Text": "",
 			"Uri": "",
 			"Comment": "",
 			"LabelMarkup": false,
 			"LabelWrap": false,
-			"TooltipMarkup": false,
-			"Idx": 20
+			"TooltipMarkup": true,
+			"Idx": 23
 		},
 		{
 			"Class": "GtkScrolledWindow",
@@ -311,7 +350,7 @@
 			"LabelMarkup": false,
 			"LabelWrap": false,
 			"TooltipMarkup": false,
-			"Idx": 21
+			"Idx": 24
 		},
 		{
 			"Class": "GtkTreeView",
@@ -324,7 +363,7 @@
 			"LabelMarkup": false,
 			"LabelWrap": false,
 			"TooltipMarkup": false,
-			"Idx": 22
+			"Idx": 25
 		},
 		{
 			"Class": "GtkImage",
@@ -337,7 +376,7 @@
 			"LabelMarkup": false,
 			"LabelWrap": false,
 			"TooltipMarkup": false,
-			"Idx": 23
+			"Idx": 26
 		},
 		{
 			"Class": "GtkLabel",
@@ -350,7 +389,7 @@
 			"LabelMarkup": true,
 			"LabelWrap": false,
 			"TooltipMarkup": false,
-			"Idx": 24
+			"Idx": 27
 		},
 		{
 			"Class": "GtkLabel",
@@ -363,7 +402,7 @@
 			"LabelMarkup": true,
 			"LabelWrap": false,
 			"TooltipMarkup": false,
-			"Idx": 25
+			"Idx": 28
 		},
 		{
 			"Class": "GtkLabel",
@@ -376,7 +415,7 @@
 			"LabelMarkup": true,
 			"LabelWrap": false,
 			"TooltipMarkup": false,
-			"Idx": 26
+			"Idx": 29
 		},
 		{
 			"Class": "GtkTreeView",
@@ -389,20 +428,20 @@
 			"LabelMarkup": false,
 			"LabelWrap": false,
 			"TooltipMarkup": false,
-			"Idx": 27
+			"Idx": 30
 		},
 		{
 			"Class": "GtkButton",
 			"Id": "MainButtonOptions",
 			"Label": "",
-			"Tooltip": "Options",
+			"Tooltip": "\u003cspan foreground=\"#3465A4FF\"\u003eOptions\u003c/span\u003e",
 			"Text": "",
 			"Uri": "",
 			"Comment": "No label needed",
 			"LabelMarkup": false,
 			"LabelWrap": false,
-			"TooltipMarkup": false,
-			"Idx": 28
+			"TooltipMarkup": true,
+			"Idx": 31
 		},
 		{
 			"Class": "GtkButton",
@@ -415,7 +454,7 @@
 			"LabelMarkup": false,
 			"LabelWrap": false,
 			"TooltipMarkup": false,
-			"Idx": 29
+			"Idx": 32
 		},
 		{
 			"Class": "GtkButton",
@@ -428,33 +467,33 @@
 			"LabelMarkup": false,
 			"LabelWrap": false,
 			"TooltipMarkup": false,
-			"Idx": 30
+			"Idx": 33
 		},
 		{
 			"Class": "GtkEntry",
 			"Id": "OptionsEntryMaxFileSize",
 			"Label": "",
-			"Tooltip": "Choose the \u003cb\u003emaximum\u003c/b\u003e size in bytes of files to scan.\n\n\u003cspan background=\"#FCE94FFF\"\u003e\u003cspan foreground=\"#6D0000FF\"\u003e1024\t\t1Ko\t\t\n5120\t\t5Ko\t\t\n524288\t\t512Ko\t\n1048576\t1Mo\t\u003c/span\u003e\u003c/span\u003e",
+			"Tooltip": "\u003cspan foreground=\"#3465A4FF\"\u003eChoose the \u003cb\u003emaximum\u003c/b\u003e size in bytes of files to scan.\u003c/span\u003e\n\n\u003cspan foreground=\"#6D0000FF\"\u003e1024\t\t1Ko\t\t\n5120\t\t5Ko\t\t\n524288\t512Ko\t\n1048576\t1Mo\t\u003c/span\u003e",
 			"Text": "",
 			"Uri": "",
 			"Comment": "",
 			"LabelMarkup": false,
 			"LabelWrap": false,
 			"TooltipMarkup": true,
-			"Idx": 31
+			"Idx": 34
 		},
 		{
 			"Class": "GtkEntry",
 			"Id": "OptionsEntryMinFileSize",
 			"Label": "",
-			"Tooltip": "Choose the \u003cb\u003eminimum\u003c/b\u003e size in bytes of files to scan.\n\n\u003cspan background=\"#FCE94FFF\"\u003e\u003cspan foreground=\"#6D0000FF\"\u003e1024\t\t1Ko\t\t\n5120\t\t5Ko\t\t\n524288\t\t512Ko\t\n1048576\t1Mo\t\u003c/span\u003e\u003c/span\u003e",
+			"Tooltip": "\u003cspan foreground=\"#3465A4FF\"\u003eChoose the \u003cb\u003eminimum\u003c/b\u003e size in bytes of files to scan.\u003c/span\u003e\n\n\u003cspan foreground=\"#6D0000FF\"\u003e1024\t\t1Ko\t\t\n5120\t\t5Ko\t\t\n524288\t512Ko\t\n1048576\t1Mo\t\u003c/span\u003e",
 			"Text": "",
 			"Uri": "",
 			"Comment": "",
 			"LabelMarkup": false,
 			"LabelWrap": false,
 			"TooltipMarkup": true,
-			"Idx": 32
+			"Idx": 35
 		},
 		{
 			"Class": "GtkImage",
@@ -467,7 +506,7 @@
 			"LabelMarkup": false,
 			"LabelWrap": false,
 			"TooltipMarkup": false,
-			"Idx": 33
+			"Idx": 36
 		},
 		{
 			"Class": "GtkLabel",
@@ -480,7 +519,7 @@
 			"LabelMarkup": false,
 			"LabelWrap": false,
 			"TooltipMarkup": false,
-			"Idx": 34
+			"Idx": 37
 		},
 		{
 			"Class": "GtkLabel",
@@ -493,33 +532,33 @@
 			"LabelMarkup": false,
 			"LabelWrap": false,
 			"TooltipMarkup": false,
-			"Idx": 35
+			"Idx": 38
 		},
 		{
 			"Class": "GtkLabel",
 			"Id": "OptionsLabelMaxFileSize",
 			"Label": "\u003cb\u003eMax\u003c/b\u003eimum file size to be scanned :",
-			"Tooltip": "\u003cspan background=\"#FCE94FFF\"\u003ePay attention to these values, otherwise no file will be analyzed !\u003c/span\u003e",
+			"Tooltip": "\u003cspan foreground=\"#A40000FF\"\u003ePay attention to these values, otherwise no file will be analyzed !\u003c/span\u003e",
 			"Text": "",
 			"Uri": "",
 			"Comment": "",
 			"LabelMarkup": true,
 			"LabelWrap": false,
 			"TooltipMarkup": true,
-			"Idx": 36
+			"Idx": 39
 		},
 		{
 			"Class": "GtkLabel",
 			"Id": "OptionsLabelMinFileSize",
 			"Label": "\u003cb\u003eMin\u003c/b\u003eimum file size to be scanned :",
-			"Tooltip": "\u003cspan background=\"#FCE94FFF\"\u003ePay attention to these values, otherwise no file will be analyzed !\u003c/span\u003e",
+			"Tooltip": "\u003cspan foreground=\"#A40000FF\"\u003ePay attention to these values, otherwise no file will be analyzed !\u003c/span\u003e",
 			"Text": "",
 			"Uri": "",
 			"Comment": "",
 			"LabelMarkup": true,
 			"LabelWrap": false,
 			"TooltipMarkup": true,
-			"Idx": 37
+			"Idx": 40
 		},
 		{
 			"Class": "GtkScrolledWindow",
@@ -532,33 +571,33 @@
 			"LabelMarkup": false,
 			"LabelWrap": false,
 			"TooltipMarkup": false,
-			"Idx": 38
+			"Idx": 41
 		},
 		{
 			"Class": "GtkToggleButton",
 			"Id": "SourceToggleButtonMapWidth",
 			"Label": "Map fixed width",
-			"Tooltip": "",
-			"Text": "",
-			"Uri": "",
-			"Comment": "",
-			"LabelMarkup": false,
-			"LabelWrap": false,
-			"TooltipMarkup": false,
-			"Idx": 39
-		},
-		{
-			"Class": "GtkSpinButton",
-			"Id": "spinButtonDepth",
-			"Label": "",
-			"Tooltip": "Choose the depth for sub-directory scanning.\n\n\u003cb\u003e\u003cspan foreground=\"#5C3566FF\"\u003e0\u003c/span\u003e\u003c/b\u003e means \u003cb\u003edon't scan sub directories\u003c/b\u003e.\n\u003cb\u003e\u003cspan foreground=\"#5C3566FF\"\u003e-1\u003c/span\u003e\u003c/b\u003e means \u003cb\u003eno restriction\u003c/b\u003e.",
+			"Tooltip": "\u003cspan foreground=\"#3465A4FF\"\u003eKeep the width of the map proportional to the width\nof the windows.\u003c/span\u003e",
 			"Text": "",
 			"Uri": "",
 			"Comment": "",
 			"LabelMarkup": false,
 			"LabelWrap": false,
 			"TooltipMarkup": true,
-			"Idx": 40
+			"Idx": 42
+		},
+		{
+			"Class": "GtkSpinButton",
+			"Id": "spinButtonDepth",
+			"Label": "",
+			"Tooltip": "\u003cspan foreground=\"#3465A4FF\"\u003eChoose the depth for sub-directory scanning.\u003c/span\u003e\n\n\u003cb\u003e\u003cspan foreground=\"#5C3566FF\"\u003e  0\u003c/span\u003e\u003c/b\u003e\tmeans \u003cb\u003edon't scan sub directories\u003c/b\u003e.\n\u003cb\u003e\u003cspan foreground=\"#5C3566FF\"\u003e-1\u003c/span\u003e\u003c/b\u003e\tmeans \u003cb\u003eno restriction\u003c/b\u003e.",
+			"Text": "",
+			"Uri": "",
+			"Comment": "",
+			"LabelMarkup": false,
+			"LabelWrap": false,
+			"TooltipMarkup": true,
+			"Idx": 43
 		},
 		{
 			"Class": "GtkStatusbar",
@@ -571,52 +610,13 @@
 			"LabelMarkup": false,
 			"LabelWrap": false,
 			"TooltipMarkup": false,
-			"Idx": 41
+			"Idx": 44
 		},
 		{
 			"Class": "GtkSwitch",
 			"Id": "switchFileChooserButton",
 			"Label": "",
-			"Tooltip": "Switch \u003cb\u003e\u003cspan foreground=\"#3465A4FF\"\u003e\u003cspan background=\"#EDD400FF\"\u003eon\u003c/span\u003e\u003c/span\u003e\u003c/b\u003e to allow the \u003cspan foreground=\"#5C3566FF\"\u003eSelect Directories button\u003c/span\u003e to scan\nthe directory automatically after choosing a folder.",
-			"Text": "",
-			"Uri": "",
-			"Comment": "",
-			"LabelMarkup": false,
-			"LabelWrap": false,
-			"TooltipMarkup": true,
-			"Idx": 42
-		},
-		{
-			"Class": "GtkButton",
-			"Id": "textWinBtnDone",
-			"Label": "Close",
-			"Tooltip": "Close window.",
-			"Text": "",
-			"Uri": "",
-			"Comment": "",
-			"LabelMarkup": false,
-			"LabelWrap": false,
-			"TooltipMarkup": false,
-			"Idx": 43
-		},
-		{
-			"Class": "GtkCheckButton",
-			"Id": "textWinChkShowModifications",
-			"Label": "Show modifications",
-			"Tooltip": "Display modifications without applying.",
-			"Text": "",
-			"Uri": "",
-			"Comment": "",
-			"LabelMarkup": false,
-			"LabelWrap": false,
-			"TooltipMarkup": false,
-			"Idx": 44
-		},
-		{
-			"Class": "GtkCheckButton",
-			"Id": "textWinChkSyntxHighlight",
-			"Label": "Syntax highlighter",
-			"Tooltip": "Activate the highlighting function.\n\n\u003cspan background=\"#FCE94FFF\"\u003eCan be very useful sometimes, but on large files\nhigher than 25 KB, the display takes a long time.\u003c/span\u003e",
+			"Tooltip": "\u003cspan foreground=\"#3465A4FF\"\u003eEnable to allow the Select Directories button to automatically scan\nfiles in the directory after choosing it.\u003c/span\u003e",
 			"Text": "",
 			"Uri": "",
 			"Comment": "",
@@ -626,43 +626,82 @@
 			"Idx": 45
 		},
 		{
-			"Class": "GtkCheckButton",
-			"Id": "textWinChkWrap",
-			"Label": "Wrap text  ",
-			"Tooltip": "Wrap displayed text.",
+			"Class": "GtkButton",
+			"Id": "textWinBtnDone",
+			"Label": "Close",
+			"Tooltip": "\u003cspan foreground=\"#3465A4FF\"\u003eClose window.\u003c/span\u003e",
 			"Text": "",
 			"Uri": "",
 			"Comment": "",
 			"LabelMarkup": false,
 			"LabelWrap": false,
-			"TooltipMarkup": false,
+			"TooltipMarkup": true,
 			"Idx": 46
+		},
+		{
+			"Class": "GtkCheckButton",
+			"Id": "textWinChkShowModifications",
+			"Label": "Show modifications",
+			"Tooltip": "\u003cspan foreground=\"#3465A4FF\"\u003eDisplay modifications without applying.\u003c/span\u003e",
+			"Text": "",
+			"Uri": "",
+			"Comment": "",
+			"LabelMarkup": false,
+			"LabelWrap": false,
+			"TooltipMarkup": true,
+			"Idx": 47
+		},
+		{
+			"Class": "GtkCheckButton",
+			"Id": "textWinChkSyntxHighlight",
+			"Label": "Syntax highlighter",
+			"Tooltip": "\u003cspan foreground=\"#3465A4FF\"\u003eActivate the highlighting function.\u003c/span\u003e",
+			"Text": "",
+			"Uri": "",
+			"Comment": "",
+			"LabelMarkup": false,
+			"LabelWrap": false,
+			"TooltipMarkup": true,
+			"Idx": 48
+		},
+		{
+			"Class": "GtkCheckButton",
+			"Id": "textWinChkWrap",
+			"Label": "Wrap text  ",
+			"Tooltip": "\u003cspan foreground=\"#3465A4FF\"\u003eWrap displayed text.\u003c/span\u003e",
+			"Text": "",
+			"Uri": "",
+			"Comment": "",
+			"LabelMarkup": false,
+			"LabelWrap": false,
+			"TooltipMarkup": true,
+			"Idx": 49
 		},
 		{
 			"Class": "GtkComboBoxText",
 			"Id": "textWinComboBoxLanguage",
 			"Label": "",
-			"Tooltip": "Choose the language handled by the\nsyntax highlighting function.",
+			"Tooltip": "\u003cspan foreground=\"#3465A4FF\"\u003eChoose the language handled by the syntax\nhighlighting function.\u003c/span\u003e",
 			"Text": "",
 			"Uri": "",
 			"Comment": "",
 			"LabelMarkup": false,
 			"LabelWrap": false,
-			"TooltipMarkup": false,
-			"Idx": 47
+			"TooltipMarkup": true,
+			"Idx": 50
 		},
 		{
 			"Class": "GtkComboBoxText",
 			"Id": "textWinComboBoxTextStyleChooser",
 			"Label": "",
-			"Tooltip": "Choose the style used by the\nsyntax highlighting function.",
+			"Tooltip": "\u003cspan foreground=\"#3465A4FF\"\u003eChoose the style used by the syntax highlighting function.\u003c/span\u003e",
 			"Text": "",
 			"Uri": "",
 			"Comment": "",
 			"LabelMarkup": false,
 			"LabelWrap": false,
-			"TooltipMarkup": false,
-			"Idx": 48
+			"TooltipMarkup": true,
+			"Idx": 51
 		},
 		{
 			"Class": "GtkSourceView",
@@ -675,7 +714,7 @@
 			"LabelMarkup": false,
 			"LabelWrap": false,
 			"TooltipMarkup": false,
-			"Idx": 49
+			"Idx": 52
 		}
 	],
 	"Sentences": {

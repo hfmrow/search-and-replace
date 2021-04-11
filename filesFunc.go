@@ -100,9 +100,10 @@ func ScanDirDepth(root string, depth int, optParam ...bool) (files []string, err
 
 // scanForSubDir: In case where a display refresh is requiered from an existing files/dirs list.
 func scanForSubDir(inFilesList []string) (err error) {
-	var stat os.FileInfo
-	var isDir bool
-	var filesList []glfssf.ScanDirFileInfos
+	var (
+		stat  os.FileInfo
+		isDir bool
+	)
 
 	toDispFileList = toDispFileList[:0]
 
@@ -113,13 +114,13 @@ func scanForSubDir(inFilesList []string) (err error) {
 			if stat, err = os.Lstat(file); err != nil {
 				return err
 			} else if isDir, err = isSymlinkDir(file, stat,
-				mainObjects.chkFollowSymlinkDir.GetActive()); !(os.IsPermission(err) || os.IsNotExist(err)) && err != nil {
+				obj.chkFollowSymlinkDir.GetActive()); !(os.IsPermission(err) || os.IsNotExist(err)) && err != nil {
 				return err
 			}
 
 			if isDir || stat.IsDir() {
-				if filesList, err = glfssf.ScanDirDepthFileInfo(file, mainObjects.spinButtonDepth.GetValueAsInt(),
-					false, mainObjects.chkFollowSymlinkDir.GetActive()); os.IsPermission(err) || os.IsNotExist(err) || err == nil {
+				if filesList, err := ScanDirDepthFileInfo(file, obj.spinButtonDepth.GetValueAsInt(),
+					false, obj.chkFollowSymlinkDir.GetActive()); os.IsPermission(err) || os.IsNotExist(err) || err == nil {
 					toDispFileList = append(toDispFileList, filesList...)
 				} else {
 					return err

@@ -8,8 +8,8 @@
 		"License (MIT Restricted)"
 	],
 	"AppName": "Search And Replace",
-	"AppCreator": "H.F.M",
-	"AppVers": "v1.9",
+	"AppCreator": "hfmrow",
+	"AppVers": "v1.10",
 	"AppDescr": "",
 	"License": "",
 	"LicenseShort": "",
@@ -22,13 +22,13 @@
 	"MainWindowName": "mainWin",
 	"GtkApplicationName": "app",
 	"GtkApplicationId": "id.application.name",
-	"ObjStructName": "mainObjects",
-	"OptStructName": "mainOptions",
+	"ObjStructName": "obj",
+	"OptStructName": "opt",
 	"Gotk3Path": "github.com/gotk3/gotk3",
 	"GtkSourcePath": "\"github.com/hfmrow/gotk3_gtksource/source\"",
 	"GladeXmlFile": "",
 	"GladeXmlFileRel": "assets/glade/main.glade",
-	"GladeXmlFileCheckSum": "3a32a24c90989fdc3eab52783d43d417",
+	"GladeXmlFileCheckSum": "4bddad59c20d10bb2c3d5d543133a490",
 	"DefaultProjExt": "*.proj",
 	"BackupExt": [
 		"*.go",
@@ -94,9 +94,9 @@
 		"Images": false,
 		"License": false
 	},
-	"ObjectsCount": 66,
-	"ObjectsAdded": 0,
-	"ObjectsRemoved": 0,
+	"ObjectsCount": 68,
+	"ObjectsAdded": 3,
+	"ObjectsRemoved": 2,
 	"ActualObjects": [
 		{
 			"ObjectType": "GtkButton",
@@ -316,6 +316,30 @@
 		},
 		{
 			"ObjectType": "GtkButton",
+			"ObjectName": "findWinBtnDeselect",
+			"LibPrefix": "gtk",
+			"Suffix": "",
+			"Prefix": "",
+			"Value": "",
+			"Commented": "",
+			"ManualyAdded": false,
+			"Unkowen": false,
+			"NewObject": false
+		},
+		{
+			"ObjectType": "GtkButton",
+			"ObjectName": "findWinBtnInvertSel",
+			"LibPrefix": "gtk",
+			"Suffix": "",
+			"Prefix": "",
+			"Value": "",
+			"Commented": "",
+			"ManualyAdded": false,
+			"Unkowen": false,
+			"NewObject": false
+		},
+		{
+			"ObjectType": "GtkButton",
 			"ObjectName": "findWinCancelBtn",
 			"LibPrefix": "gtk",
 			"Suffix": "",
@@ -341,6 +365,18 @@
 		{
 			"ObjectType": "GtkCheckButton",
 			"ObjectName": "findWinChkDispForbFiles",
+			"LibPrefix": "gtk",
+			"Suffix": "",
+			"Prefix": "",
+			"Value": "",
+			"Commented": "",
+			"ManualyAdded": false,
+			"Unkowen": false,
+			"NewObject": false
+		},
+		{
+			"ObjectType": "GtkCheckButton",
+			"ObjectName": "findWinChkExpandAll",
 			"LibPrefix": "gtk",
 			"Suffix": "",
 			"Prefix": "",
@@ -497,18 +533,6 @@
 		{
 			"ObjectType": "GtkButton",
 			"ObjectName": "MainButtonOptions",
-			"LibPrefix": "gtk",
-			"Suffix": "",
-			"Prefix": "",
-			"Value": "",
-			"Commented": "",
-			"ManualyAdded": false,
-			"Unkowen": false,
-			"NewObject": false
-		},
-		{
-			"ObjectType": "GtkGrid",
-			"ObjectName": "MainGrid",
 			"LibPrefix": "gtk",
 			"Suffix": "",
 			"Prefix": "",

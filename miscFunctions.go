@@ -20,26 +20,23 @@ import (
 	"path/filepath"
 	"strings"
 
-	humanize "github.com/dustin/go-humanize"
+	"github.com/gotk3/gotk3/glib"
+
 	"github.com/gotk3/gotk3/gdk"
 	"github.com/gotk3/gotk3/gtk"
 
-	glfsft "github.com/hfmrow/genLib/files/fileText"
-	glsg "github.com/hfmrow/genLib/strings"
-	gltsbh "github.com/hfmrow/genLib/tools/bench"
+	humanize "github.com/dustin/go-humanize"
 
-	gidg "github.com/hfmrow/gtk3Import/dialog"
+	glfsft "github.com/hfmrow/genLib/files/fileText"
+
 	gipo "github.com/hfmrow/gtk3Import/pango"
-	gipops "github.com/hfmrow/gtk3Import/pango/pangoSimple"
-	gitl "github.com/hfmrow/gtk3Import/tools"
 )
 
 // displayProgressBar: Hide or show some controls during a long search process.
 func displayProgressBar(toggle bool) {
 
-	mainObjects.MainGrid.SetSensitive(!toggle)
-	mainObjects.MainTopGrig.SetSensitive(!toggle)
-	mainObjects.listViewFiles.SetSensitive(!toggle)
+	obj.mainBox.SetSensitive(!toggle)
+	obj.MainButtonOptions.SetSensitive(!toggle)
 }
 
 // updateTreeViewFilesDisplay: Display files to treeView
@@ -47,24 +44,24 @@ func updateTreeViewFilesDisplay() {
 	var err error
 	var stat os.FileInfo
 
-	bench := gltsbh.BenchNew(false)
+	bench := BenchNew(false)
 	bench.Lapse()
 
 	if !fromDnD {
 		currentInFilesList = currentInFilesList[:0]
-		currentInFilesList = append(currentInFilesList, mainObjects.fileChooserBtn.GetFilename())
+		currentInFilesList = append(currentInFilesList, obj.fileChooserBtn.GetFilename())
 	} else {
 		if len(currentInFilesList) == 1 {
 			if stat, err = os.Stat(currentInFilesList[0]); err == nil {
 				if stat.IsDir() {
-					mainObjects.fileChooserBtn.SetFilename(currentInFilesList[0])
+					obj.fileChooserBtn.SetFilename(currentInFilesList[0])
 					fromDnD = false
 				}
 			}
 		}
 	}
 	if err != nil {
-		gidg.DialogMessage(mainObjects.mainWin, "error", sts["alert"], "\n\n"+err.Error(), "", "Ok")
+		DialogMessage(obj.mainWin, "error", sts["alert"], "\n\n"+err.Error(), "", "Ok")
 	} else {
 		err = scanForSubDir(currentInFilesList)
 		bench.Stop()
@@ -75,28 +72,31 @@ func updateTreeViewFilesDisplay() {
 
 // displayFiles: display formatted files to treeview.
 func displayFiles() {
-	mainOptions.UpdateOptions()
+	opt.UpdateOptions()
 
 	if tvsList != nil {
-		bench := gltsbh.BenchNew(false)
+		bench := BenchNew(false)
 		bench.Lapse()
 
 		// Detach listStore & clean before fill it
 		tvsList.StoreDetach()
+		defer tvsList.StoreAttach()
 		tvsList.Clear()
 
 		var ok bool
 		var err error
 
 		for _, rowFile := range toDispFileList {
-			for _, msk := range mainOptions.ExtMask { // Check for ext matching well.
+			for _, msk := range opt.ExtMask { // Check for ext matching well.
 				if ok, err = filepath.Match(msk, rowFile.FileInfo.Name()); err == nil {
 					if ok {
 						tvsList.AddRow(nil,
 							html.EscapeString(rowFile.FileInfo.Name()),
-							humanize.Bytes(uint64(rowFile.FileInfo.Size())),
+							HumanReadableSize(rowFile.FileInfo.Size()),
+							// TODO make a human readable Time function
 							humanize.Time(rowFile.FileInfo.ModTime()),
 							html.EscapeString(rowFile.Filename),
+							rowFile.Filename, // Unmodified filename
 							rowFile.FileInfo.Size(),
 							rowFile.FileInfo.ModTime().Unix())
 					}
@@ -107,7 +107,6 @@ func displayFiles() {
 		}
 
 		// Attach listStore
-		tvsList.StoreAttach()
 
 		bench.Stop()
 
@@ -124,19 +123,20 @@ func showResults(mainFound *[]glfsft.SearchAndReplaceFiles) (countFiles int) {
 	var iter *gtk.TreeIter
 	var total, binary, text int
 
-	pc := gipops.PangoColorNew()
+	pc := PangoColorNew()
 
 	// Detach & clear treeStore
 	tvsTree.StoreDetach()
+	defer tvsTree.StoreAttach()
 	tvsTree.Clear()
 
-	for _, result := range *mainFound {
+	for fileIdx, result := range *mainFound {
 		prevLineNbr = -1
 		total++
 		if result.Occurrences > 0 {
 			text++
 			/* Add parent */
-			if iter, err = tvsTree.AddRow(nil, result.FileName); err == nil {
+			if iter, err = tvsTree.AddRow(nil, true, result.FileName, fileIdx, -1); err == nil {
 
 				// Make markup
 				pm := gipo.PangoMarkup{}
@@ -147,21 +147,21 @@ func showResults(mainFound *[]glfsft.SearchAndReplaceFiles) (countFiles int) {
 
 				/* Add Childs */
 				linesStr := strings.Split(text, result.SearchAndRepl.Pos.Eol)
-				for idxLine := 0; idxLine < len(result.SearchAndRepl.Pos.FoundLinesIdx); idxLine++ {
+				for lineIdx := 0; lineIdx < len(result.SearchAndRepl.Pos.FoundLinesIdx); lineIdx++ {
 
-					lineNbr = result.SearchAndRepl.Pos.FoundLinesIdx[idxLine].Number
+					lineNbr = result.SearchAndRepl.Pos.FoundLinesIdx[lineIdx].Number
 					if prevLineNbr != lineNbr { // Avoid displaying duplicated rows
 						pm.Init(fmt.Sprintf(" %v ", lineNbr+1))        // Line number
 						pm.AddTypes([][]string{{"bgc", "#E4DDDD"}}...) // Light grey
 						lineNbStr := pm.Markup()
 
-						tvsTree.AddRow(iter, lineNbStr+"\t"+string(linesStr[lineNbr]))
+						tvsTree.AddRow(iter, true, lineNbStr+"\t"+string(linesStr[lineNbr]), fileIdx, lineIdx)
 					}
 					prevLineNbr = lineNbr
 				}
 				countFiles++
 			}
-		} else if mainObjects.findWinChkDispForbFiles.GetActive() && result.NotTextFile {
+		} else if obj.findWinChkDispForbFiles.GetActive() && result.NotTextFile {
 			binary++
 			// Markup bad file: File size too short or Binary files warning ...
 			pm := gipo.PangoMarkup{}
@@ -171,18 +171,20 @@ func showResults(mainFound *[]glfsft.SearchAndReplaceFiles) (countFiles int) {
 			filename := pm.Markup()
 
 			/* Add parent */
-			if iter, err = tvsTree.AddRow(nil, filename); err == nil {
+			if iter, err = tvsTree.AddRow(nil, false, filename, fileIdx, -1); err == nil {
 				pm.Init(string(result.SearchAndRepl.TextBytes)) // text with reason why it's not displayed
 				pm.AddTypes([][]string{{"fgc", pc.Red}}...)
 				desciption := pm.Markup()
 
 				/* Add Child */
-				tvsTree.AddRow(iter, desciption)
+				tvsTree.AddRow(iter, false, desciption, fileIdx, -1)
 			}
 		}
 	}
-	// Attach treeStore
-	tvsTree.StoreAttach()
+	glib.IdleAdd(func() {
+		tvsTree.ExpandAll(!opt.ExpandAll)
+	})
+
 	return countFiles
 }
 
@@ -200,18 +202,17 @@ func showTextWin(text string, filename string) {
 	var err error
 
 	if !alreadyPlacedPrevWin {
-		mainObjects.findWin.SetModal(false)
-		mainObjects.textWin.SetKeepAbove(false)
-		x, y := mainObjects.mainWin.GetPosition()
-		mainObjects.textWin.Move(x+(mainOptions.CascadeDepth*2), y+(mainOptions.CascadeDepth*2))
-		mainObjects.textWin.Resize(mainObjects.mainWin.GetSize())
+		obj.findWin.SetModal(false)
+		obj.textWin.SetKeepAbove(false)
+		x, y := obj.mainWin.GetPosition()
+		obj.textWin.Move(x+(opt.CascadeDepth*2), y+(opt.CascadeDepth*2))
+		obj.textWin.Resize(obj.mainWin.GetSize())
 		alreadyPlacedPrevWin = true
 	}
 	// Set text
-	if occurrences, err = highlightText(text, mainObjects.textWinChkShowModifications.GetActive()); err == nil {
-		textWinTitle.MainTitle = glsg.TruncatePath(filename, mainOptions.FilePathLength)
+	if occurrences, err = highlightText(text, obj.textWinChkShowModifications.GetActive()); err == nil {
+		textWinTitle.MainTitle = TruncatePath(filename, opt.FilePathLength)
 		textWinTitle.Update([]string{fmt.Sprintf("%s %d", sts["totalOccurrences"], occurrences)})
-
 		svs.BringToFront()
 	}
 
@@ -222,8 +223,8 @@ func showTextWin(text string, filename string) {
 func highlightText(txtStr string, doReplace bool) (occurrences int, err error) {
 
 	// Set colors for GtkSourceView
-	svs.TxtBgCol = mainOptions.TxtBgCol
-	svs.TxtFgCol = mainOptions.TxtFgCol
+	svs.TxtBgCol = opt.TxtBgCol
+	svs.TxtFgCol = opt.TxtFgCol
 
 	// store current text
 	if currentText != txtStr || (!doReplace && currentTextChanged) {
@@ -242,20 +243,20 @@ func highlightText(txtStr string, doReplace bool) (occurrences int, err error) {
 			currentTextChanged = true
 
 			tmpTextSearch := svs.TextSearch
-			svs.TextSearch = gitl.GetEntryText(mainObjects.entryReplace)
+			svs.TextSearch = GetEntryText(obj.entryReplace)
 			svs.Search(svs.Buffer.GetStartIter(), false)
 			svs.TextSearch = tmpTextSearch
 
 		} else {
 			// SourceView search part: used to highlight found or replaced patterns
-			svs.TextSearch = gitl.GetEntryText(mainObjects.entrySearch)
-			svs.UseRegexp = mainObjects.chkRegex.GetActive()
-			svs.WordBoundaries = mainObjects.chkWholeWord.GetActive()
-			svs.CaseSensitive = mainObjects.chkCaseSensitive.GetActive()
+			svs.TextSearch = UnEscapedStr(GetEntryText(obj.entrySearch))
+			svs.UseRegexp = obj.chkRegex.GetActive()
+			svs.WordBoundaries = obj.chkWholeWord.GetActive()
+			svs.CaseSensitive = obj.chkCaseSensitive.GetActive()
 			svs.Search(svs.Buffer.GetStartIter(), false)
 		}
-
-		textWinTitle.Update([]string{fmt.Sprintf("%s %d", sts["totalOccurrences"], fileFoundSingle.Occurrences)})
+		occurrences = fileFoundSingle.Occurrences
+		// textWinTitle.Update([]string{fmt.Sprintf("%s %d", sts["totalOccurrences"], fileFoundSingle.Occurrences)})
 
 		if currentLine > -1 {
 			svs.RunAfterEvents(func() {
@@ -265,8 +266,8 @@ func highlightText(txtStr string, doReplace bool) (occurrences int, err error) {
 	}
 
 	// // Set colors for GtkSourceView
-	// svs.TxtBgCol = mainOptions.TxtBgCol
-	// svs.TxtFgCol = mainOptions.TxtFgCol
+	// svs.TxtBgCol = opt.TxtBgCol
+	// svs.TxtFgCol = opt.TxtFgCol
 
 	// // store current text
 	// if currentText != txtStr || (!doReplace && currentTextChanged) {
@@ -277,15 +278,15 @@ func highlightText(txtStr string, doReplace bool) (occurrences int, err error) {
 
 	// if len(currentText) != 0 {
 
-	// 	svs.TextSearch = gitl.GetEntryText(mainObjects.entrySearch)
-	// 	svs.UseRegexp = mainObjects.chkRegex.GetActive()
-	// 	svs.WordBoundaries = mainObjects.chkWholeWord.GetActive()
-	// 	svs.CaseSensitive = mainObjects.chkCaseSensitive.GetActive()
+	// 	svs.TextSearch = GetEntryText(obj.entrySearch)
+	// 	svs.UseRegexp = obj.chkRegex.GetActive()
+	// 	svs.WordBoundaries = obj.chkWholeWord.GetActive()
+	// 	svs.CaseSensitive = obj.chkCaseSensitive.GetActive()
 
 	// 	if !doReplace {
 	// 		svs.Search(svs.Buffer.GetStartIter(), false)
 	// 	} else {
-	// 		svs.TextReplace = gitl.GetEntryText(mainObjects.entryReplace)
+	// 		svs.TextReplace = GetEntryText(obj.entryReplace)
 	// 		occurrences, err = svs.SearchCtx.ReplaceAll(svs.TextReplace)
 	// 		currentTextChanged = true
 	// 		tmpTextSearch := svs.TextSearch
@@ -336,13 +337,13 @@ func updateStatusBar() {
 
 func clipboardInit() {
 	var err error
-	if mainObjects.clipboard, err = gtk.ClipboardGet(gdk.SELECTION_CLIPBOARD); err != nil {
+	if obj.clipboard, err = gtk.ClipboardGet(gdk.SELECTION_CLIPBOARD); err != nil {
 		log.Fatalf("clipboardInit: %s\n", err.Error())
 	}
 }
 
 func clipboardCopyFromTextWin() {
-	mainObjects.clipboard.SetText(svs.GetText())
+	obj.clipboard.SetText(svs.GetText())
 }
 
 func clipboardPastToTextWin() {
@@ -351,30 +352,30 @@ func clipboardPastToTextWin() {
 
 func clipboardGet() (clipboardContent string) {
 	var err error
-	if clipboardContent, err = mainObjects.clipboard.WaitForText(); err != nil {
+	if clipboardContent, err = obj.clipboard.WaitForText(); err != nil {
 		log.Fatalf("clipboardGet: %s\n", err.Error())
 	}
 	return clipboardContent
 }
 
 func clipboardSet(clipboardContent string) {
-	mainObjects.clipboard.SetText(clipboardContent)
+	obj.clipboard.SetText(clipboardContent)
 }
 
 // Convert Entry to list of extensions.
 func ExtSliceToOpt() {
-	mainOptions.ExtMask = []string{}
+	opt.ExtMask = []string{}
 
-	tmpSliceStrings := strings.Split(gitl.GetEntryText(mainObjects.entryExtMask), mainOptions.ExtSep)
+	tmpSliceStrings := strings.Split(GetEntryText(obj.entryExtMask), opt.ExtSep)
 	for _, str := range tmpSliceStrings {
 		str = strings.TrimSpace(str)
 		if len(str) != 0 {
-			mainOptions.ExtMask = append(mainOptions.ExtMask, str)
+			opt.ExtMask = append(opt.ExtMask, str)
 		}
 	}
-	mainObjects.entryExtMask.SetText(strings.Join(mainOptions.ExtMask, mainOptions.ExtSep+" "))
+	obj.entryExtMask.SetText(strings.Join(opt.ExtMask, opt.ExtSep+" "))
 }
 
 func OptToExtSlice() {
-	mainObjects.entryExtMask.SetText(strings.Join(mainOptions.ExtMask, mainOptions.ExtSep+" "))
+	obj.entryExtMask.SetText(strings.Join(opt.ExtMask, opt.ExtSep+" "))
 }
