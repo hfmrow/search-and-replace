@@ -1,6 +1,6 @@
 # Search and Replace ©2018-21 H.F.M
 
-## Informations
+## information
 
 At the bottom you can find a compiled standalone ".deb" version with its checksum. The ".tar.gz" sources contain a "vendor" directory ensuring you can always compile it even if the official libraries have been changed.
 
