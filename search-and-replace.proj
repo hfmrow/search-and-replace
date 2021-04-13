@@ -28,7 +28,7 @@
 	"GtkSourcePath": "\"github.com/hfmrow/gotk3_gtksource/source\"",
 	"GladeXmlFile": "",
 	"GladeXmlFileRel": "assets/glade/main.glade",
-	"GladeXmlFileCheckSum": "4bddad59c20d10bb2c3d5d543133a490",
+	"GladeXmlFileCheckSum": "868f1266739c68e98b7152da7dc04298",
 	"DefaultProjExt": "*.proj",
 	"BackupExt": [
 		"*.go",
@@ -95,8 +95,8 @@
 		"License": false
 	},
 	"ObjectsCount": 68,
-	"ObjectsAdded": 3,
-	"ObjectsRemoved": 2,
+	"ObjectsAdded": 0,
+	"ObjectsRemoved": 0,
 	"ActualObjects": [
 		{
 			"ObjectType": "GtkButton",

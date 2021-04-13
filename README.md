@@ -93,7 +93,7 @@ This operation indicate that externals data (Image/Icons) must be embedded into 
 | CODENAME                                                   | ulyana                                         |
 | RELEASE                                                    | #46-Ubuntu SMP Fri Jul 10 00:24:02 UTC 2020    |
 | UBUNTU_CODENAME                                            | focal                                          |
-| KERNEL                                                     | 5.8.0-48-generic                               |
+| KERNEL                                                     | 5.8.0-49-generic                               |
 | HDWPLATFORM                                                | x86_64                                         |
 | GTK+ 3                                                     | 3.24.20                                        |
 | GLIB 2                                                     | 2.64.3                                         |

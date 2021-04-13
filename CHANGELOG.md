@@ -8,7 +8,7 @@ At the bottom you can find a compiled standalone ".deb" version with its checksu
 
 All notable changes to this project will be documented in this file.
 
-#### [1.10] 2021-04-10
+#### [1.10] 2021-04-14
 
 #### Added
 
