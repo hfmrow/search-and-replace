@@ -2,7 +2,7 @@
 
 **Note**: since v1.9 '*Search and Replace*' use: [Golang GtkSourceView binding for use with gotk3](https://github.com/hfmrow/gotk3_gtksource)
 
-#### Last update 2021-04-10
+#### Last update 2021-04-14
 
 *This program is designed to find and replace a text pattern in one or more files stored in one or more directories, sub-directories.
 Search and replace in the clipboard is allowed. Drag and drop can be used.
