@@ -1,8 +1,8 @@
-# Search and Replace v1.9
+# Search and Replace v1.10
 
 **Note**: since v1.9 '*Search and Replace*' use: [Golang GtkSourceView binding for use with gotk3](https://github.com/hfmrow/gotk3_gtksource)
 
-#### Last update 2021-04-02
+#### Last update 2021-04-14
 
 *This program is designed to find and replace a text pattern in one or more files stored in one or more directories, sub-directories.
 Search and replace in the clipboard is allowed. Drag and drop can be used.
@@ -29,18 +29,24 @@ Take a look at [H.F.M repositories](https://github.com/hfmrow/) for others usefu
 - Search and replace text pattern into clipboard.
 - A map that allows you to view the content of the text and allows easy navigation through it.
 - Allow the displaying of preview with highlighted patterns before modification.
-- Source code highlighting for multiple languages.
+- Source code highlighting for multiple languages with navigation map.
 - Wildcard, regex, case sensitive, character classes can be used.
 - Whole word functionality, Escape character can be used.
 - Drag and drop capacity.
 - Files can be sorted by extension or using a mask for filename.
+- Lines that contain the searched pattern can be independently selected to be modified or vice versa to keep the content unchanged.
 - Options (top right) to filter text files analysis behavior (text detection) and to limit depth of directories where files will be searched.
 - Backup function available.
 - Each function have his tool-tip for explanations.
 
-*This is the main screen, and children*
+This is the main screen
+![](assets/readme/main.jpg)
 
-![Overview](assets/readme/whole.jpg)
+Found window
+![Found window](assets/readme/found.jpg)
+
+Preview window
+![Preview window](assets/readme/preview.jpg)
 
 ### How to compile
 
@@ -74,17 +80,17 @@ into
 
 This operation indicate that externals data (Image/Icons) must be embedded into the executable file.
 
-### Os information (build using)
+## Os information:
 
 | Name                                                       | Version / Info / Name                          |
 | ---------------------------------------------------------- | ---------------------------------------------- |
-| GOLANG                                                     | V1.16.2 -> GO111MODULE="off", GOPROXY="direct" |
+| GOLANG                                                     | V1.16.3 -> GO111MODULE="off", GOPROXY="direct" |
 | DISTRIB                                                    | LinuxMint Xfce                                 |
 | VERSION                                                    | 20                                             |
 | CODENAME                                                   | ulyana                                         |
 | RELEASE                                                    | #46-Ubuntu SMP Fri Jul 10 00:24:02 UTC 2020    |
 | UBUNTU_CODENAME                                            | focal                                          |
-| KERNEL                                                     | 5.8.0-48-generic                               |
+| KERNEL                                                     | 5.8.0-49-generic                               |
 | HDWPLATFORM                                                | x86_64                                         |
 | GTK+ 3                                                     | 3.24.20                                        |
 | GLIB 2                                                     | 2.64.3                                         |
