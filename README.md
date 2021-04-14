@@ -39,13 +39,16 @@ Take a look at [H.F.M repositories](https://github.com/hfmrow/) for others usefu
 - Backup function available.
 - Each function have his tool-tip for explanations.
 
-This is the main screen
+###### This is the main screen
+
 ![](assets/readme/main.jpg)
 
-Found window
+###### Found window
+
 ![Found window](assets/readme/found.jpg)
 
-Preview window
+###### Preview window
+
 ![Preview window](assets/readme/preview.jpg)
 
 ### How to compile
