@@ -3,13 +3,14 @@ package files
 import (
 	"bufio"
 	"bytes"
-	"crypto/rand"
+	"crypto/md5"
 	"encoding/binary"
 	"encoding/hex"
 	"fmt"
 	"io"
 	"io/ioutil"
 	"log"
+	"math/rand"
 	"os"
 	"os/user"
 	"path"
@@ -17,6 +18,7 @@ import (
 	"regexp"
 	"strconv"
 	"strings"
+	"time"
 
 	glsg "github.com/hfmrow/genLib/strings"
 )
@@ -112,9 +114,33 @@ func DirKeepSame(f1, f2 string) (same, diff []string) {
 	return append([]string{string(os.PathSeparator)}, same...), diff
 }
 
+// CheckOutsideRoot: Check if 'filePath' is outside the current scope of the
+// 'rootDir' (must be a DIRECTORY).
+// count = 0 means 'filePath' is at the same level than 'rootDir'.
+// count > 0 means 'filePath' is in a sub-directory of 'rootDir' and the value
+//           indicate how many sub-directories.
+// count < 0 means how many parent directories relative to base directory.
+func CheckOutsideRoot(rootDir, filePath string) (count int) {
+	rel, err := filepath.Rel(rootDir, filePath)
+	if err != nil {
+		log.Printf("[CheckOutsideRoot], Unable to find relative path: %v\n", err)
+		return -1
+	}
+	for strings.HasPrefix(rel, "..") {
+		rel = strings.TrimPrefix(strings.TrimPrefix(rel, ".."), string(os.PathSeparator))
+		count--
+	}
+	if count == 0 {
+		count = len(strings.Split(rel, string(os.PathSeparator))) - 1
+	}
+	return count
+}
+
 // CheckOutsideDir: Check if 'filenameNew' is in the same directory as
 // 'filenameOrig'. returns 'false' if the 'root' directory is the same.
 func CheckOutsideDir(baseFilename, newFilename string) bool {
+
+	log.Printf("[CheckOutsideDir], This function is outdated, please use '%s' instead\n", "CheckOutsideRoot")
 
 	re := regexp.MustCompile(`^(\.\.[/\\]|\.)`)
 
@@ -152,6 +178,25 @@ func SizeToBytes(size uint32) []byte {
 		fmt.Println("binary.Write failed:", err)
 	}
 	return buf.Bytes()
+}
+
+// ReducePath: Reduce path length by preserving count element from the end
+func TruncatePath(fullpath string, count ...int) (reduced string) {
+	elemCnt := 2
+	if len(count) != 0 {
+		elemCnt = count[0]
+	}
+	splited := strings.Split(fullpath, string(os.PathSeparator))
+	if len(splited) > elemCnt+1 {
+		return "..." + string(os.PathSeparator) + filepath.Join(splited[len(splited)-elemCnt:]...)
+	}
+	return fullpath
+}
+
+// GenFileName: Generate a randomized file name
+func GenFileName() string {
+	r := rand.New(rand.NewSource(time.Now().UnixNano()))
+	return fmt.Sprintf("%x", md5.Sum([]byte(fmt.Sprint(r.Int63n(time.Now().UnixNano())))))
 }
 
 // splitPath: make a slice from a string path
@@ -259,7 +304,10 @@ const (
 // 'option' correspond to 'EEOptions' declaration above.
 func ExtEnsure(filename, ext string, option ...EEOptions) string {
 
-	var opt EEOptions = EE_DEFAULT
+	var (
+		opt            EEOptions = EE_DEFAULT
+		origExtRemoved bool
+	)
 	if len(option) > 0 {
 		opt = option[0]
 	}
@@ -269,8 +317,11 @@ func ExtEnsure(filename, ext string, option ...EEOptions) string {
 		return filename + ext
 	}
 
-	// For some double extenssions, i.e: "tar.gz", remove before apply
-	filename = strings.TrimSuffix(filename, ext)
+	// For some double extensions, i.e: "tar.gz", remove before apply
+	if strings.HasSuffix(filename, ext) {
+		filename = strings.TrimSuffix(filename, ext)
+		origExtRemoved = true
+	}
 
 	// Whether removing all after 1st dot is requested
 	if opt&EE_REM_ALL_AFTER_DOT != 0 {
@@ -280,6 +331,9 @@ func ExtEnsure(filename, ext string, option ...EEOptions) string {
 		}
 	}
 
+	if origExtRemoved {
+		return filename + ext
+	}
 	return filename[:len(filename)-len(path.Ext(filename))] + ext
 }
 

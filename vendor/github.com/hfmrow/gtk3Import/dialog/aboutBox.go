@@ -5,35 +5,17 @@
 	This software use gotk3 that is licensed under the ISC License:
 	https://github.com/gotk3/gotk3/blob/master/LICENSE
 
-	Copyright ©2019 H.F.M - about box v2.0
+	Copyright ©2019-21 H.F.M - about box v2.0
+
 	This program comes with absolutely no warranty. See the The MIT License (MIT) for details:
 	https://opensource.org/licenses/mit-license.php
-
-Usage:
-			About := new(AboutInfos)
-			About.InitFillInfos(
-				mainObjects.MainWindow,
-				"About "+Name,
-				Name,
-				Vers,
-				Creat,
-				YearCreat,
-				LicenseAbrv,
-				LicenseShort,
-				Repository,
-				Descr,
-				searchAndReplaceTop27,// As []byte or a filename
-				signSelect20) // As []byte or a filename
-			About.Width = 400
-
-			if err := About.Show(); err != nil {
-				log.Fatal(err)
-			}
 */
 
 package gtk3Import
 
 import (
+	"log"
+
 	"github.com/gotk3/gotk3/gdk"
 	"github.com/gotk3/gotk3/gtk"
 
@@ -62,6 +44,7 @@ type AboutInfos struct {
 	ImageTop,
 	ImageOkButton interface{}
 
+	ImageTopHeight,
 	MaxCharWidthText,
 	ImageOkButtonSize,
 	Width,
@@ -75,17 +58,44 @@ type AboutInfos struct {
 	DlgBoxStruct *DialogBoxStructure
 }
 
-func AboutInfosNew(parentWindow *gtk.Window, titleWindow, appName, appVers, appCreat, yearCreat, licenseAbrv,
-	licenseShort, repository, description string, topImage, okBtnIcon interface{}) (ab *AboutInfos) {
-	ab = new(AboutInfos)
-	ab.InitFillInfos(parentWindow, titleWindow, appName, appVers, appCreat, yearCreat,
-		licenseAbrv, licenseShort, repository, description, topImage, okBtnIcon)
-	return
+func AboutInfosNew(parentWindow *gtk.Window) *AboutInfos {
+
+	ab := new(AboutInfos)
+	ab.parentWindow = parentWindow
+	ab.MaxCharWidthText = 80
+	ab.ImageTopHeight = 30
+	ab.CssName = "AboutBox"
+	ab.HttpKeepFromEnd = 2
+	ab.Width = 425
+	ab.Height = 100
+	ab.ImageOkButtonSize = 24
+	ab.Resizable = false
+
+	return ab
+}
+
+// InitFillInfos: Initialize structure
+func (ab *AboutInfos) FillInfos(titleWindow, appName, appVers, appCreat,
+	yearCreat, licenseAbrv, licenseShort, repository, description string, topImage, okBtnIcon interface{}) {
+
+	ab.TitleWindow = titleWindow
+	ab.AppName = appName
+	ab.AppVers = appVers
+	ab.AppCreats = appCreat
+	ab.YearCreat = "©" + yearCreat
+	ab.LicenseAbrv = licenseAbrv
+	ab.LicenseShort = licenseShort
+	ab.Repository = repository
+	ab.Description = glsg.FormatText(description, ab.MaxCharWidthText, true)
+	ab.ImageTop = topImage
+	ab.ImageOkButton = okBtnIcon
 }
 
 // InitFillInfos: Initialize structure
 func (ab *AboutInfos) InitFillInfos(parentWindow *gtk.Window, titleWindow, appName, appVers, appCreat,
 	yearCreat, licenseAbrv, licenseShort, repository, description string, topImage, okBtnIcon interface{}) {
+
+	log.Println("WARNING: method out of date. Use 'AboutInfosNew', set wanted option inside structure,\nfollowed by 'FillInfos' with application informations.")
 
 	if ab.MaxCharWidthText == 0 {
 		ab.MaxCharWidthText = 80
@@ -103,12 +113,6 @@ func (ab *AboutInfos) InitFillInfos(parentWindow *gtk.Window, titleWindow, appNa
 	ab.Description = glsg.FormatText(description, ab.MaxCharWidthText, true)
 	ab.ImageTop = topImage
 	ab.ImageOkButton = okBtnIcon
-	ab.CssName = "AboutBox"
-	ab.HttpKeepFromEnd = 2
-	ab.Width = 425
-	ab.Height = 100
-	ab.ImageOkButtonSize = 24
-	ab.Resizable = false
 }
 
 // Show: Display about box
@@ -117,7 +121,6 @@ func (ab *AboutInfos) Show() (err error) {
 
 		ab.DlgBoxStruct.CssName = ab.CssName
 		ab.DlgBoxStruct.KeepAbove = ab.KeepAbove
-		// ab.DlgBoxStruct.WidgetExpend = true
 		ab.DlgBoxStruct.SetSize(ab.Width, ab.Height)
 		ab.DlgBoxStruct.Resizable = ab.Resizable
 		ab.DlgBoxStruct.IconsSize = ab.ImageOkButtonSize
@@ -146,7 +149,8 @@ func (ab *AboutInfos) build() (err error) {
 	name, repo, lic := doMarkup(ab.AppName, ab.Repository, ab.LicenseShort, ab.HttpKeepFromEnd)
 
 	// Build widgets used to this About box window
-	pixbuf, _ = gipf.GetPixBuf(ab.ImageTop, nil) // If an error occurs pixbuf will be nul and imageTop too. So, no image displayed.
+	pixbuf, _ = gipf.GetPixBuf(ab.ImageTop, ab.ImageTopHeight)
+	// If an error occurs pixbuf will be nul and imageTop too. So, no image displayed.
 	if imageTop, err = gtk.ImageNewFromPixbuf(pixbuf); err == nil {
 		if labelAppName, err = gtk.LabelNew(""); err == nil {
 			labelAppName.SetMarkup("\n" + name)

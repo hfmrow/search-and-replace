@@ -1,11 +1,14 @@
 // searching.go
 
 /*
-	Source file auto-generated on Thu, 17 Oct 2019 22:43:58 using Gotk3ObjHandler v1.3.9 ©2018-19 H.F.M
+	Source file auto-generated on Sat, 24 Apr 2021 04:33:11 using Gotk3 Objects Handler v1.7.8
+	©2018-21 hfmrow https://hfmrow.github.io
+
 	This software use gotk3 that is licensed under the ISC License:
 	https://github.com/gotk3/gotk3/blob/master/LICENSE
 
-	Copyright ©2018-19 H.F.M - Search And Replace
+	Copyright ©2018-21 hfmrow - Search And Replace v1.10 github.com/hfmrow/search-and-replace
+
 	This program comes with absolutely no warranty. See the The MIT License (MIT) for details:
 	https://opensource.org/licenses/mit-license.php
 */

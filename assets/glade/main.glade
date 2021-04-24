@@ -4,9 +4,6 @@
   <requires lib="gtk+" version="3.16"/>
   <requires lib="gtksourceview" version="4.0"/>
   <object class="GtkWindow" id="OptionsWindow">
-    <property name="name"></property>
-    <property name="name"></property>
-    <property name="name"></property>
     <property name="name">OptionsWindow</property>
     <property name="can_focus">False</property>
     <property name="resizable">False</property>
@@ -26,9 +23,6 @@
         <property name="orientation">vertical</property>
         <child>
           <object class="GtkImage" id="OptionsImageTop">
-            <property name="name"></property>
-            <property name="name"></property>
-            <property name="name"></property>
             <property name="name">OptionsImageTop</property>
             <property name="visible">True</property>
             <property name="can_focus">False</property>
@@ -68,9 +62,6 @@
                 <property name="column_homogeneous">True</property>
                 <child>
                   <object class="GtkLabel" id="OptionsLabelChooseDepth">
-                    <property name="name"></property>
-                    <property name="name"></property>
-                    <property name="name"></property>
                     <property name="name">OptionsLabelChooseDepth</property>
                     <property name="visible">True</property>
                     <property name="can_focus">False</property>
@@ -86,9 +77,6 @@
                 </child>
                 <child>
                   <object class="GtkSpinButton" id="spinButtonDepth">
-                    <property name="name"></property>
-                    <property name="name"></property>
-                    <property name="name"></property>
                     <property name="name">spinButtonDepth</property>
                     <property name="visible">True</property>
                     <property name="can_focus">True</property>
@@ -102,9 +90,6 @@
                 </child>
                 <child>
                   <object class="GtkLabel" id="OptionsLabelMaxFileSize">
-                    <property name="name"></property>
-                    <property name="name"></property>
-                    <property name="name"></property>
                     <property name="name">OptionsLabelMaxFileSize</property>
                     <property name="visible">True</property>
                     <property name="can_focus">False</property>
@@ -120,9 +105,6 @@
                 </child>
                 <child>
                   <object class="GtkLabel" id="OptionsLabelMinFileSize">
-                    <property name="name"></property>
-                    <property name="name"></property>
-                    <property name="name"></property>
                     <property name="name">OptionsLabelMinFileSize</property>
                     <property name="visible">True</property>
                     <property name="can_focus">False</property>
@@ -138,9 +120,6 @@
                 </child>
                 <child>
                   <object class="GtkEntry" id="OptionsEntryMaxFileSize">
-                    <property name="name"></property>
-                    <property name="name"></property>
-                    <property name="name"></property>
                     <property name="name">OptionsEntryMaxFileSize</property>
                     <property name="visible">True</property>
                     <property name="can_focus">True</property>
@@ -155,9 +134,6 @@
                 </child>
                 <child>
                   <object class="GtkEntry" id="OptionsEntryMinFileSize">
-                    <property name="name"></property>
-                    <property name="name"></property>
-                    <property name="name"></property>
                     <property name="name">OptionsEntryMinFileSize</property>
                     <property name="visible">True</property>
                     <property name="can_focus">True</property>
@@ -171,9 +147,6 @@
                 </child>
                 <child>
                   <object class="GtkLabel" id="OptionsLabelEnableDirChooser">
-                    <property name="name"></property>
-                    <property name="name"></property>
-                    <property name="name"></property>
                     <property name="name">OptionsLabelEnableDirChooser</property>
                     <property name="visible">True</property>
                     <property name="can_focus">False</property>
@@ -189,9 +162,6 @@
                 </child>
                 <child>
                   <object class="GtkSwitch" id="switchFileChooserButton">
-                    <property name="name"></property>
-                    <property name="name"></property>
-                    <property name="name"></property>
                     <property name="name">switchFileChooserButton</property>
                     <property name="visible">True</property>
                     <property name="can_focus">True</property>
@@ -210,11 +180,8 @@
                 </child>
                 <child>
                   <object class="GtkCheckButton" id="chkFollowSymlinkDir">
-                    <property name="name"></property>
-                    <property name="name"></property>
-                    <property name="name"></property>
-                    <property name="label" translatable="yes">Follow symlink directory</property>
                     <property name="name">chkFollowSymlinkDir</property>
+                    <property name="label" translatable="yes">Follow symlink directory</property>
                     <property name="visible">True</property>
                     <property name="can_focus">True</property>
                     <property name="receives_default">False</property>
@@ -259,11 +226,8 @@
         </child>
         <child>
           <object class="GtkButton" id="OptionButtonDone">
-            <property name="name"></property>
-            <property name="name"></property>
-            <property name="name"></property>
-            <property name="label" translatable="yes">Done</property>
             <property name="name">OptionButtonDone</property>
+            <property name="label" translatable="yes">Done</property>
             <property name="visible">True</property>
             <property name="can_focus">True</property>
             <property name="receives_default">True</property>
@@ -287,9 +251,6 @@
     </child>
   </object>
   <object class="GtkWindow" id="findWin">
-    <property name="name"></property>
-    <property name="name"></property>
-    <property name="name"></property>
     <property name="name">findWin</property>
     <property name="can_focus">False</property>
     <property name="window_position">center</property>
@@ -299,9 +260,6 @@
     </child>
     <child>
       <object class="GtkGrid" id="findWinGrid">
-        <property name="name"></property>
-        <property name="name"></property>
-        <property name="name"></property>
         <property name="name">findWinGrid</property>
         <property name="visible">True</property>
         <property name="can_focus">False</property>
@@ -309,9 +267,6 @@
         <property name="margin_bottom">2</property>
         <child>
           <object class="GtkScrolledWindow" id="findWinScrollWin">
-            <property name="name"></property>
-            <property name="name"></property>
-            <property name="name"></property>
             <property name="name">findWinScrollWin</property>
             <property name="visible">True</property>
             <property name="can_focus">True</property>
@@ -321,9 +276,6 @@
             <property name="shadow_type">in</property>
             <child>
               <object class="GtkTreeView" id="findWinTreeView">
-                <property name="name"></property>
-                <property name="name"></property>
-                <property name="name"></property>
                 <property name="name">findWinTreeView</property>
                 <property name="visible">True</property>
                 <property name="can_focus">True</property>
@@ -340,20 +292,14 @@
         </child>
         <child>
           <object class="GtkGrid" id="findWinGridBtn">
-            <property name="name"></property>
-            <property name="name"></property>
-            <property name="name"></property>
             <property name="name">findWinGridBtn</property>
             <property name="visible">True</property>
             <property name="can_focus">False</property>
             <property name="row_homogeneous">True</property>
             <child>
               <object class="GtkButton" id="findWinReplaceBtn">
-                <property name="name"></property>
-                <property name="name"></property>
-                <property name="name"></property>
-                <property name="label" translatable="yes">Replace</property>
                 <property name="name">findWinReplaceBtn</property>
+                <property name="label" translatable="yes">Replace</property>
                 <property name="visible">True</property>
                 <property name="can_focus">True</property>
                 <property name="receives_default">True</property>
@@ -366,11 +312,8 @@
             </child>
             <child>
               <object class="GtkCheckButton" id="findWinChkBackUp">
-                <property name="name"></property>
-                <property name="name"></property>
-                <property name="name"></property>
-                <property name="label" translatable="yes">Backup</property>
                 <property name="name">findWinChkBackUp</property>
+                <property name="label" translatable="yes">Backup</property>
                 <property name="visible">True</property>
                 <property name="can_focus">True</property>
                 <property name="receives_default">False</property>
@@ -384,11 +327,8 @@
             </child>
             <child>
               <object class="GtkCheckButton" id="findWinChkDispForbFiles">
-                <property name="name"></property>
-                <property name="name"></property>
-                <property name="name"></property>
-                <property name="label" translatable="yes">Show forbidden files</property>
                 <property name="name">findWinChkDispForbFiles</property>
+                <property name="label" translatable="yes">Show forbidden files</property>
                 <property name="visible">True</property>
                 <property name="can_focus">True</property>
                 <property name="receives_default">False</property>
@@ -402,11 +342,8 @@
             </child>
             <child>
               <object class="GtkCheckButton" id="findWinChkExpandAll">
-                <property name="name"></property>
-                <property name="name"></property>
-                <property name="name"></property>
+                <property name="name">findWinChkExpandAll</property>
                 <property name="label" translatable="yes">Expand all</property>
-                <property name="name">findWinChkBackUp</property>
                 <property name="visible">True</property>
                 <property name="can_focus">True</property>
                 <property name="receives_default">False</property>
@@ -450,11 +387,8 @@
             </child>
             <child>
               <object class="GtkButton" id="findWinBtnInvertSel">
-                <property name="name"></property>
-                <property name="name"></property>
-                <property name="name"></property>
-                <property name="label" translatable="yes">Invert sel.</property>
                 <property name="name">findWinBtnInvertSel</property>
+                <property name="label" translatable="yes">Invert sel.</property>
                 <property name="visible">True</property>
                 <property name="can_focus">True</property>
                 <property name="receives_default">True</property>
@@ -469,11 +403,8 @@
             </child>
             <child>
               <object class="GtkButton" id="findWinBtnDeselect">
-                <property name="name"></property>
-                <property name="name"></property>
-                <property name="name"></property>
+                <property name="name">findWinBtnDeselect</property>
                 <property name="label" translatable="yes">Deselect all</property>
-                <property name="name">findWinCancelBtn</property>
                 <property name="visible">True</property>
                 <property name="can_focus">True</property>
                 <property name="receives_default">True</property>
@@ -488,11 +419,8 @@
             </child>
             <child>
               <object class="GtkButton" id="findWinCancelBtn">
-                <property name="name"></property>
-                <property name="name"></property>
-                <property name="name"></property>
-                <property name="label" translatable="yes">Close</property>
                 <property name="name">findWinCancelBtn</property>
+                <property name="label" translatable="yes">Close</property>
                 <property name="visible">True</property>
                 <property name="can_focus">True</property>
                 <property name="receives_default">True</property>
@@ -525,9 +453,6 @@
     </child>
   </object>
   <object class="GtkWindow" id="mainWin">
-    <property name="name"></property>
-    <property name="name"></property>
-    <property name="name"></property>
     <property name="name">mainWin</property>
     <property name="can_focus">False</property>
     <signal name="delete-event" handler="mainWinOnExit" swapped="no"/>
@@ -546,26 +471,17 @@
         <property name="orientation">vertical</property>
         <child>
           <object class="GtkGrid" id="MainTopGrig">
-            <property name="name"></property>
-            <property name="name"></property>
-            <property name="name"></property>
             <property name="name">MainTopGrig</property>
             <property name="visible">True</property>
             <property name="can_focus">False</property>
             <child>
               <object class="GtkEventBox" id="ImgTopEventbox">
-                <property name="name"></property>
-                <property name="name"></property>
-                <property name="name"></property>
                 <property name="name">ImgTopEventbox</property>
                 <property name="visible">True</property>
                 <property name="can_focus">False</property>
                 <property name="hexpand">True</property>
                 <child>
                   <object class="GtkImage" id="imgTop">
-                    <property name="name"></property>
-                    <property name="name"></property>
-                    <property name="name"></property>
                     <property name="name">imgTop</property>
                     <property name="visible">True</property>
                     <property name="can_focus">False</property>
@@ -587,9 +503,6 @@
                 <property name="orientation">vertical</property>
                 <child>
                   <object class="GtkButton" id="MainButtonOptions">
-                    <property name="name"></property>
-                    <property name="name"></property>
-                    <property name="name"></property>
                     <property name="name">MainButtonOptions</property>
                     <property name="visible">True</property>
                     <property name="can_focus">True</property>
@@ -620,8 +533,6 @@
         </child>
         <child>
           <object class="GtkBox" id="mainBox">
-            <property name="name"></property>
-            <property name="name"></property>
             <property name="name">mainBox</property>
             <property name="visible">True</property>
             <property name="can_focus">False</property>
@@ -634,9 +545,6 @@
                 <property name="column_homogeneous">True</property>
                 <child>
                   <object class="GtkGrid" id="replaceGrid">
-                    <property name="name"></property>
-                    <property name="name"></property>
-                    <property name="name">mainBox</property>
                     <property name="name">replaceGrid</property>
                     <property name="visible">True</property>
                     <property name="can_focus">False</property>
@@ -645,9 +553,6 @@
                     <property name="column_homogeneous">True</property>
                     <child>
                       <object class="GtkEntry" id="entryReplace">
-                        <property name="name"></property>
-                        <property name="name"></property>
-                        <property name="name">mainBox</property>
                         <property name="name">entryReplace</property>
                         <property name="visible">True</property>
                         <property name="can_focus">True</property>
@@ -659,9 +564,6 @@
                     </child>
                     <child>
                       <object class="GtkLabel" id="lblReplace">
-                        <property name="name"></property>
-                        <property name="name"></property>
-                        <property name="name">mainBox</property>
                         <property name="name">lblReplace</property>
                         <property name="visible">True</property>
                         <property name="can_focus">False</property>
@@ -674,9 +576,6 @@
                     </child>
                     <child>
                       <object class="GtkLabel" id="lblSearch">
-                        <property name="name"></property>
-                        <property name="name"></property>
-                        <property name="name">mainBox</property>
                         <property name="name">lblSearch</property>
                         <property name="visible">True</property>
                         <property name="can_focus">False</property>
@@ -689,9 +588,6 @@
                     </child>
                     <child>
                       <object class="GtkEntry" id="entrySearch">
-                        <property name="name"></property>
-                        <property name="name"></property>
-                        <property name="name">mainBox</property>
                         <property name="name">entrySearch</property>
                         <property name="visible">True</property>
                         <property name="can_focus">True</property>
@@ -705,9 +601,6 @@
                     </child>
                     <child>
                       <object class="GtkLabel" id="lblExtMask">
-                        <property name="name"></property>
-                        <property name="name"></property>
-                        <property name="name">mainBox</property>
                         <property name="name">lblExtMask</property>
                         <property name="visible">True</property>
                         <property name="can_focus">False</property>
@@ -722,9 +615,6 @@
                     </child>
                     <child>
                       <object class="GtkEntry" id="entryExtMask">
-                        <property name="name"></property>
-                        <property name="name"></property>
-                        <property name="name">mainBox</property>
                         <property name="name">entryExtMask</property>
                         <property name="visible">True</property>
                         <property name="can_focus">True</property>
@@ -755,11 +645,8 @@
                         <property name="can_focus">False</property>
                         <child>
                           <object class="GtkButton" id="btnScan">
-                            <property name="name"></property>
-                            <property name="name"></property>
-                            <property name="name">mainBox</property>
-                            <property name="label" translatable="yes">Scan files</property>
                             <property name="name">btnScan</property>
+                            <property name="label" translatable="yes">Scan files</property>
                             <property name="visible">True</property>
                             <property name="can_focus">True</property>
                             <property name="receives_default">True</property>
@@ -774,9 +661,6 @@
                         </child>
                         <child>
                           <object class="GtkFileChooserButton" id="fileChooserBtn">
-                            <property name="name"></property>
-                            <property name="name"></property>
-                            <property name="name">mainBox</property>
                             <property name="name">fileChooserBtn</property>
                             <property name="visible">True</property>
                             <property name="can_focus">False</property>
@@ -793,11 +677,8 @@
                         </child>
                         <child>
                           <object class="GtkButton" id="btnReplaceInClipboard">
-                            <property name="name"></property>
-                            <property name="name"></property>
-                            <property name="name">mainBox</property>
-                            <property name="label" translatable="yes">Replace in clipboard</property>
                             <property name="name">btnReplaceInClipboard</property>
+                            <property name="label" translatable="yes">Replace in clipboard</property>
                             <property name="visible">True</property>
                             <property name="can_focus">True</property>
                             <property name="receives_default">True</property>
@@ -814,11 +695,8 @@
                         </child>
                         <child>
                           <object class="GtkButton" id="btnShowClipboard">
-                            <property name="name"></property>
-                            <property name="name"></property>
-                            <property name="name">mainBox</property>
-                            <property name="label" translatable="yes">View clipboard</property>
                             <property name="name">btnShowClipboard</property>
+                            <property name="label" translatable="yes">View clipboard</property>
                             <property name="visible">True</property>
                             <property name="can_focus">True</property>
                             <property name="receives_default">True</property>
@@ -840,11 +718,8 @@
                     </child>
                     <child>
                       <object class="GtkButton" id="btnFind">
-                        <property name="name"></property>
-                        <property name="name"></property>
-                        <property name="name">mainBox</property>
-                        <property name="label" translatable="yes">Search in file(s)</property>
                         <property name="name">btnFind</property>
+                        <property name="label" translatable="yes">Search in file(s)</property>
                         <property name="visible">True</property>
                         <property name="can_focus">True</property>
                         <property name="receives_default">True</property>
@@ -864,11 +739,8 @@
                         <property name="can_focus">False</property>
                         <child>
                           <object class="GtkCheckButton" id="chkCaseSensitive">
-                            <property name="name"></property>
-                            <property name="name"></property>
-                            <property name="name">mainBox</property>
-                            <property name="label" translatable="yes">Case sensitive</property>
                             <property name="name">chkCaseSensitive</property>
+                            <property name="label" translatable="yes">Case sensitive</property>
                             <property name="visible">True</property>
                             <property name="can_focus">True</property>
                             <property name="receives_default">False</property>
@@ -883,11 +755,8 @@
                         </child>
                         <child>
                           <object class="GtkCheckButton" id="chkWholeWord">
-                            <property name="name"></property>
-                            <property name="name"></property>
-                            <property name="name">mainBox</property>
-                            <property name="label" translatable="yes">Whole word</property>
                             <property name="name">chkWholeWord</property>
+                            <property name="label" translatable="yes">Whole word</property>
                             <property name="visible">True</property>
                             <property name="can_focus">True</property>
                             <property name="receives_default">False</property>
@@ -902,11 +771,8 @@
                         </child>
                         <child>
                           <object class="GtkCheckButton" id="chkRegex">
-                            <property name="name"></property>
-                            <property name="name"></property>
-                            <property name="name">mainBox</property>
-                            <property name="label" translatable="yes">Regex</property>
                             <property name="name">chkRegex</property>
+                            <property name="label" translatable="yes">Regex</property>
                             <property name="visible">True</property>
                             <property name="can_focus">True</property>
                             <property name="receives_default">False</property>
@@ -921,11 +787,8 @@
                         </child>
                         <child>
                           <object class="GtkCheckButton" id="chkWildcard">
-                            <property name="name"></property>
-                            <property name="name"></property>
-                            <property name="name">mainBox</property>
-                            <property name="label" translatable="yes">Wildcard</property>
                             <property name="name">chkWildcard</property>
+                            <property name="label" translatable="yes">Wildcard</property>
                             <property name="visible">True</property>
                             <property name="can_focus">True</property>
                             <property name="receives_default">False</property>
@@ -940,11 +803,8 @@
                         </child>
                         <child>
                           <object class="GtkCheckButton" id="chkUseEscapeChar">
-                            <property name="name"></property>
-                            <property name="name"></property>
-                            <property name="name">mainBox</property>
-                            <property name="label" translatable="yes">Esc search</property>
                             <property name="name">chkUseEscapeChar</property>
+                            <property name="label" translatable="yes">Esc search</property>
                             <property name="visible">True</property>
                             <property name="can_focus">True</property>
                             <property name="receives_default">False</property>
@@ -959,11 +819,8 @@
                         </child>
                         <child>
                           <object class="GtkCheckButton" id="chkCharacterClassStrictMode">
-                            <property name="name"></property>
-                            <property name="name"></property>
-                            <property name="name">mainBox</property>
-                            <property name="label" translatable="yes">Strict mode</property>
                             <property name="name">chkCharacterClassStrictMode</property>
+                            <property name="label" translatable="yes">Strict mode</property>
                             <property name="visible">True</property>
                             <property name="can_focus">True</property>
                             <property name="receives_default">False</property>
@@ -978,11 +835,8 @@
                         </child>
                         <child>
                           <object class="GtkCheckButton" id="chkCharacterClass">
-                            <property name="name"></property>
-                            <property name="name"></property>
-                            <property name="name">mainBox</property>
-                            <property name="label" translatable="yes">Posix char class  </property>
                             <property name="name">chkCharacterClass</property>
+                            <property name="label" translatable="yes">Posix char class  </property>
                             <property name="visible">True</property>
                             <property name="can_focus">True</property>
                             <property name="receives_default">False</property>
@@ -998,11 +852,8 @@
                         </child>
                         <child>
                           <object class="GtkCheckButton" id="chkUseEscapeCharToReplace">
-                            <property name="name"></property>
-                            <property name="name"></property>
-                            <property name="name">mainBox</property>
+                            <property name="name">chkUseEscapeCharToReplace</property>
                             <property name="label" translatable="yes">Esc replace</property>
-                            <property name="name">chkUseEscapeChar</property>
                             <property name="visible">True</property>
                             <property name="can_focus">True</property>
                             <property name="receives_default">False</property>
@@ -1039,9 +890,6 @@
             </child>
             <child>
               <object class="GtkScrolledWindow" id="scrolledWindowTreeView">
-                <property name="name"></property>
-                <property name="name"></property>
-                <property name="name">mainBox</property>
                 <property name="name">scrolledWindowTreeView</property>
                 <property name="visible">True</property>
                 <property name="can_focus">True</property>
@@ -1054,9 +902,6 @@
                 <property name="overlay_scrolling">False</property>
                 <child>
                   <object class="GtkTreeView" id="listViewFiles">
-                    <property name="name"></property>
-                    <property name="name"></property>
-                    <property name="name">mainBox</property>
                     <property name="name">listViewFiles</property>
                     <property name="visible">True</property>
                     <property name="can_focus">True</property>
@@ -1091,9 +936,6 @@
             <property name="can_focus">False</property>
             <child>
               <object class="GtkStatusbar" id="statusbar">
-                <property name="name"></property>
-                <property name="name"></property>
-                <property name="name">mainBox</property>
                 <property name="name">statusbar</property>
                 <property name="visible">True</property>
                 <property name="can_focus">False</property>
@@ -1113,11 +955,8 @@
             </child>
             <child>
               <object class="GtkButton" id="mainWinBtnClose">
-                <property name="name"></property>
-                <property name="name"></property>
-                <property name="name">mainBox</property>
-                <property name="label" translatable="yes">Close</property>
                 <property name="name">mainWinBtnClose</property>
+                <property name="label" translatable="yes">Close</property>
                 <property name="visible">True</property>
                 <property name="can_focus">True</property>
                 <property name="receives_default">True</property>
@@ -1141,9 +980,6 @@
     </child>
   </object>
   <object class="GtkWindow" id="textWin">
-    <property name="name"></property>
-    <property name="name"></property>
-    <property name="name">mainBox</property>
     <property name="name">textWin</property>
     <property name="can_focus">False</property>
     <property name="window_position">center</property>
@@ -1153,18 +989,12 @@
     </child>
     <child>
       <object class="GtkBox" id="textWinBox">
-        <property name="name"></property>
-        <property name="name"></property>
-        <property name="name">mainBox</property>
         <property name="name">textWinBox</property>
         <property name="visible">True</property>
         <property name="can_focus">False</property>
         <property name="orientation">vertical</property>
         <child>
           <object class="GtkGrid" id="textWinGridTop">
-            <property name="name"></property>
-            <property name="name"></property>
-            <property name="name">mainBox</property>
             <property name="name">textWinGridTop</property>
             <property name="visible">True</property>
             <property name="can_focus">False</property>
@@ -1173,11 +1003,8 @@
             <property name="row_homogeneous">True</property>
             <child>
               <object class="GtkCheckButton" id="textWinChkWrap">
-                <property name="name"></property>
-                <property name="name"></property>
-                <property name="name">mainBox</property>
-                <property name="label" translatable="yes">Wrap text  </property>
                 <property name="name">textWinChkWrap</property>
+                <property name="label" translatable="yes">Wrap text  </property>
                 <property name="visible">True</property>
                 <property name="can_focus">True</property>
                 <property name="receives_default">False</property>
@@ -1193,11 +1020,8 @@
             </child>
             <child>
               <object class="GtkCheckButton" id="textWinChkShowModifications">
-                <property name="name"></property>
-                <property name="name"></property>
-                <property name="name">mainBox</property>
-                <property name="label" translatable="yes">Show modifications</property>
                 <property name="name">textWinChkShowModifications</property>
+                <property name="label" translatable="yes">Show modifications</property>
                 <property name="visible">True</property>
                 <property name="can_focus">True</property>
                 <property name="receives_default">False</property>
@@ -1210,11 +1034,8 @@
             </child>
             <child>
               <object class="GtkCheckButton" id="textWinChkSyntxHighlight">
-                <property name="name"></property>
-                <property name="name"></property>
-                <property name="name">mainBox</property>
-                <property name="label" translatable="yes">Syntax highlighter</property>
                 <property name="name">textWinChkSyntxHighlight</property>
+                <property name="label" translatable="yes">Syntax highlighter</property>
                 <property name="visible">True</property>
                 <property name="can_focus">True</property>
                 <property name="receives_default">False</property>
@@ -1227,9 +1048,6 @@
             </child>
             <child>
               <object class="GtkComboBoxText" id="textWinComboBoxTextStyleChooser">
-                <property name="name"></property>
-                <property name="name"></property>
-                <property name="name">mainBox</property>
                 <property name="name">textWinComboBoxTextStyleChooser</property>
                 <property name="visible">True</property>
                 <property name="can_focus">False</property>
@@ -1243,9 +1061,6 @@
             </child>
             <child>
               <object class="GtkComboBoxText" id="textWinComboBoxLanguage">
-                <property name="name"></property>
-                <property name="name"></property>
-                <property name="name">mainBox</property>
                 <property name="name">textWinComboBoxLanguage</property>
                 <property name="visible">True</property>
                 <property name="can_focus">False</property>
@@ -1258,11 +1073,8 @@
             </child>
             <child>
               <object class="GtkToggleButton" id="SourceToggleButtonMapWidth">
-                <property name="name"></property>
-                <property name="name"></property>
-                <property name="name">mainBox</property>
-                <property name="label" translatable="yes">Map fixed width</property>
                 <property name="name">SourceToggleButtonMapWidth</property>
+                <property name="label" translatable="yes">Map fixed width</property>
                 <property name="visible">True</property>
                 <property name="can_focus">True</property>
                 <property name="receives_default">True</property>
@@ -1282,9 +1094,6 @@
         </child>
         <child>
           <object class="GtkPaned" id="Paned">
-            <property name="name"></property>
-            <property name="name"></property>
-            <property name="name">mainBox</property>
             <property name="name">Paned</property>
             <property name="visible">True</property>
             <property name="can_focus">True</property>
@@ -1298,9 +1107,6 @@
                 <property name="shadow_type">in</property>
                 <child>
                   <object class="GtkSourceView" id="View">
-                    <property name="name"></property>
-                    <property name="name"></property>
-                    <property name="name">mainBox</property>
                     <property name="name">View</property>
                     <property name="visible">True</property>
                     <property name="can_focus">True</property>
@@ -1321,9 +1127,6 @@
                 <property name="shadow_type">in</property>
                 <child>
                   <object class="GtkSourceMap" id="Map">
-                    <property name="name"></property>
-                    <property name="name"></property>
-                    <property name="name">mainBox</property>
                     <property name="name">Map</property>
                     <property name="visible">True</property>
                     <property name="can_focus">False</property>
@@ -1349,11 +1152,8 @@
         </child>
         <child>
           <object class="GtkButton" id="textWinBtnDone">
-            <property name="name"></property>
-            <property name="name"></property>
-            <property name="name">mainBox</property>
-            <property name="label" translatable="yes">Close</property>
             <property name="name">textWinBtnDone</property>
+            <property name="label" translatable="yes">Close</property>
             <property name="visible">True</property>
             <property name="can_focus">True</property>
             <property name="receives_default">True</property>

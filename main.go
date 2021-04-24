@@ -1,11 +1,14 @@
 // main.go
 
 /*
-	Source file auto-generated on Fri, 09 Apr 2021 03:01:52 using Gotk3 Objects Handler v1.7.5 ©2018-21 hfmrow
+	Source file auto-generated on Sat, 24 Apr 2021 04:33:11 using Gotk3 Objects Handler v1.7.8
+	©2018-21 hfmrow https://hfmrow.github.io
+
 	This software use gotk3 that is licensed under the ISC License:
 	https://github.com/gotk3/gotk3/blob/master/LICENSE
 
 	Copyright ©2018-21 hfmrow - Search And Replace v1.10 github.com/hfmrow/search-and-replace
+
 	This program comes with absolutely no warranty. See the The MIT License (MIT) for details:
 	https://opensource.org/licenses/mit-license.php
 */
@@ -32,7 +35,7 @@ func main() {
 	// - translate function if used, will no more auto-update "sts" map sentences,
 	// - all built-in assets will be used instead of the files themselves.
 	//   Be aware to update assets via "Goh" and translations with "Got" before all.
-	devMode = true
+	devMode = false
 	absoluteRealPath, optFilename = getAbsRealPath()
 
 	/* Logger init. */
@@ -71,8 +74,9 @@ func mainApplication() {
 	)
 
 	/* Init AboutBox */
-	opt.AboutOptions.InitFillInfos(
-		obj.mainWin,
+	About = AboutInfosNew(obj.mainWin)
+	About.ImageTopHeight = 40
+	About.FillInfos(
 		"About "+Name,
 		Name,
 		Vers,

@@ -103,6 +103,42 @@ func HumanReadableSize(size interface{}, opt ...HROptions) string {
 	return fmt.Sprintf("%2.2f%s", val, unit)
 }
 
+// HumanReadableSizeAlt: Same as above with an alternative method.
+// Format byte size to human readable format.
+func HumanReadableSizeAlt(b int64, options ...HROptions) string {
+	var (
+		unit    int64 = 1024
+		suffix        = "iB"
+		unitStr       = "KMGTPE"
+	)
+	if len(options) > 0 {
+		opt := options[0]
+		if opt&UNIT_DECIMAL != 0 {
+			unit = 1000
+		}
+		if opt&UNIT_SHORTEN != 0 || opt&UNIT_DECIMAL != 0 {
+			suffix = "B"
+		}
+		if opt&UNIT_LOWER != 0 {
+			suffix = strings.ToLower(suffix)
+			unitStr = strings.ToLower(unitStr)
+		}
+		if opt&UNIT_HIDE != 0 {
+			suffix = ""
+			unitStr = ""
+		}
+	}
+	if b < unit {
+		return fmt.Sprintf("%d B", b)
+	}
+	div, exp := int64(unit), 0
+	for n := b / unit; n >= unit; n /= unit {
+		div *= unit
+		exp++
+	}
+	return fmt.Sprintf("%.1f%s%c%s", float64(b)/float64(div), " ", unitStr[exp], suffix)
+}
+
 // String: Convert frenquency value int64 to string human readable version.
 func HumanReadableFreq(value interface{}, hideUnit ...bool) string {
 

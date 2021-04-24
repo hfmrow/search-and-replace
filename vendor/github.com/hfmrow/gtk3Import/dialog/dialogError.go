@@ -17,9 +17,9 @@ import (
 func DialogError(window *gtk.Window, title, text string, err error, options ...bool) bool {
 
 	var (
-		devMode,
-		forceExit,
-		markupEnabled = true, false, false
+		devMode              = true
+		forceExit            = false
+		DMOptions DlgOptions = DLG_ERROR
 	)
 
 	switch {
@@ -33,27 +33,25 @@ func DialogError(window *gtk.Window, title, text string, err error, options ...b
 	case len(options) == 3:
 		devMode = options[0]
 		forceExit = options[1]
-		markupEnabled = options[2]
-
+		if options[2] {
+			DMOptions = DMOptions | DLG_MARKUP
+		}
 	case len(options) > 3:
 		fmt.Printf("DialogError: Bad, number of arguments, %v\n", options)
 		os.Exit(1)
-
-	}
-
-	dialogType := "error"
-	if markupEnabled {
-		dialogType = "errorWithMarkup"
 	}
 
 	if gler.Check(err) {
+		dispText := fmt.Sprintf("\n\n"+text+":\n%s", err.Error())
+		if len(text) == 0 {
+			dispText = fmt.Sprintf("\n\n" + err.Error() + "\n")
+		}
 		if devMode {
 			if DialogMessage(
 				window,
-				dialogType,
 				title,
-				fmt.Sprintf("\n\n"+text+":\n\n%s", err.Error()),
-				"",
+				dispText,
+				nil, DMOptions,
 				"Stop",
 				"Continue") == 0 {
 				os.Exit(1)
@@ -61,10 +59,9 @@ func DialogError(window *gtk.Window, title, text string, err error, options ...b
 		} else {
 			DialogMessage(
 				window,
-				dialogType,
 				title,
-				fmt.Sprintf("\n\n"+text+":\n\n%s", err.Error()),
-				"",
+				dispText,
+				nil, DMOptions,
 				"Ok")
 			if forceExit {
 				os.Exit(1)

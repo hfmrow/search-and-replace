@@ -17,12 +17,12 @@ import (
 	"strings"
 
 	glco "github.com/hfmrow/genLib/crypto"
-	glfsfs "github.com/hfmrow/genLib/files/files-operations"
+	glfsfo "github.com/hfmrow/genLib/files/filesOperations"
 	glsg "github.com/hfmrow/genLib/strings"
 	glsscc "github.com/hfmrow/genLib/strings/cClass"
 )
 
-var fos *glfsfs.FilesOpStruct
+var fos *glfsfo.FilesOpStruct
 
 // SearchAndReplaceFiles: is a structure that hold some methods
 // to provide an efficient way to search, replace given pattern
@@ -46,7 +46,7 @@ func SearchAndReplaceInFiles(filenames []string, toSearch, replaceWith string, m
 	var stat os.FileInfo
 
 	// Init FOS structure (used to handle file operations)
-	fos, err = glfsfs.FilesOpStructNew()
+	fos, err = glfsfo.FilesOpStructNew()
 	if err != nil {
 		return founds, occurFound, err
 	}

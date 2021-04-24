@@ -2,7 +2,7 @@
 
 **Note**: since v1.9 '*Search and Replace*' use: [Golang GtkSourceView binding for use with gotk3](https://github.com/hfmrow/gotk3_gtksource)
 
-#### Last update 2021-04-14
+#### Last update 2021-04-24
 
 *This program is designed to find and replace a text pattern in one or more files stored in one or more directories, sub-directories.
 Search and replace in the clipboard is allowed. Drag and drop can be used.
@@ -57,15 +57,17 @@ Take a look at [H.F.M repositories](https://github.com/hfmrow/) for others usefu
 
 - Open terminal window and at command prompt, type: `go get github.com/hfmrow/search-and-replace`
 
-- See [Gotk3 Installation instructions](https://github.com/gotk3/gotk3/wiki#installation) for gui installation instruction.
+- Install [Go bindings for GTK3](https://github.com/gotk3/gotk3) and follow [Installation instructions](https://github.com/gotk3/gotk3/wiki#installation).
 
-- `go get github.com/hfmrow/gotk3_gtksource/source` is also required since version 1.9 see at the bottom.
+- Get [GtkSourceView](https://github.com/hfmrow/gotk3_gtksource) library and follow instructions to install it with his `libgtksourceview-X-dev` package. Required since version 1.9 see at the bottom.
 
-- To change gtk3 interface you need to use the ```devMode = true``` to disable embedding assets. see below ...
+- **Since Go 1.16, native embed library is used instead of previous one and the following restriction is out of date.**
 
-- To change language file you need to use another home made software, (not published actually). So don't change language file ...
+- ~~To change gtk3 interface you need to set `devMode` flag at `true`. A home made software, (not published actually) have been used to generate some parts of source code / assets embedding. So, you cannot (at this time) change interface for production mode.~~
 
-- To Produce a stand-alone executable, you must change inside "main.go" file:
+- To change language file you need to use another home made software, (not published actually). You can still do it manually, all data has been stored in a '.json' file in the `assets/lang` directory.
+
+- To Produce a *stand-alone executable*, you must change inside `main.go` file:
 
 ```go
     func main() {
@@ -81,7 +83,7 @@ into
     ...
 ```
 
-This operation indicate that externals data (Image/Icons) must be embedded into the executable file.
+This operation indicates that the internal behavior of the software will be modified to adapt to the production environment (display of errors, location of the configuration file, etc.).
 
 ## Os information:
 
@@ -96,7 +98,7 @@ This operation indicate that externals data (Image/Icons) must be embedded into 
 | CODENAME                                                   | ulyana                                         |
 | RELEASE                                                    | #46-Ubuntu SMP Fri Jul 10 00:24:02 UTC 2020    |
 | UBUNTU_CODENAME                                            | focal                                          |
-| KERNEL                                                     | 5.8.0-49-generic                               |
+| KERNEL                                                     | 5.8.0-50-generic                               |
 | HDWPLATFORM                                                | x86_64                                         |
 | GTK+ 3                                                     | 3.24.20                                        |
 | GLIB 2                                                     | 2.64.3                                         |
@@ -107,7 +109,7 @@ This operation indicate that externals data (Image/Icons) must be embedded into 
 
 </details>
 
-- The compilation have not been tested under Windows or Mac OS, but all file access functions, line-end manipulations or charset implementation are made with OS portability in mind.
+- The compilation have not been tested under Windows or Mac OS.
 
 ### You got an issue ?
 
@@ -118,8 +120,8 @@ This operation indicate that externals data (Image/Icons) must be embedded into 
 ### Used libraries
 
 - Since version 1.9: [Golang GtkSourceView binding for use with gotk3](https://github.com/hfmrow/gotk3_gtksource)
-- Before version 1.9: [A general purpose syntax highlighter in pure Go](https://github.com/alecthomas/chroma)
-- [Go Humans! (formatters for units to human friendly sizes)](https://github.com/dustin/go-humanize)
+- ~~Before version 1.9: [A general purpose syntax highlighter in pure Go](https://github.com/alecthomas/chroma)~~
+- [Go Humans! (formatters for units to human friendly time/date)](https://github.com/dustin/go-humanize)
 - [Go bindings for GTK3](https://github.com/gotk3/gotk3)
 - And some personal libraries not yet published.
 

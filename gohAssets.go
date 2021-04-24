@@ -1,14 +1,21 @@
 // gohAssets.go
 
 /*
-	Source file auto-generated on Wed, 14 Apr 2021 01:33:39 using Gotk3 Objects Handler v1.7.5 ©2018-21 hfmrow
+	Source file auto-generated on Sat, 24 Apr 2021 04:33:11 using Gotk3 Objects Handler v1.7.8
+	©2018-21 hfmrow https://hfmrow.github.io
+
 	This software use gotk3 that is licensed under the ISC License:
 	https://github.com/gotk3/gotk3/blob/master/LICENSE
 
 	Copyright ©2018-21 hfmrow - Search And Replace v1.10 github.com/hfmrow/search-and-replace
+
 	This program comes with absolutely no warranty. See the The MIT License (MIT) for details:
 	https://opensource.org/licenses/mit-license.php
 */
+
+/************************************************************************/
+/* NOTICE: This file is completely rewritten when updating the assets. */
+/**********************************************************************/
 
 package main
 
@@ -16,10 +23,6 @@ import (
 	"embed"
 	"log"
 )
-
-//go:embed assets/glade
-//go:embed assets/images
-var embeddedFiles embed.FS
 
 // This functionality does not require explicit encoding of the files, at each
 // compilation, the files are inserted into the resulting binary. Thus, updating
@@ -54,3 +57,20 @@ func readEmbedFile(filename string) (out []byte) {
 	}
 	return
 }
+
+//go:embed assets/glade/main.glade
+//go:embed assets/images/clipboard.png
+//go:embed assets/images/clipboard-repl.png
+//go:embed assets/images/Cross-icon-48.png
+//go:embed assets/images/folder-48.png
+//go:embed assets/images/linear-progress-horz-blue.gif
+//go:embed assets/images/logout-48.png
+//go:embed assets/images/Mimetype-source-icon-golang-48.png
+//go:embed assets/images/Options.png
+//go:embed assets/images/replace.png
+//go:embed assets/images/search-and-replace-top-27.png
+//go:embed assets/images/search-and-replace-top-48.png
+//go:embed assets/images/search-folder-48.png
+//go:embed assets/images/search-icon-48.png
+//go:embed assets/images/Tick-icon-48.png
+var embeddedFiles embed.FS

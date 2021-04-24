@@ -1,11 +1,16 @@
 // translate.go
 
-// File generated on Sat, 10 Apr 2021 22:05:31 using Gotk3 Objects Translate v1.5.2 2019-21 hfmrow
-
 /*
-* 	This program comes with absolutely no warranty.
-*	See the The MIT License (MIT) for details:
-*	https://opensource.org/licenses/mit-license.php
+	Source file auto-generated on Sat, 24 Apr 2021 04:33:11 using Gotk3 Objects Handler v1.7.8
+	©2018-21 hfmrow https://hfmrow.github.io
+
+	This software use gotk3 that is licensed under the ISC License:
+	https://github.com/gotk3/gotk3/blob/master/LICENSE
+
+	Copyright ©2018-21 hfmrow - Search And Replace v1.10 github.com/hfmrow/search-and-replace
+
+	This program comes with absolutely no warranty. See the The MIT License (MIT) for details:
+	https://opensource.org/licenses/mit-license.php
 */
 
 package main
@@ -76,6 +81,7 @@ func (trans *MainTranslate) initGtkObjectsText() {
 	trans.setTextToGtkObjects(&obj.textWinComboBoxTextStyleChooser.Widget, "textWinComboBoxTextStyleChooser")
 	trans.setTextToGtkObjects(&obj.View.Widget, "View")
 }
+
 // Translations structure declaration. To be used in main application.
 var translate = new(MainTranslate)
 
@@ -84,50 +90,49 @@ var translate = new(MainTranslate)
 // They'll be added to language file each time application started
 // when "devMode" is set at true.
 var sts = map[string]string{
-	`scanTime`: `Scan files time:`,
-	`totalModified`: `Occurrence(s) modified`,
-	`allow`: `Allow`,
-	`file-LinkNotExist`: `File does not exist, or symlink endpoint not found.`,
-	`sbFiles`: `Files:`,
-	`status`: `Status:`,
-	`deny`: `Deny`,
-	`savef`: `Save file`,
-	`regexpErr`: `Regex mistake ...`,
+	`scanTime`:           `Scan files time:`,
+	`totalModified`:      `Occurrence(s) modified`,
+	`allow`:              `Allow`,
+	`file-LinkNotExist`:  `File does not exist, or symlink endpoint not found.`,
+	`sbFiles`:            `Files:`,
+	`status`:             `Status:`,
+	`deny`:               `Deny`,
+	`savef`:              `Save file`,
+	`regexpErr`:          `Regex mistake ...`,
 	`titleSearchResults`: `Search results`,
-	`removed`: `File has been removed before processing.`,
-	`file-rem`: `File(s) does not exist.`,
-	`file`: `file(s)`,
-	`noFileSel`: `No selected file(s) to search in ...`,
-	`dispTime`: `Display time:`,
-	`searchTime`: `Search time:`,
-	`missing`: `Something missing`,
-	`totalOccurrences`: `Occurrence(s) found:`,
-	`in`: `in`,
-	`yes`: `Yes`,
-	`clpbrdPreview`: `Clipboard content preview.`,
-	`no`: `No`,
-	`nothingToSearch`: `Nothing to search ...`,
-	`openf`: `Open file`,
+	`removed`:            `File has been removed before processing.`,
+	`file-rem`:           `File(s) does not exist.`,
+	`file`:               `file(s)`,
+	`noFileSel`:          `No selected file(s) to search in ...`,
+	`dispTime`:           `Display time:`,
+	`searchTime`:         `Search time:`,
+	`missing`:            `Something missing`,
+	`totalOccurrences`:   `Occurrence(s) found:`,
+	`in`:                 `in`,
+	`yes`:                `Yes`,
+	`clpbrdPreview`:      `Clipboard content preview.`,
+	`no`:                 `No`,
+	`nothingToSearch`:    `Nothing to search ...`,
+	`openf`:              `Open file`,
 	`forbiddenFiles`: `Some files could not be accessed ...
 Unchecking "Follow symlink" may be useful.`,
-	`notFound`: `Nothing was found ...`,
-	`sbFile`: `File`,
-	`alert`: `Alert ...`,
-	`sbFilesSel`: `Files selected:`,
+	`notFound`:         `Nothing was found ...`,
+	`sbFile`:           `File`,
+	`alert`:            `Alert ...`,
+	`sbFilesSel`:       `Files selected:`,
 	`titlePreviewText`: `Preview window`,
-	`file-perm`: `File permissions error.`,
-	`done`: `Operation done.`,
-	`ok`: `Ok`,
-	`sbFileSel`: `File selected:`,
-	`cancel`: `Cancel`,
-	`dir-rem`: `Directory does not exist. The current application directory will be used.`,
-	`unexpected`: `An unexpected error occurred`,
-	`confirm`: `Confirmation`,
-	`proceed`: `Are you sure you want to replace pattern in files ?`,
-	`emptyCB`: `Nothing to do with an empty clipboard ...`,
-	`retry`: `Retry`,
+	`file-perm`:        `File permissions error.`,
+	`done`:             `Operation done.`,
+	`ok`:               `Ok`,
+	`sbFileSel`:        `File selected:`,
+	`cancel`:           `Cancel`,
+	`dir-rem`:          `Directory does not exist. The current application directory will be used.`,
+	`unexpected`:       `An unexpected error occurred`,
+	`confirm`:          `Confirmation`,
+	`proceed`:          `Are you sure you want to replace pattern in files ?`,
+	`emptyCB`:          `Nothing to do with an empty clipboard ...`,
+	`retry`:            `Retry`,
 }
-
 
 // Translations structure with methods
 type MainTranslate struct {

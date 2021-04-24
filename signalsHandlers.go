@@ -1,11 +1,14 @@
 // signalsHandlers.go
 
 /*
-	Source file auto-generated on using Gotk3ObjHandler v1.3.9 ©2018-19 H.F.M
+	Source file auto-generated on Sat, 24 Apr 2021 04:33:11 using Gotk3 Objects Handler v1.7.8
+	©2018-21 hfmrow https://hfmrow.github.io
+
 	This software use gotk3 that is licensed under the ISC License:
 	https://github.com/gotk3/gotk3/blob/master/LICENSE
 
-	Copyright ©2018-19 H.F.M - Search And Replace
+	Copyright ©2018-21 hfmrow - Search And Replace v1.10 github.com/hfmrow/search-and-replace
+
 	This program comes with absolutely no warranty. See the The MIT License (MIT) for details:
 	https://opensource.org/licenses/mit-license.php
 */
@@ -296,16 +299,13 @@ func chkCharacterClassToggled() {
 // Signal handler toggled ...
 func chkUseEscapeCharToggled() {
 	if obj.chkUseEscapeChar.GetActive() {
-		obj.chkWildcard.SetSensitive(false)
 		obj.chkCharacterClass.SetSensitive(false)
 		obj.chkRegex.SetSensitive(false)
 		obj.chkWholeWord.SetSensitive(false)
-		obj.chkWildcard.SetActive(false)
 		obj.chkCharacterClass.SetActive(false)
 		obj.chkRegex.SetActive(false)
 		obj.chkWholeWord.SetActive(false)
 	} else {
-		obj.chkWildcard.SetSensitive(true)
 		obj.chkCharacterClass.SetSensitive(true)
 		obj.chkRegex.SetSensitive(true)
 		obj.chkWholeWord.SetSensitive(true)
@@ -507,9 +507,9 @@ func genericEntryFocusOut(e *gtk.Entry) {
 
 // imgTop handler release signal (Display about box)
 func imgTopReleaseEvent() {
-	opt.AboutOptions.Width = 400
-	opt.AboutOptions.ImageOkButtonSize = 24
-	opt.AboutOptions.Show()
+	About.Width = 400
+	About.ImageOkButtonSize = 24
+	About.Show()
 }
 
 // Signal handler on Exit window ... Saving options before quit

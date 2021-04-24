@@ -1,11 +1,12 @@
-// pixbuffByte.go
+// pixbufByte.go
 
 /*
 	Source file auto-generated on Sun, 20 Oct 2019 13:50:31 using Gotk3ObjHandler v1.3.9 ©2018-19 H.F.M
 	This software use gotk3 that is licensed under the ISC License:
 	https://github.com/gotk3/gotk3/blob/master/LICENSE
 
-	©2019 H.F.M
+	©2019-21 H.F.M pixbuf byte library
+	- provide simplified function to handle gotk3 pixbuff objects...
 
 	This program comes with absolutely no warranty. See the The MIT License (MIT) for details:
 	https://opensource.org/licenses/mit-license.php

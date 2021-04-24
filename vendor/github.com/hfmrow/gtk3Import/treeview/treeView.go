@@ -1082,8 +1082,9 @@ func (tvs *TreeViewStructure) ExpandAll(collapse ...bool) {
 	}
 }
 
-// changeCheckState: invert or set 'state" to list/treeview columns.
-func (tvs *TreeViewStructure) ChangeCheckState(toggleCol int, state, invert bool) {
+// changeCheckState: 'setState' or invert list/treeview 'toggleCol'.
+// NOTE: 'orInvert' is prioritized
+func (tvs *TreeViewStructure) ChangeCheckState(toggleCol int, setState, orInvert bool) {
 
 	var (
 		gValue *glib.Value
@@ -1096,7 +1097,7 @@ func (tvs *TreeViewStructure) ChangeCheckState(toggleCol int, state, invert bool
 	switch tvs.StoreType.(type) {
 	case *gtk.ListStore:
 		tvs.ListStore.ForEach(func(model *gtk.TreeModel, path *gtk.TreePath, iter *gtk.TreeIter) bool {
-			if invert {
+			if orInvert {
 				if gValue, err = tvs.ListStore.GetValue(iter, toggleCol); err == nil {
 					if value, err = gValue.GoValue(); err == nil {
 						gValue.Unset()
@@ -1104,7 +1105,7 @@ func (tvs *TreeViewStructure) ChangeCheckState(toggleCol int, state, invert bool
 					}
 				}
 			} else {
-				err = tvs.ListStore.SetValue(iter, toggleCol, state)
+				err = tvs.ListStore.SetValue(iter, toggleCol, setState)
 			}
 			if err != nil {
 				log.Printf("ChangeCheckState: %v\n", err)
@@ -1114,7 +1115,7 @@ func (tvs *TreeViewStructure) ChangeCheckState(toggleCol int, state, invert bool
 
 	case *gtk.TreeStore:
 		tvs.TreeStore.ForEach(func(model *gtk.TreeModel, path *gtk.TreePath, iter *gtk.TreeIter) bool {
-			if invert {
+			if orInvert {
 				if gValue, err = tvs.TreeStore.GetValue(iter, toggleCol); err == nil {
 					if value, err = gValue.GoValue(); err == nil {
 						gValue.Unset()
@@ -1122,7 +1123,7 @@ func (tvs *TreeViewStructure) ChangeCheckState(toggleCol int, state, invert bool
 					}
 				}
 			} else {
-				err = tvs.TreeStore.SetValue(iter, toggleCol, state)
+				err = tvs.TreeStore.SetValue(iter, toggleCol, setState)
 			}
 			if err != nil {
 				log.Printf("ChangeCheckState: %v\n", err)

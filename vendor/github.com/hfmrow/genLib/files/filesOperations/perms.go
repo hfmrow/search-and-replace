@@ -1,7 +1,7 @@
-// files-operations.go
+// perms.go
 
 /*
-	Copyright ©2020 H.F.M - File operations v1.0 https://github.com/hfmrow
+	Copyright ©2020-21 hfmrow - File operations v1.0 https://github.com/hfmrow
 	This program comes with absolutely no warranty. See the The MIT License (MIT) for details:
 	https://opensource.org/licenses/mit-license.php
 */

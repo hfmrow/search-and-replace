@@ -59,7 +59,10 @@ type PopupMenuStruct struct {
 	// space separator for box (used when image is present)
 	BoxSpacing,
 	// Contain the index of last GtkMenuItem created
-	nextMenuItemIdx int
+	nextMenuItemIdx,
+	// When a callback is defined (treeview RMB popup for example),
+	// set the minimum selected row(s) to allow showing the popup.
+	TreeViewMinSelectedRows int
 	// Used to link radio button within a group
 	lastRadioMenuItmGroup *gtk.RadioMenuItem
 	// Where menuitems are stored
@@ -174,6 +177,7 @@ func PopupMenuStructNew() (pop *PopupMenuStruct) {
 
 	pop.lastRadioMenuItmGroup = nil
 	pop.ReserveToggleSize = false
+	pop.TreeViewMinSelectedRows = 1
 	pop.WindowTypeHint = gdk.WINDOW_TYPE_HINT_POPUP_MENU
 
 	pop.OPT_NORMAL = ITEM_OPT_NORMAL
@@ -205,7 +209,8 @@ func (pop *PopupMenuStruct) GetSeparatorMenuItemCurrent() *gtk.SeparatorMenuItem
 	return pop.items[pop.nextMenuItemIdx-1].getSeparatorMenuItem()
 }
 
-// Retrieve the IMenuItem at 'idx' require type assertion
+// Retrieve the IMenuItem at 'idx'
+// NOTE: Require type assertion!!!
 func (pop *PopupMenuStruct) GetIMenuItemIdx(idx int) gtk.IMenuItem {
 	return pop.items[idx].widget.(gtk.IMenuItem)
 }
@@ -351,8 +356,10 @@ func (pop *PopupMenuStruct) CheckRMB(obj interface{}, event *gdk.Event) bool {
 // TreeView' "button-press-event" signal, considere to initialize the
 // popup menu before setting this function as callback. Otherwise, the
 // call will generate error "nil pointer ..."
+// NOTE: "button-press-event" signal instead of "button-release-event"
+// must be used to avoid deselecting rows on right click.
 func (pop *PopupMenuStruct) CheckRMBFromTreeView(tv *gtk.TreeView, event *gdk.Event) bool {
-	return checkRMBFromTreeView(pop.LMB, pop.Menu, tv, event)
+	return checkRMBFromTreeView(pop.LMB, pop.Menu, tv, event, pop.TreeViewMinSelectedRows)
 }
 
 // AppendToExistingMenu: append "MenuItems" to an existing "*gtk.Menu"
@@ -425,7 +432,10 @@ type PopupMenuIconStruct struct {
 	// Contain the last GtkMenuItme created
 	nextMenuItemIdx,
 	// Used to link radio button within a group
-	lastRadioButtonGroupIdx int
+	lastRadioButtonGroupIdx,
+	// When a callback is defined (treeview RMB popup for example),
+	// set the minimum selected row(s) to allow showing the popup.
+	TreeViewMinSelectedRows int
 	// Used to link radio button within a group
 	lastRadioButtonGroup *gtk.RadioButton
 	// Where menuitems are stored
@@ -445,11 +455,13 @@ type PopupMenuIconStruct struct {
 // PopupMenuNew: return a new PopupMenuIconStruct structure
 func PopupMenuIconStructNew() (pop *PopupMenuIconStruct) {
 	pop = new(PopupMenuIconStruct)
+
 	pop.IconsSize = 18
 	pop.BoxSpacing = 4
 
 	pop.lastRadioButtonGroup = nil
 	pop.ReserveToggleSize = false
+	pop.TreeViewMinSelectedRows = 1
 	pop.WindowTypeHint = gdk.WINDOW_TYPE_HINT_POPUP_MENU
 
 	pop.OPT_NORMAL = ITEM_OPT_NORMAL
@@ -693,7 +705,7 @@ func (pop *PopupMenuIconStruct) CheckRMB(obj interface{}, event *gdk.Event) bool
 // popup menu before setting this function as callback. Otherwise, the
 // call will generate error "nil pointer ..."
 func (pop *PopupMenuIconStruct) CheckRMBFromTreeView(tv *gtk.TreeView, event *gdk.Event) bool {
-	return checkRMBFromTreeView(pop.LMB, pop.Menu, tv, event)
+	return checkRMBFromTreeView(pop.LMB, pop.Menu, tv, event, pop.TreeViewMinSelectedRows)
 }
 
 func (pop *PopupMenuIconStruct) AppendToExistingMenu(menu *gtk.Menu) *gtk.Menu {
@@ -709,7 +721,7 @@ func checkRMB(popLMB bool, menu *gtk.Menu, event *gdk.Event) bool {
 	return false /* we did not handle this */
 }
 
-func checkRMBFromTreeView(popLMB bool, menu *gtk.Menu, tv *gtk.TreeView, event *gdk.Event) bool {
+func checkRMBFromTreeView(popLMB bool, menu *gtk.Menu, tv *gtk.TreeView, event *gdk.Event, minSelRows int) bool {
 	if selection, err := tv.GetSelection(); err == nil {
 
 		eventButton := gdk.EventButtonNewFromEvent(event)
@@ -724,7 +736,7 @@ func checkRMBFromTreeView(popLMB bool, menu *gtk.Menu, tv *gtk.TreeView, event *
 					selection.SelectPath(path)
 				}
 			}
-			if selection.CountSelectedRows() > 0 {
+			if selection.CountSelectedRows() >= minSelRows {
 				// Display popup menu
 				menu.PopupAtPointer(event)
 				return true /* we handled this */

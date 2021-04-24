@@ -1,11 +1,14 @@
 // gohOptions.go
 
 /*
-	Source file auto-generated on Wed, 14 Apr 2021 01:33:39 using Gotk3 Objects Handler v1.7.5 ©2018-21 hfmrow
+	Source file auto-generated on Sat, 24 Apr 2021 04:33:11 using Gotk3 Objects Handler v1.7.8
+	©2018-21 hfmrow https://hfmrow.github.io
+
 	This software use gotk3 that is licensed under the ISC License:
 	https://github.com/gotk3/gotk3/blob/master/LICENSE
 
 	Copyright ©2018-21 hfmrow - Search And Replace v1.10 github.com/hfmrow/search-and-replace
+
 	This program comes with absolutely no warranty. See the The MIT License (MIT) for details:
 	https://opensource.org/licenses/mit-license.php
 */
@@ -19,6 +22,7 @@ import (
 	"io/ioutil"
 	"os"
 
+	glfs "github.com/hfmrow/genLib/files"
 	glfsft "github.com/hfmrow/genLib/files/fileText"
 	glfssf "github.com/hfmrow/genLib/files/scanFileDir"
 	glss "github.com/hfmrow/genLib/slices"
@@ -67,7 +71,13 @@ var (
 	currentLine int
 	textWinTextToShowBytes []byte
 
-	// Lib mapping
+	/*
+	 * Lib mapping
+	 */
+	// AboutBox
+	AboutInfosNew = gidg.AboutInfosNew
+	About         *gidg.AboutInfos
+
 	tvsTree,
 	tvsList *gitw.TreeViewStructure
 	TreeViewStructureNew = gitw.TreeViewStructureNew
@@ -118,7 +128,7 @@ var (
 	IsExistSlIface    = glss.IsExistSlIface
 	DeleteSlIface     = glss.DeleteSlIface
 	HumanReadableSize = gltsushe.HumanReadableSize
-	TruncatePath      = glsg.TruncatePath
+	TruncatePath      = glfs.TruncatePath
 	RemoveNonNum      = glsg.RemoveNonNum
 	UnEscapedStr      = func(in string) string {
 		if obj.chkUseEscapeChar.GetActive() {
@@ -155,8 +165,9 @@ var (
 )
 
 type MainOpt struct {
-	/* Public, will be saved and restored */
-	AboutOptions *gidg.AboutInfos
+	// File signature
+	FileSign []string
+
 	MainWinWidth,
 	MainWinHeight,
 	MainWinPosX,
@@ -214,7 +225,6 @@ type MainOpt struct {
 
 // Main options initialisation
 func (opt *MainOpt) Init() {
-	opt.AboutOptions = new(gidg.AboutInfos)
 
 	opt.MainWinWidth = 800
 	opt.MainWinHeight = 600
@@ -363,9 +373,7 @@ func (opt *MainOpt) Write() (err error) {
 	var out bytes.Buffer
 	var jsonData []byte
 	opt.UpdateOptions()
-
-	opt.AboutOptions.DlgBoxStruct = nil // remove dialog object before saving
-
+	opt.FileSign = []string{Name, Vers, "©" + YearCreat, Creat, Repository, LicenseAbrv}
 	if jsonData, err = json.Marshal(&opt); err == nil {
 		if err = json.Indent(&out, jsonData, "", "\t"); err == nil {
 			err = ioutil.WriteFile(optFilename, out.Bytes(), os.ModePerm)

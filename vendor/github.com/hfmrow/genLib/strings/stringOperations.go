@@ -10,18 +10,52 @@
 package strings
 
 import (
-	"crypto/md5"
 	"fmt"
 	"log"
-	"math/rand"
-	"os"
-	"path/filepath"
 	"regexp"
 	"strconv"
 	"strings"
-	"time"
 	"unicode"
 )
+
+type HtmlEscOpt int
+
+const (
+	HE_UNESCAPE HtmlEscOpt = 1 << iota
+	HE_PANGO
+)
+
+// HtmlEscOrUnEsc: Escape or unescape to/from html, usefull for pango too.
+func HtmlEscOrUnEsc(in string, options ...HtmlEscOpt) string {
+
+	var (
+		opt         HtmlEscOpt
+		unesc       bool
+		htmlEscaper = map[string]string{
+			`&`: "&amp;",
+			`<`: "&lt;",
+			`>`: "&gt;",
+		}
+	)
+	if len(options) > 0 {
+		opt = options[0]
+	}
+	if opt&HE_PANGO == 0 {
+		htmlEscaper[`'`] = "&#39;" // "&#39;" is shorter than "&apos;" and apos was not in HTML until HTML5.
+		htmlEscaper[`"`] = "&#34;" // "&#34;" is shorter than "&quot;".
+	}
+	unesc = opt&HE_UNESCAPE != 0
+
+	for unes, escp := range htmlEscaper {
+		switch unesc {
+		case true:
+			in = strings.ReplaceAll(in, escp, unes)
+		case false:
+			in = strings.ReplaceAll(in, unes, escp)
+		}
+	}
+	return in
+}
 
 // UnescapeToUtf8: Convert raw string that contain escaped values to
 // utf-8 literal string.
@@ -146,12 +180,6 @@ func SeparateUpper(inString, sep string) string {
 	return inString
 }
 
-// GenFileName: Generate a randomized file name
-func GenFileName() string {
-	r := rand.New(rand.NewSource(time.Now().UnixNano()))
-	return fmt.Sprintf("%x", md5.Sum([]byte(fmt.Sprint(r.Int63n(time.Now().UnixNano())))))
-}
-
 // RemoveNonAlNum: Remove all non alpha-numeric char
 func RemoveNonAlNum(inString string) string {
 	nonAlNum := regexp.MustCompile(`[[:punct:]]`)
@@ -194,19 +222,6 @@ func SplitNumeric(inString string) (outText []string, err error) {
 	spaceSepared := toSplit.ReplaceAllString(inString, " ")
 	outText = strings.Split(RemoveDupSpace(spaceSepared), " ")
 	return outText, err
-}
-
-// ReducePath: Reduce path length by preserving count element from the end
-func TruncatePath(fullpath string, count ...int) (reduced string) {
-	elemCnt := 2
-	if len(count) != 0 {
-		elemCnt = count[0]
-	}
-	splited := strings.Split(fullpath, string(os.PathSeparator))
-	if len(splited) > elemCnt+1 {
-		return "..." + string(os.PathSeparator) + filepath.Join(splited[len(splited)-elemCnt:]...)
-	}
-	return fullpath
 }
 
 // // TrimSpace: Some multiple way to trim strings. cmds is optionnal or accept multiples args

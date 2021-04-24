@@ -24,11 +24,12 @@
 	"GtkApplicationId": "id.application.name",
 	"ObjStructName": "obj",
 	"OptStructName": "opt",
+	"OpenFileCmd": "xdg-open",
 	"Gotk3Path": "github.com/gotk3/gotk3",
 	"GtkSourcePath": "\"github.com/hfmrow/gotk3_gtksource/source\"",
 	"GladeXmlFile": "",
 	"GladeXmlFileRel": "assets/glade/main.glade",
-	"GladeXmlFileCheckSum": "868f1266739c68e98b7152da7dc04298",
+	"GladeXmlFileCheckSum": "3687daa6863e610e0a897fcbafaf9fd5",
 	"DefaultProjExt": "*.proj",
 	"BackupExt": [
 		"*.go",
@@ -40,6 +41,7 @@
 		"Activated": true,
 		"FirstCharLower": true,
 		"ScanSubDir": true,
+		"EmbedIncludeDirOnly": false,
 		"BinData": true,
 		"Directory": "assets/images",
 		"ExtInName": null,
@@ -61,7 +63,15 @@
 		"MiscFunc": "gohFunc.go",
 		"Images": "gohImages.go",
 		"Assets": "gohAssets.go",
-		"BackupDir": "gohBackup"
+		"BackupDir": "gohBackup",
+		"StandaloneFiles": [
+			"filesFunc.go",
+			"miscFunctions.go",
+			"popup.go",
+			"searching.go",
+			"signalsHandlers.go",
+			"translate.go"
+		]
 	},
 	"MainGladeVarNameMinimal": "mainGlade",
 	"FlagsBuild": {
@@ -75,11 +85,11 @@
 		"ApplicationBuild": false,
 		"CheckIsGotk3ObjAvailable": true,
 		"WarnMissingFuncDecl": true,
+		"AddShrtLicToFile": true,
 		"WarnMissingObjDecl": true,
-		"AddLicToMainFile": true,
 		"NamingCSS": true,
 		"NamingCSSLowerCase": false,
-		"NamingCSSForce": false,
+		"NamingCSSForce": true,
 		"NamingCSSClear": false,
 		"ChooseGotk3Dir": false,
 		"GtkSourceUsed": true,
@@ -92,7 +102,8 @@
 		"MiscFunc": false,
 		"StartGtk": false,
 		"Images": false,
-		"License": false
+		"License": false,
+		"StndaloneAutoUpdt": true
 	},
 	"ObjectsCount": 68,
 	"ObjectsAdded": 0,
