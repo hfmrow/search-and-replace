@@ -1,4 +1,4 @@
-# Search and Replace ©2018-21 H.F.M
+# Search and Replace
 
 ## information
 
